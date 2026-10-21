@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,11 +9,9 @@
 
     <title>Crear cuenta | FALCONI-GIT</title>
 
-    <!-- ARCHIVOS CSS -->
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="./responsive.css">
 
-    <!-- ARCHIVOS JS -->
     <script src="./translations.js" defer></script>
     <script src="./language.js" defer></script>
     <script src="./register.js" defer></script>
@@ -28,6 +25,7 @@
         <section class="brand-panel" aria-label="FALCONI-GIT">
 
             <header class="brand-header">
+
                 <div class="logo-box">
                     <img
                         src="./assets/images/logo.png"
@@ -44,16 +42,34 @@
 
                 <div class="eyebrow">
                     <span class="eyebrow-dot"></span>
-                    TU ESPACIO FINANCIERO EN ₽
+
+                    <span data-i18n="brandTagline">
+                        TU ESPACIO FINANCIERO EN ₽
+                    </span>
                 </div>
 
                 <h1 class="brand-title">
-                    Comienza hoy.<br>
-                    Organízate mejor.<br>
-                    <span>Crece mañana.</span>
+
+                    <span
+                        data-i18n="registerBrandLine1"
+                        style="color:inherit"
+                    >Comienza hoy.</span><br>
+
+                    <span
+                        data-i18n="registerBrandLine2"
+                        style="color:inherit"
+                    >Organízate mejor.</span><br>
+
+                    <span data-i18n="registerBrandLine3">
+                        Crece mañana.
+                    </span>
+
                 </h1>
 
-                <p class="brand-description">
+                <p
+                    class="brand-description"
+                    data-i18n="registerBrandDescription"
+                >
                     Crea tu espacio personal para organizar
                     tus finanzas de manera clara y sencilla.
                 </p>
@@ -76,35 +92,81 @@
                         </div>
                     </div>
 
+                    <div class="card-note">
+
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            aria-hidden="true"
+                        >
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+
+                        <span data-i18n="brandNote">
+                            Tu espacio financiero personal.
+                        </span>
+                    </div>
+
                 </div>
 
             </div>
 
-            <footer class="brand-footer">
+            <footer
+                class="brand-footer"
+                data-i18n="brandFooter"
+            >
                 Más claridad. Más control. Todo en rublos.
             </footer>
 
         </section>
 
-        <!-- PANEL DE REGISTRO -->
+        <!-- FORMULARIO DE REGISTRO -->
         <section class="auth-panel">
 
             <header class="auth-top">
-                <a href="./index.html" class="text-link">
-                    ← Volver al inicio
-                </a>
+
+                <select
+                    class="language-select"
+                    id="language"
+                    aria-label="Seleccionar idioma"
+                >
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                </select>
+
             </header>
 
             <div class="auth-content">
 
                 <div class="auth-heading">
-                    <p class="auth-label">Únete a FALCONI-GIT</p>
 
-                    <h2 class="auth-title">Crea tu cuenta.</h2>
+                    <p
+                        class="auth-label"
+                        data-i18n="registerLabel"
+                    >
+                        Únete a FALCONI-GIT
+                    </p>
 
-                    <p class="auth-description">
+                    <h2
+                        class="auth-title"
+                        data-i18n="registerTitle"
+                    >
+                        Crea tu cuenta.
+                    </h2>
+
+                    <p
+                        class="auth-description"
+                        data-i18n="registerSubtitle"
+                    >
                         Completa tus datos para comenzar.
                     </p>
+
                 </div>
 
                 <form
@@ -115,7 +177,12 @@
 
                     <!-- NOMBRE -->
                     <div class="form-group">
-                        <label class="form-label" for="username">
+
+                        <label
+                            class="form-label"
+                            for="username"
+                            data-i18n="username"
+                        >
                             Nombre de usuario
                         </label>
 
@@ -125,20 +192,29 @@
                             id="username"
                             name="username"
                             placeholder="Tu nombre"
+                            data-i18n-placeholder="usernamePlaceholder"
                             autocomplete="username"
-                            minlength="3"
                             maxlength="40"
                             aria-describedby="usernameError"
                             required
                         >
 
-                        <small class="error-message"
-                               id="usernameError"></small>
+                        <small
+                            class="error-message"
+                            id="usernameError"
+                            aria-live="polite"
+                        ></small>
+
                     </div>
 
                     <!-- CORREO -->
                     <div class="form-group">
-                        <label class="form-label" for="email">
+
+                        <label
+                            class="form-label"
+                            for="email"
+                            data-i18n="email"
+                        >
                             Correo electrónico
                         </label>
 
@@ -148,18 +224,28 @@
                             id="email"
                             name="email"
                             placeholder="nombre@correo.com"
+                            data-i18n-placeholder="emailPlaceholder"
                             autocomplete="email"
                             aria-describedby="emailError"
                             required
                         >
 
-                        <small class="error-message"
-                               id="emailError"></small>
+                        <small
+                            class="error-message"
+                            id="emailError"
+                            aria-live="polite"
+                        ></small>
+
                     </div>
 
                     <!-- CONTRASEÑA -->
                     <div class="form-group">
-                        <label class="form-label" for="password">
+
+                        <label
+                            class="form-label"
+                            for="password"
+                            data-i18n="password"
+                        >
                             Contraseña
                         </label>
 
@@ -171,30 +257,39 @@
                                 id="password"
                                 name="password"
                                 placeholder="Crea una contraseña"
+                                data-i18n-placeholder="registerPasswordPlaceholder"
                                 autocomplete="new-password"
                                 aria-describedby="passwordRequirements passwordError"
                                 required
                             >
 
                             <button
-                                class="password-toggle"
                                 type="button"
+                                class="password-toggle"
                                 id="togglePassword"
-                                aria-label="Mostrar contraseña"
                                 aria-pressed="false"
+                                aria-label="Mostrar contraseña"
                             >
                                 Mostrar
                             </button>
 
                         </div>
 
-                        <!-- Indicador de seguridad -->
-                        <div class="password-security"
-                             id="passwordSecurity">
+                        <!-- REQUISITOS -->
+                        <div
+                            class="password-security"
+                            id="passwordSecurity"
+                        >
 
                             <div class="security-header">
-                                <span>Seguridad de contraseña</span>
-                                <span id="strengthText">Sin evaluar</span>
+
+                                <span data-i18n="securityLabel">
+                                    Requisitos de contraseña
+                                </span>
+
+                                <span id="strengthText">
+                                    Sin evaluar
+                                </span>
                             </div>
 
                             <div class="strength-track">
@@ -223,17 +318,27 @@
                                 <p id="ruleNumber">
                                     ○ Un número
                                 </p>
+
                             </div>
 
                         </div>
 
-                        <small class="error-message"
-                               id="passwordError"></small>
+                        <small
+                            class="error-message"
+                            id="passwordError"
+                            aria-live="polite"
+                        ></small>
+
                     </div>
 
                     <!-- CONFIRMAR CONTRASEÑA -->
                     <div class="form-group">
-                        <label class="form-label" for="confirmPassword">
+
+                        <label
+                            class="form-label"
+                            for="confirmPassword"
+                            data-i18n="confirmPassword"
+                        >
                             Confirmar contraseña
                         </label>
 
@@ -245,34 +350,43 @@
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 placeholder="Repite tu contraseña"
+                                data-i18n-placeholder="confirmPlaceholder"
                                 autocomplete="new-password"
                                 aria-describedby="matchMessage confirmPasswordError"
                                 required
                             >
 
                             <button
-                                class="password-toggle"
                                 type="button"
+                                class="password-toggle"
                                 id="toggleConfirmPassword"
-                                aria-label="Mostrar confirmación de contraseña"
                                 aria-pressed="false"
+                                aria-label="Mostrar contraseña"
                             >
                                 Mostrar
                             </button>
 
                         </div>
 
-                        <p id="matchMessage"
-                           class="password-match"
-                           aria-live="polite"></p>
+                        <p
+                            class="password-match"
+                            id="matchMessage"
+                            aria-live="polite"
+                        ></p>
 
-                        <small class="error-message"
-                               id="confirmPasswordError"></small>
+                        <small
+                            class="error-message"
+                            id="confirmPasswordError"
+                            aria-live="polite"
+                        ></small>
+
                     </div>
 
                     <!-- TÉRMINOS -->
                     <div class="form-group">
+
                         <label class="terms-label">
+
                             <input
                                 type="checkbox"
                                 id="acceptTerms"
@@ -280,14 +394,18 @@
                                 required
                             >
 
-                            <span>
-                                Acepto los términos y la
-                                política de privacidad.
+                            <span data-i18n="acceptTerms">
+                                Acepto los términos y la política de privacidad.
                             </span>
+
                         </label>
 
-                        <small class="error-message"
-                               id="termsError"></small>
+                        <small
+                            class="error-message"
+                            id="termsError"
+                            aria-live="polite"
+                        ></small>
+
                     </div>
 
                     <!-- BOTÓN -->
@@ -296,31 +414,53 @@
                         class="submit-button"
                         id="registerButton"
                     >
-                        <span>Crear cuenta</span>
-                        <span class="submit-arrow"
-                              aria-hidden="true">→</span>
+
+                        <span data-i18n="registerButton">
+                            Crear cuenta
+                        </span>
+
+                        <span
+                            class="submit-arrow"
+                            aria-hidden="true"
+                        >→</span>
+
                     </button>
 
                     <p
-                        id="registerStatus"
                         class="form-status"
+                        id="registerStatus"
                         role="status"
                     ></p>
 
                 </form>
 
+                <!-- VOLVER AL LOGIN -->
                 <div class="register-area">
-                    <span>¿Ya tienes cuenta?</span>
-                    <a href="./index.html" class="text-link">
+
+                    <span data-i18n="alreadyAccount">
+                        ¿Ya tienes cuenta?
+                    </span>
+
+                    <a
+                        href="./index.html"
+                        class="text-link"
+                        data-i18n="loginButton"
+                    >
                         Iniciar sesión
                     </a>
+
                 </div>
 
             </div>
 
             <footer class="auth-footer">
+
                 <span>© 2026 FALCONI-GIT</span>
-                <span>Interfaz en desarrollo</span>
+
+                <span data-i18n="development">
+                    Interfaz en desarrollo
+                </span>
+
             </footer>
 
         </section>

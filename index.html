@@ -7,13 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0F1B2D">
 
-    <title>FALCONI-GIT | Iniciar sesión</title>
+    <title>FALCONI-GIT | Login</title>
 
-    <!-- ARCHIVOS CSS -->
+    <!-- ESTILOS -->
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="./responsive.css">
 
-    <!-- ARCHIVOS JS -->
+    <!-- JAVASCRIPT: mantener este orden -->
     <script src="./translations.js" defer></script>
     <script src="./language.js" defer></script>
     <script src="./login.js" defer></script>
@@ -23,19 +23,17 @@
 
     <main class="page">
 
-        <!-- PANEL IZQUIERDO -->
+        <!-- IDENTIDAD DE MARCA -->
         <section class="brand-panel" aria-label="FALCONI-GIT">
 
             <header class="brand-header">
-                <div class="logo-box">
 
+                <div class="logo-box">
                     <img
                         src="./assets/images/logo.png"
                         alt=""
-                        id="brandLogo"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
                     >
-
                     <span class="logo-fallback">F.</span>
                 </div>
 
@@ -46,16 +44,34 @@
 
                 <div class="eyebrow">
                     <span class="eyebrow-dot"></span>
-                    TU ESPACIO FINANCIERO EN ₽
+
+                    <span data-i18n="brandTagline">
+                        TU ESPACIO FINANCIERO EN ₽
+                    </span>
                 </div>
 
                 <h1 class="brand-title">
-                    Tu dinero.<br>
-                    Tu espacio.<br>
-                    <span>Tu control.</span>
+
+                    <span
+                        data-i18n="brandTitleLine1"
+                        style="color:inherit"
+                    >Tu dinero.</span><br>
+
+                    <span
+                        data-i18n="brandTitleLine2"
+                        style="color:inherit"
+                    >Tu espacio.</span><br>
+
+                    <span data-i18n="brandTitleLine3">
+                        Tu control.
+                    </span>
+
                 </h1>
 
-                <p class="brand-description">
+                <p
+                    class="brand-description"
+                    data-i18n="brandDescription"
+                >
                     Una manera más clara de organizar tus
                     finanzas personales mientras construyes
                     tu vida en Rusia.
@@ -69,18 +85,15 @@
                         role="img"
                         aria-label="Tarjeta decorativa FALCONI-GIT"
                     >
-
                         <div class="card-diagonal-one"></div>
                         <div class="card-diagonal-two"></div>
                         <div class="card-texture"></div>
-
                         <div class="card-chip"></div>
 
                         <div class="card-mark">
                             <strong>F.</strong>
                             <span>FALCONI</span>
                         </div>
-
                     </div>
 
                     <div class="card-note">
@@ -98,20 +111,25 @@
                             <path d="m9 12 2 2 4-4"/>
                         </svg>
 
-                        Tu espacio financiero personal.
-                    </div>
+                        <span data-i18n="brandNote">
+                            Tu espacio financiero personal.
+                        </span>
 
+                    </div>
                 </div>
 
             </div>
 
-            <footer class="brand-footer">
+            <footer
+                class="brand-footer"
+                data-i18n="brandFooter"
+            >
                 Más claridad. Más control. Todo en rublos.
             </footer>
 
         </section>
 
-        <!-- PANEL DERECHO -->
+        <!-- LOGIN -->
         <section class="auth-panel">
 
             <header class="auth-top">
@@ -128,25 +146,33 @@
 
             </header>
 
-           
-<div class="auth-heading">
+            <div class="auth-content">
 
-    <p class="auth-label" data-i18n="loginLabel">
-        Acceso a tu cuenta
-    </p>
+                <div class="auth-heading">
 
-    <h2 class="auth-title" data-i18n="loginTitle">
-        Bienvenido de nuevo.
-    </h2>
+                    <p
+                        class="auth-label"
+                        data-i18n="loginLabel"
+                    >
+                        Acceso a tu cuenta
+                    </p>
 
-    <p class="auth-description" data-i18n="loginSubtitle">
-        Introduce tus credenciales para continuar.
-    </p>
+                    <h2
+                        class="auth-title"
+                        data-i18n="loginTitle"
+                    >
+                        Bienvenido de nuevo.
+                    </h2>
 
-</div>
+                    <p
+                        class="auth-description"
+                        data-i18n="loginSubtitle"
+                    >
+                        Introduce tus credenciales para continuar.
+                    </p>
 
+                </div>
 
-                <!-- FORMULARIO -->
                 <form
                     id="loginForm"
                     class="login-form"
@@ -156,7 +182,11 @@
                     <!-- CORREO -->
                     <div class="form-group">
 
-                        <label class="form-label" for="email">
+                        <label
+                            class="form-label"
+                            for="email"
+                            data-i18n="email"
+                        >
                             Correo electrónico
                         </label>
 
@@ -166,6 +196,7 @@
                             id="email"
                             name="email"
                             placeholder="nombre@correo.com"
+                            data-i18n-placeholder="emailPlaceholder"
                             autocomplete="email"
                             aria-describedby="emailError"
                             required
@@ -182,7 +213,11 @@
                     <!-- CONTRASEÑA -->
                     <div class="form-group">
 
-                        <label class="form-label" for="password">
+                        <label
+                            class="form-label"
+                            for="password"
+                            data-i18n="password"
+                        >
                             Contraseña
                         </label>
 
@@ -194,6 +229,7 @@
                                 id="password"
                                 name="password"
                                 placeholder="Introduce tu contraseña"
+                                data-i18n-placeholder="passwordPlaceholder"
                                 autocomplete="current-password"
                                 aria-describedby="passwordError"
                                 required
@@ -226,6 +262,7 @@
                             href="#"
                             class="text-link"
                             id="forgotLink"
+                            data-i18n="forgotPassword"
                         >
                             ¿Olvidaste tu contraseña?
                         </a>
@@ -238,33 +275,36 @@
                         type="submit"
                         id="submitButton"
                     >
-
-                        <span>Iniciar sesión</span>
+                        <span data-i18n="loginButton">
+                            Iniciar sesión
+                        </span>
 
                         <span
                             class="submit-arrow"
                             aria-hidden="true"
                         >→</span>
-
                     </button>
 
                     <p
-                        id="formStatus"
                         class="form-status"
+                        id="formStatus"
                         role="status"
                     ></p>
 
                 </form>
 
-                <!-- REGISTRO -->
+                <!-- CREAR CUENTA -->
                 <div class="register-area">
 
-                    <span>¿Aún no tienes cuenta?</span>
+                    <span data-i18n="noAccount">
+                        ¿Aún no tienes cuenta?
+                    </span>
 
                     <a
-                        href="#"
+                        href="./register.html"
                         class="text-link"
                         id="registerLink"
+                        data-i18n="createAccount"
                     >
                         Crear cuenta
                     </a>
@@ -274,11 +314,11 @@
             </div>
 
             <footer class="auth-footer">
-
                 <span>© 2026 FALCONI-GIT</span>
 
-                <span>Interfaz en desarrollo</span>
-
+                <span data-i18n="development">
+                    Interfaz en desarrollo
+                </span>
             </footer>
 
         </section>

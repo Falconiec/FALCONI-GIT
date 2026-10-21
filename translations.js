@@ -1,27 +1,31 @@
 
 /*
-  FALCONI-GIT
-  Sistema de traducciones - v0.5
-
-  es = Español
-  en = English
-  ru = Русский
+ FALCONI-GIT
+ Sistema multilingüe v0.5
+ Español - Inglés - Ruso
 */
 
 const translations = {
-
     es: {
-        // General
+        // Marca
         brandTagline: "TU ESPACIO FINANCIERO EN ₽",
-        brandFooter: "Más claridad. Más control. Todo en rublos.",
+        brandTitleLine1: "Tu dinero.",
+        brandTitleLine2: "Tu espacio.",
+        brandTitleLine3: "Tu control.",
+        brandDescription: "Una manera más clara de organizar tus finanzas personales mientras construyes tu vida en Rusia.",
+        registerBrandLine1: "Comienza hoy.",
+        registerBrandLine2: "Organízate mejor.",
+        registerBrandLine3: "Crece mañana.",
+        registerBrandDescription: "Crea tu espacio personal para organizar tus finanzas de manera clara y sencilla.",
         brandNote: "Tu espacio financiero personal.",
-        backToLogin: "← Volver al inicio",
+        brandFooter: "Más claridad. Más control. Todo en rublos.",
         development: "Interfaz en desarrollo",
+        backToLogin: "← Volver al inicio",
 
-        // Login
+        // Acceso
+        loginLabel: "Acceso a tu cuenta",
         loginTitle: "Bienvenido de nuevo.",
         loginSubtitle: "Introduce tus credenciales para continuar.",
-        loginLabel: "Acceso a tu cuenta",
         email: "Correo electrónico",
         password: "Contraseña",
         emailPlaceholder: "nombre@correo.com",
@@ -42,7 +46,7 @@ const translations = {
         registerPasswordPlaceholder: "Crea una contraseña",
         confirmPassword: "Confirmar contraseña",
         confirmPlaceholder: "Repite tu contraseña",
-        securityLabel: "Seguridad de contraseña",
+        securityLabel: "Requisitos de contraseña",
         notEvaluated: "Sin evaluar",
         requirementsMissing: "Faltan requisitos",
         almostReady: "Casi lista",
@@ -65,24 +69,35 @@ const translations = {
         usernameTooLong: "El nombre no puede superar 40 caracteres.",
         passwordInvalid: "La contraseña debe cumplir los cuatro requisitos.",
         confirmRequired: "Confirma tu contraseña.",
+        passwordsDifferentError: "Las contraseñas no coinciden.",
         termsRequired: "Debes aceptar las condiciones para continuar.",
 
-        // Mensajes informativos
+        // Mensajes
         loginSuccess: "Formulario validado. La autenticación real estará disponible más adelante.",
-        registerSuccess: "Datos validados correctamente. El registro real estará disponible cuando implementemos el backend.",
+        registerSuccess: "Datos validados. El registro real estará disponible cuando implementemos el backend.",
         recoveryPending: "La recuperación de contraseña estará disponible próximamente."
     },
 
     en: {
+        // Brand
         brandTagline: "YOUR FINANCIAL SPACE IN ₽",
-        brandFooter: "More clarity. More control. All in rubles.",
+        brandTitleLine1: "Your money.",
+        brandTitleLine2: "Your space.",
+        brandTitleLine3: "Your control.",
+        brandDescription: "A clearer way to manage your personal finances while building your life in Russia.",
+        registerBrandLine1: "Start today.",
+        registerBrandLine2: "Stay organized.",
+        registerBrandLine3: "Grow tomorrow.",
+        registerBrandDescription: "Create your personal space to manage your finances simply and clearly.",
         brandNote: "Your personal financial space.",
-        backToLogin: "← Back to login",
+        brandFooter: "More clarity. More control. All in rubles.",
         development: "Interface in development",
+        backToLogin: "← Back to login",
 
+        // Login
+        loginLabel: "Account access",
         loginTitle: "Welcome back.",
         loginSubtitle: "Enter your credentials to continue.",
-        loginLabel: "Account access",
         email: "Email address",
         password: "Password",
         emailPlaceholder: "name@email.com",
@@ -94,6 +109,7 @@ const translations = {
         noAccount: "Don't have an account?",
         createAccount: "Create account",
 
+        // Registration
         registerLabel: "Join FALCONI-GIT",
         registerTitle: "Create your account.",
         registerSubtitle: "Enter your details to get started.",
@@ -117,6 +133,7 @@ const translations = {
         alreadyAccount: "Already have an account?",
         registerButton: "Create account",
 
+        // Validation
         emailRequired: "Enter your email address.",
         emailInvalid: "Enter a valid email address.",
         passwordRequired: "Enter your password.",
@@ -124,23 +141,35 @@ const translations = {
         usernameTooLong: "Username cannot exceed 40 characters.",
         passwordInvalid: "Password must meet all four requirements.",
         confirmRequired: "Confirm your password.",
+        passwordsDifferentError: "Passwords do not match.",
         termsRequired: "You must accept the terms to continue.",
 
+        // Messages
         loginSuccess: "Form validated. Real authentication will be added later.",
-        registerSuccess: "Details validated. Real registration will be available when the backend is implemented.",
+        registerSuccess: "Details validated. Real registration will be available after the backend is implemented.",
         recoveryPending: "Password recovery will be available soon."
     },
 
     ru: {
+        // Бренд
         brandTagline: "ВАШЕ ФИНАНСОВОЕ ПРОСТРАНСТВО В ₽",
+        brandTitleLine1: "Твои деньги.",
+        brandTitleLine2: "Твоё пространство.",
+        brandTitleLine3: "Твой контроль.",
+        brandDescription: "Простой и понятный способ управлять личными финансами, пока ты строишь свою жизнь в России.",
+        registerBrandLine1: "Начни сегодня.",
+        registerBrandLine2: "Наведи порядок.",
+        registerBrandLine3: "Развивайся завтра.",
+        registerBrandDescription: "Создай личное пространство для простого и удобного управления финансами.",
+        brandNote: "Твоё личное финансовое пространство.",
         brandFooter: "Больше ясности. Больше контроля. Всё в рублях.",
-        brandNote: "Ваше личное финансовое пространство.",
-        backToLogin: "← Вернуться ко входу",
         development: "Интерфейс в разработке",
+        backToLogin: "← Вернуться ко входу",
 
+        // Вход
+        loginLabel: "Вход в аккаунт",
         loginTitle: "С возвращением!",
         loginSubtitle: "Введите свои данные для продолжения.",
-        loginLabel: "Вход в аккаунт",
         email: "Электронная почта",
         password: "Пароль",
         emailPlaceholder: "name@email.com",
@@ -152,6 +181,7 @@ const translations = {
         noAccount: "Ещё нет аккаунта?",
         createAccount: "Создать аккаунт",
 
+        // Регистрация
         registerLabel: "Присоединяйтесь к FALCONI-GIT",
         registerTitle: "Создайте аккаунт.",
         registerSubtitle: "Заполните данные, чтобы начать.",
@@ -175,6 +205,7 @@ const translations = {
         alreadyAccount: "Уже есть аккаунт?",
         registerButton: "Создать аккаунт",
 
+        // Проверка
         emailRequired: "Введите адрес электронной почты.",
         emailInvalid: "Введите корректный адрес электронной почты.",
         passwordRequired: "Введите пароль.",
@@ -182,8 +213,10 @@ const translations = {
         usernameTooLong: "Имя пользователя не должно превышать 40 символов.",
         passwordInvalid: "Пароль должен соответствовать всем четырём требованиям.",
         confirmRequired: "Подтвердите пароль.",
+        passwordsDifferentError: "Пароли не совпадают.",
         termsRequired: "Необходимо принять условия использования.",
 
+        // Сообщения
         loginSuccess: "Форма проверена. Настоящая авторизация будет добавлена позже.",
         registerSuccess: "Данные проверены. Регистрация станет доступна после подключения сервера.",
         recoveryPending: "Восстановление пароля скоро появится."

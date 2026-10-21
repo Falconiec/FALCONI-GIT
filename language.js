@@ -1,88 +1,74 @@
 
 /*
-  FALCONI-GIT
-  Control de idiomas - v0.5
+ FALCONI-GIT
+ Control de idioma v0.5
 */
 
 const supportedLanguages = ["es", "en", "ru"];
 
-function getLanguage() {
+function getSavedLanguage() {
     try {
-        const saved = localStorage.getItem("falconi-language");
-        return supportedLanguages.includes(saved) ? saved : "es";
+        const value = localStorage.getItem("falconi-language");
+        return supportedLanguages.includes(value) ? value : "es";
     } catch {
         return "es";
     }
 }
 
-let currentLanguage = getLanguage();
+let currentLanguage = getSavedLanguage();
 
-// Obtener una traducción por clave
 function t(key) {
     const dictionary = translations[currentLanguage] || translations.es;
-    return dictionary[key] || translations.es[key] || key;
+    return dictionary[key] ?? translations.es[key] ?? key;
 }
 
-// Actualizar la interfaz
 function applyLanguage() {
-
     document.documentElement.lang = currentLanguage;
 
-    // Traducir textos visibles
     document.querySelectorAll("[data-i18n]").forEach(function (element) {
-        const key = element.dataset.i18n;
-        element.textContent = t(key);
+        element.textContent = t(element.dataset.i18n);
     });
 
-    // Traducir placeholders
     document.querySelectorAll("[data-i18n-placeholder]").forEach(function (element) {
-        const key = element.dataset.i18nPlaceholder;
-        element.placeholder = t(key);
+        element.placeholder = t(element.dataset.i18nPlaceholder);
     });
 
-    // Traducir etiquetas de accesibilidad
     document.querySelectorAll("[data-i18n-aria-label]").forEach(function (element) {
-        const key = element.dataset.i18nAriaLabel;
-        element.setAttribute("aria-label", t(key));
+        element.setAttribute(
+            "aria-label",
+            t(element.dataset.i18nAriaLabel)
+        );
     });
 
-    // Sincronizar selector
     const selector = document.getElementById("language");
 
     if (selector) {
         selector.value = currentLanguage;
     }
 
-    // Avisar a otras funciones de que cambió el idioma
     document.dispatchEvent(new CustomEvent("languageChanged"));
 }
 
-// Cambiar idioma
 function setLanguage(language) {
-
-    if (!supportedLanguages.includes(language)) {
-        return;
-    }
+    if (!supportedLanguages.includes(language)) return;
 
     currentLanguage = language;
 
     try {
         localStorage.setItem("falconi-language", language);
     } catch {
-        // La página puede funcionar sin guardar la preferencia.
+        // El selector funciona incluso sin almacenamiento.
     }
 
     applyLanguage();
 }
 
-// Inicializar
 document.addEventListener("DOMContentLoaded", function () {
-
     const selector = document.getElementById("language");
 
     if (selector) {
         selector.addEventListener("change", function () {
-            setLanguage(this.value);
+            setLanguage(selector.value);
         });
     }
 

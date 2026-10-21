@@ -1,171 +1,142 @@
 
-// ==========================================
-// FALCONI-GIT
-// LOGIN.JS - VERSION 0.3
-// ==========================================
+/*
+ FALCONI-GIT
+ Login multilingüe v0.5
+*/
 
-// Elementos del formulario
-
+// Elementos
 const loginForm = document.getElementById("loginForm");
-
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 
 const emailError = document.getElementById("emailError");
 const passwordError = document.getElementById("passwordError");
-
-const togglePassword = document.getElementById("togglePassword");
 const formStatus = document.getElementById("formStatus");
 
+const togglePassword = document.getElementById("togglePassword");
+const registerLink = document.getElementById("registerLink");
+const forgotLink = document.getElementById("forgotLink");
 
-// ==========================================
-// MOSTRAR Y OCULTAR CONTRASEÑA
-// ==========================================
+// Conservar las claves de los mensajes activos
+let emailErrorKey = "";
+let passwordErrorKey = "";
+let statusKey = "";
 
-togglePassword.addEventListener("click", function () {
+// Mostrar / ocultar contraseña
+function updatePasswordToggle() {
+    const isVisible = password.type === "text";
 
-    const isHidden = password.type === "password";
-
-    if (isHidden) {
-        password.type = "text";
-        togglePassword.textContent = "Ocultar";
-    } else {
-        password.type = "password";
-        togglePassword.textContent = "Mostrar";
-    }
-
-    togglePassword.setAttribute(
-        "aria-pressed",
-        String(isHidden)
-    );
-
+    togglePassword.textContent = t(isVisible ? "hide" : "show");
+    togglePassword.setAttribute("aria-pressed", String(isVisible));
     togglePassword.setAttribute(
         "aria-label",
-        isHidden
-            ? "Ocultar contraseña"
-            : "Mostrar contraseña"
+        t(isVisible ? "hide" : "show")
     );
+}
 
+togglePassword.addEventListener("click", function () {
+    password.type = password.type === "password"
+        ? "text"
+        : "password";
+
+    updatePasswordToggle();
 });
 
+// Mostrar errores
+function showLoginError(field, element, key) {
+    element.textContent = t(key);
+    field.setAttribute("aria-invalid", "true");
 
-// ==========================================
-// LIMPIAR ERRORES
-// ==========================================
+    if (field === email) emailErrorKey = key;
+    if (field === password) passwordErrorKey = key;
+}
 
-function clearErrors() {
-
+function clearLoginErrors() {
     emailError.textContent = "";
     passwordError.textContent = "";
     formStatus.textContent = "";
+
+    emailErrorKey = "";
+    passwordErrorKey = "";
+    statusKey = "";
 
     email.removeAttribute("aria-invalid");
     password.removeAttribute("aria-invalid");
 }
 
-
-// ==========================================
-// VALIDAR CORREO
-// ==========================================
-
 function validEmail(value) {
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    return emailPattern.test(value);
-
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-
-// ==========================================
-// ENVÍO DEL FORMULARIO
-// ==========================================
-
+// Validar formulario
 loginForm.addEventListener("submit", function (event) {
-
     event.preventDefault();
+    clearLoginErrors();
 
-    clearErrors();
+    let valid = true;
 
-    const emailValue = email.value.trim();
-    const passwordValue = password.value;
-
-    let hasError = false;
-
-    // Verificar correo electrónico
-
-    if (emailValue === "") {
-
-        emailError.textContent =
-            "Introduce tu correo electrónico.";
-
-        email.setAttribute("aria-invalid", "true");
-
-        hasError = true;
-
-    } else if (!validEmail(emailValue)) {
-
-        emailError.textContent =
-            "Introduce un correo válido.";
-
-        email.setAttribute("aria-invalid", "true");
-
-        hasError = true;
+    if (email.value.trim() === "") {
+        showLoginError(email, emailError, "emailRequired");
+        valid = false;
+    } else if (!validEmail(email.value.trim())) {
+        showLoginError(email, emailError, "emailInvalid");
+        valid = false;
     }
 
-    // Verificar contraseña
-
-    if (passwordValue === "") {
-
-        passwordError.textContent =
-            "Introduce tu contraseña.";
-
-        password.setAttribute("aria-invalid", "true");
-
-        hasError = true;
+    if (password.value === "") {
+        showLoginError(password, passwordError, "passwordRequired");
+        valid = false;
     }
 
-    // Si existen errores, detener el envío
+    if (!valid) return;
 
-    if (hasError) {
-        return;
-    }
-
-    // Demostración: todavía no existe backend
-
-    formStatus.textContent =
-        "Formulario validado. La autenticación real estará disponible más adelante.";
-
+    // No existe autenticación real todavía.
+    statusKey = "loginSuccess";
+    formStatus.textContent = t(statusKey);
 });
 
-
-// ==========================================
-// RECUPERAR CONTRASEÑA
-// ==========================================
-
-const forgotLink = document.getElementById("forgotLink");
-
-forgotLink.addEventListener("click", function (event) {
-
-    event.preventDefault();
-
-    formStatus.textContent =
-        "La recuperación de contraseña estará disponible próximamente.";
-
+// Borrar error al modificar el campo
+email.addEventListener("input", function () {
+    emailError.textContent = "";
+    emailErrorKey = "";
+    email.removeAttribute("aria-invalid");
 });
 
+password.addEventListener("input", function () {
+    passwordError.textContent = "";
+    passwordErrorKey = "";
+    password.removeAttribute("aria-invalid");
+});
 
-// ==========================================
-// CREAR CUENTA
-// ==========================================
-
-
-const registerLink = document.getElementById("registerLink");
-
+// Navegación al registro
 registerLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    window.location.href = "./register.html";
+});
 
+// Recuperación pendiente
+forgotLink.addEventListener("click", function (event) {
     event.preventDefault();
 
-    window.location.href = "./register.html";
-
+    statusKey = "recoveryPending";
+    formStatus.textContent = t(statusKey);
 });
+
+// Mantener mensajes traducidos cuando cambia el idioma
+document.addEventListener("languageChanged", function () {
+    updatePasswordToggle();
+
+    if (emailErrorKey) {
+        emailError.textContent = t(emailErrorKey);
+    }
+
+    if (passwordErrorKey) {
+        passwordError.textContent = t(passwordErrorKey);
+    }
+
+    if (statusKey) {
+        formStatus.textContent = t(statusKey);
+    }
+});
+
+updatePasswordToggle();
