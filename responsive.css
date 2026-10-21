@@ -1,0 +1,122 @@
+
+/* FALCONI-GIT - Diseño responsive */
+
+/* Tabletas */
+
+@media (max-width: 1024px) {
+
+    .login-container {
+        grid-template-columns: 45% 55%;
+    }
+
+    .brand-panel,
+    .auth-panel {
+        padding: 32px 6%;
+    }
+
+    .brand-content h1 {
+        font-size: 46px;
+    }
+
+    .finance-card {
+        max-width: 300px;
+    }
+}
+
+/* Teléfonos */
+
+@media (max-width: 767px) {
+
+    .login-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-panel {
+        padding: 24px;
+        background: var(--white);
+    }
+
+    .brand-header {
+        justify-content: flex-start;
+    }
+
+    .brand-logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .brand-content,
+    .brand-footer {
+        display: none;
+    }
+
+    .auth-panel {
+        flex: 1;
+        padding: 20px 24px 28px;
+    }
+
+    .language-selector {
+        margin-bottom: 30px;
+    }
+
+    .auth-content {
+        max-width: 440px;
+        padding: 20px 0;
+    }
+
+    .auth-heading h2 {
+        font-size: 32px;
+    }
+
+    .auth-heading p {
+        margin-bottom: 30px;
+    }
+
+    .form-group input {
+        height: 54px;
+    }
+
+    .login-button {
+        height: 54px;
+    }
+
+    .auth-footer {
+        margin-top: 40px;
+        font-size: 10px;
+    }
+}
+
+/* Teléfonos pequeños */
+
+@media (max-width: 360px) {
+
+    .brand-panel {
+        padding: 20px;
+    }
+
+    .auth-panel {
+        padding: 16px 20px 24px;
+    }
+
+    .auth-heading h2 {
+        font-size: 28px;
+    }
+
+    .brand-name {
+        font-size: 12px;
+    }
+}
+
+/* Usuarios que prefieren menos movimiento */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .finance-card {
+        transition: none;
+    }
+
+    .finance-card:hover {
+        transform: rotate(-8deg);
+    }
+}

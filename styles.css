@@ -1,0 +1,366 @@
+
+/* FALCONI-GIT - Estilos principales */
+
+:root {
+    --background: #f5f5f5;
+    --panel: #e8e8e8;
+    --text: #202020;
+    --muted: #777777;
+    --border: #d3d3d3;
+    --white: #ffffff;
+    --dark: #242424;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+button, input, select {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+/* Contenedor principal */
+
+.login-container {
+    display: grid;
+    grid-template-columns: 52% 48%;
+    min-height: 100vh;
+}
+
+/* Panel de identidad */
+
+.brand-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 42px 8%;
+    background: var(--panel);
+    overflow: hidden;
+}
+
+.brand-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.brand-content {
+    width: 100%;
+}
+
+.brand-label {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.brand-content h1 {
+    margin-top: 22px;
+    font-size: clamp(44px, 5vw, 76px);
+    line-height: 1.05;
+    letter-spacing: -3px;
+}
+
+.brand-description {
+    max-width: 390px;
+    margin-top: 22px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.brand-footer {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Tarjeta decorativa */
+
+.card-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 48px 0;
+}
+
+.finance-card {
+    position: relative;
+    width: min(100%, 350px);
+    aspect-ratio: 1.6;
+    overflow: hidden;
+    border-radius: 17px;
+    background: #292929;
+    transform: rotate(-8deg);
+    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.18);
+    transition: transform 0.3s ease;
+}
+
+.finance-card:hover {
+    transform: rotate(-3deg) translateY(-5px);
+}
+
+.card-pattern {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            135deg,
+            transparent 35%,
+            #606060 35%,
+            #606060 43%,
+            transparent 43%
+        ),
+        linear-gradient(
+            45deg,
+            transparent 53%,
+            #454545 53%,
+            #454545 71%,
+            transparent 71%
+        );
+}
+
+.card-chip {
+    position: absolute;
+    top: 28%;
+    left: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 38px;
+    height: 29px;
+    border: 1px solid #b7b7b7;
+    border-radius: 6px;
+    background: #b0b0b0;
+}
+
+.card-chip span {
+    width: 1px;
+    height: 100%;
+    background: #777;
+}
+
+.card-brand {
+    position: absolute;
+    right: 24px;
+    bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    color: white;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.card-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Panel de autenticación */
+
+.auth-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 42px 8%;
+    background: var(--white);
+}
+
+.language-selector {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.language-selector select {
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: transparent;
+}
+
+.auth-content {
+    width: 100%;
+    max-width: 420px;
+    margin: auto;
+    padding: 40px 0;
+}
+
+.auth-heading h2 {
+    font-size: clamp(30px, 3vw, 42px);
+    letter-spacing: -1.5px;
+}
+
+.auth-heading p {
+    margin-top: 12px;
+    margin-bottom: 36px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* Campos */
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    height: 52px;
+    padding: 0 15px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: var(--dark);
+    box-shadow: 0 0 0 2px #dddddd;
+}
+
+.form-group input[aria-invalid="true"] {
+    border-color: #a65d5d;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 92px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    border: none;
+    padding: 8px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.error-message {
+    display: block;
+    margin-top: 6px;
+    color: #963e3e;
+    font-size: 12px;
+}
+
+.error-message:empty {
+    display: none;
+}
+
+.form-options {
+    text-align: right;
+    margin-bottom: 28px;
+    font-size: 12px;
+}
+
+.login-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 52px;
+    padding: 0 18px;
+    background: var(--dark);
+    border: none;
+    border-radius: 9px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    opacity: 0.88;
+}
+
+.login-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.login-button span {
+    font-size: 23px;
+}
+
+.form-status {
+    margin-top: 14px;
+    font-size: 12px;
+}
+
+.form-status:empty {
+    display: none;
+}
+
+.register-section {
+    margin-top: 32px;
+    padding-top: 26px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 13px;
+}
+
+.register-section a {
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.auth-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* Accesibilidad */
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 3px;
+}
