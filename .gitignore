@@ -1,8 +1,18 @@
 
-node_modules/
+# FALCONI-GIT
+# Bases de datos privadas
 data/
+data-backup-v07/
+
+# Copias de seguridad
+server.v07.backup.txt
+
+# Archivos temporales
+*.log
 .env
 .env.*
-!.env.example
-*.log
+node_modules/
+
+# Archivos del sistema
 .DS_Store
+Thumbs.db
