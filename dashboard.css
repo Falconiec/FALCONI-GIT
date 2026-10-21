@@ -435,3 +435,34 @@ button, select {
     align-items: center;
     gap: 12px;
 }
+
+/*
+ Logo coherente con la identidad FALCONI
+ Dashboard y Movimientos
+*/
+
+.sidebar-brand .brand-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    color: #ffffff;
+
+    border-radius: 0;
+    box-shadow: none;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 35px;
+    font-weight: 700;
+    letter-spacing: -2px;
+}
+
+.topbar-brand .mini-logo {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+}
