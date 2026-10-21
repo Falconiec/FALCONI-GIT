@@ -608,3 +608,117 @@ async function startMovements() {
 }
 
 startMovements();
+
+/*
+ FG-RUBLE-VIEW-FIX-081
+
+ Correccion visual:
+ mostrar el simbolo del rublo
+ sin cambiar importes ni calculos.
+*/
+
+(() => {
+    "use strict";
+
+    function correctText(node) {
+
+        if (
+            node.nodeType !== Node.TEXT_NODE ||
+            !node.nodeValue.includes("RUB")
+        ) {
+            return;
+        }
+
+        const corrected = node.nodeValue.replace(
+            /\bRUB\b/g,
+            "₽"
+        );
+
+        if (corrected !== node.nodeValue) {
+            node.nodeValue = corrected;
+        }
+    }
+
+    function scan(node) {
+
+        if (node.nodeType === Node.TEXT_NODE) {
+            correctText(node);
+            return;
+        }
+
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+
+        const walker = document.createTreeWalker(
+            node,
+            NodeFilter.SHOW_TEXT
+        );
+
+        while (walker.nextNode()) {
+
+            const textNode = walker.currentNode;
+
+            if (
+                !textNode.parentElement?.closest(
+                    "script,style,textarea"
+                )
+            ) {
+                correctText(textNode);
+            }
+        }
+    }
+
+    function initialize() {
+
+        const area = document.querySelector(
+            ".main-column"
+        ) || document.body;
+
+        // Corregir importes ya mostrados.
+        scan(area);
+
+        // Corregir importes cuando la pagina
+        // actualiza movimientos o graficos.
+        const observer = new MutationObserver(
+            changes => {
+
+                for (const change of changes) {
+
+                    if (change.type === "characterData") {
+
+                        correctText(change.target);
+
+                    } else {
+
+                        for (const node of change.addedNodes) {
+                            scan(node);
+                        }
+
+                    }
+                }
+            }
+        );
+
+        observer.observe(area, {
+            subtree: true,
+            childList: true,
+            characterData: true
+        });
+    }
+
+    if (document.readyState === "loading") {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize,
+            { once: true }
+        );
+
+    } else {
+
+        initialize();
+
+    }
+
+})();

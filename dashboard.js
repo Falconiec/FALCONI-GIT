@@ -80,3 +80,5 @@ logoutButton.addEventListener("click", async function () {
 document.addEventListener("languageChanged", renderWelcome);
 
 loadDashboard();
+
+

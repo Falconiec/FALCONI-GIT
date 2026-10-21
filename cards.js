@@ -1,233 +1,474 @@
-const CARD_STORAGE_KEY = "falconi_git_cards_v1";
+"use strict";
 
-const cardForm = document.getElementById("cardForm");
-const cardAlias = document.getElementById("cardAlias");
-const cardLast4 = document.getElementById("cardLast4");
-const cardHolder = document.getElementById("cardHolder");
-const cardPreview = document.getElementById("cardPreview");
-const cardsList = document.getElementById("cardsList");
-const templatesGallery = document.getElementById("templatesGallery");
-const cardStatus = document.getElementById("cardStatus");
+(() => {
 
-function getCards() {
-    try {
-        const raw = localStorage.getItem(CARD_STORAGE_KEY);
-        if (!raw) return [];
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
-    } catch (error) {
-        return [];
-    }
-}
+    const $ = id => document.getElementById(id);
 
-function saveCards(cards) {
-    localStorage.setItem(CARD_STORAGE_KEY, JSON.stringify(cards));
-}
+    const form = $("cardForm");
+    const preview = $("cardPreview");
+    const gallery = $("templatesGallery");
+    const list = $("cardsList");
+    const status = $("cardStatus");
 
-function escapeHtml(text) {
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-function getSelectedVariant() {
-    const selected = document.querySelector('input[name="variant"]:checked');
-    return selected ? selected.value : "variant-1";
-}
-
-function createCardMarkup({
-    alias = "Principal",
-    last4 = "1204",
-    holder = "FALCONI-GIT",
-    variant = "variant-1"
-}) {
-    const safeAlias = escapeHtml(alias);
-    const safeLast4 = escapeHtml(last4);
-    const safeHolder = escapeHtml(holder);
-
-    const carbon = variant === "variant-3"
-        ? '<div class="fg-carbon"></div>'
-        : '';
-
-    return `
-        <div class="fg-card ${variant}">
-            <div class="fg-shape s1"></div>
-            <div class="fg-shape s2"></div>
-            <div class="fg-shape s3"></div>
-            ${carbon}
-
-            <div class="fg-brand-top">
-                <strong>F.</strong>
-                <span>FALCONI</span>
-            </div>
-
-            <div class="fg-chip"></div>
-
-            <div class="fg-number">4874 2479 2847 ${safeLast4}</div>
-
-            <div class="fg-valid">
-                <small>VALID<br>THRU</small>
-                <strong>08/28</strong>
-            </div>
-
-            <div class="fg-holder">${safeHolder}</div>
-            <div class="fg-brand-bottom">F.</div>
-        </div>
-    `;
-}
-
-function renderPreview() {
-    cardPreview.innerHTML = createCardMarkup({
-        alias: cardAlias.value.trim() || "Principal",
-        last4: cardLast4.value.trim() || "1204",
-        holder: cardHolder.value.trim() || "FALCONI-GIT",
-        variant: getSelectedVariant()
-    });
-}
-
-function renderTemplates() {
-    const templates = [
-        {
-            alias: "Variante 1 · Azul Plata",
-            last4: "1204",
-            holder: "FALCONI-GIT",
-            variant: "variant-1"
-        },
-        {
-            alias: "Variante 2 · Negro Titanio",
-            last4: "1204",
-            holder: "FALCONI-GIT",
-            variant: "variant-2"
-        },
-        {
-            alias: "Variante 3 · Azul Carbono",
-            last4: "1204",
-            holder: "FALCONI-GIT",
-            variant: "variant-3"
-        }
-    ];
-
-    templatesGallery.innerHTML = templates.map(template => `
-        <div class="saved-card-item">
-            ${createCardMarkup(template)}
-            <div class="saved-card-meta">
-                <div class="saved-card-text">
-                    <strong>${template.alias}</strong>
-                    <span>Plantilla disponible</span>
-                </div>
-            </div>
-        </div>
-    `).join("");
-}
-
-function renderSavedCards() {
-    const cards = getCards();
-
-    if (!cards.length) {
-        cardsList.innerHTML = `
-            <p class="saved-empty">
-                Aún no tienes tarjetas guardadas. Añade la primera.
-            </p>
-        `;
+    if (
+        !form ||
+        !preview ||
+        !gallery ||
+        !list ||
+        !status
+    ) {
         return;
     }
 
-    cardsList.innerHTML = cards.map(card => `
-        <div class="saved-card-item">
-            ${createCardMarkup(card)}
-            <div class="saved-card-meta">
-                <div class="saved-card-text">
-                    <strong>${escapeHtml(card.alias)}</strong>
-                    <span>Terminada en ${escapeHtml(card.last4)}</span>
+    const alias = $("cardAlias");
+    const last4 = $("cardLast4");
+    const holder = $("cardHolder");
+
+    const themes = [
+        ["variant-1", "Azul Original"],
+        ["variant-2", "Negro Titanio"],
+        ["variant-3", "Verde Esmeralda"]
+    ];
+
+    function safe(value) {
+        return String(value ?? "").replace(
+            /[&<>"']/g,
+            char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]
+        );
+    }
+
+    function selectedTheme() {
+        const radio = document.querySelector(
+            'input[name="variant"]:checked'
+        );
+
+        const value = radio?.value || "variant-1";
+
+        return themes.some(t => t[0] === value)
+            ? value
+            : "variant-1";
+    }
+
+    async function request(url, method = "GET", data) {
+
+        const response = await fetch(url, {
+            method,
+            credentials: "same-origin",
+
+            headers: data
+                ? {
+                    "Content-Type": "application/json"
+                }
+                : {},
+
+            body: data
+                ? JSON.stringify(data)
+                : undefined
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                result.error || "Error de servidor."
+            );
+        }
+
+        return result;
+    }
+
+    function cardHTML(card, demo = false) {
+
+        const variant = themes.some(
+            t => t[0] === card.variant
+        ) ? card.variant : "variant-1";
+
+        const digits = demo
+            ? "4874 2479 2847 1204"
+            : `•••• •••• •••• ${safe(card.last4 || "••••")}`;
+
+        return `
+            <div class="fg-card-scene fg-cardskin fg-cardskin--${variant}">
+                <div class="fg-premium-card">
+
+                    <div class="fg-card-metal"></div>
+                    <div class="fg-card-shine"></div>
+
+                    <div class="fg-card-content">
+
+                        <div class="fg-card-top">
+
+                            <div class="fg-card-chip"></div>
+
+                            <div class="fg-card-brand">
+                                <span class="fg-card-brand-symbol">
+                                    F.
+                                </span>
+
+                                <span class="fg-card-brand-name">
+                                    FALCONI
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="fg-card-number">
+                            ${digits}
+                        </div>
+
+                        <div class="fg-card-expiry">
+
+                            <span class="fg-card-expiry-label">
+                                FALCONI
+                            </span>
+
+                            <span class="fg-card-expiry-date">
+                                ₽
+                            </span>
+
+                        </div>
+
+                        <div class="fg-card-bottom">
+
+                            <span class="fg-card-holder">
+                                ${safe(card.holder || "FALCONI-GIT")}
+                            </span>
+
+                            <span class="fg-card-corner">
+                                F.
+                            </span>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    let cards = [];
+
+    function renderPreview() {
+
+        preview.innerHTML = cardHTML({
+            last4: last4.value.trim(),
+            holder: holder.value.trim() || "FALCONI-GIT",
+            variant: selectedTheme()
+        });
+    }
+
+    function renderTemplates() {
+
+        gallery.innerHTML = themes.map(
+            ([variant, name]) => `
+                <article class="saved-card-item">
+
+                    ${cardHTML({
+                        last4: "1204",
+                        holder: "FALCONI-GIT",
+                        variant
+                    }, true)}
+
+                    <div class="saved-card-meta">
+
+                        <strong>${safe(name)}</strong>
+
+                        <button
+                            type="button"
+                            class="fg-theme-button"
+                            data-theme="${variant}"
+                        >
+                            Elegir
+                        </button>
+
+                    </div>
+                </article>
+            `
+        ).join("");
+    }
+
+    function renderSaved() {
+
+        if (!cards.length) {
+
+            list.innerHTML = `
+                <p class="saved-empty">
+                    Todavía no tienes tarjetas en tu cuenta.
+                </p>
+            `;
+
+            return;
+        }
+
+        list.innerHTML = cards.map(card => `
+            <article class="saved-card-item">
+
+                ${cardHTML(card)}
+
+                <div class="saved-card-meta">
+
+                    <div class="saved-card-text">
+
+                        <strong>${safe(card.alias)}</strong>
+
+                        <span>
+                            •••• ${safe(card.last4)}
+                        </span>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="delete-card-button"
+                        data-card-id="${card.id}"
+                    >
+                        Eliminar
+                    </button>
+
                 </div>
 
-                <button
-                    class="delete-card-button"
-                    data-id="${card.id}"
-                    type="button"
-                >
-                    Eliminar
-                </button>
-            </div>
-        </div>
-    `).join("");
+            </article>
+        `).join("");
+    }
 
-    document.querySelectorAll(".delete-card-button").forEach(button => {
-        button.addEventListener("click", () => {
-            const id = button.dataset.id;
-            const cards = getCards().filter(card => card.id !== id);
-            saveCards(cards);
-            renderSavedCards();
-            cardStatus.textContent = "Tarjeta eliminada.";
-        });
-    });
-}
+    async function refresh() {
 
-function validateLast4(value) {
-    return /^[0-9]{4}$/.test(value);
-}
+        const result = await request(
+            "/api/wallet/cards"
+        );
 
-if (cardAlias) {
-    ["input", "change"].forEach(eventName => {
-        cardAlias.addEventListener(eventName, renderPreview);
-        cardLast4.addEventListener(eventName, renderPreview);
-        cardHolder.addEventListener(eventName, renderPreview);
-    });
+        cards = result.cards;
 
-    document.querySelectorAll('input[name="variant"]').forEach(input => {
-        input.addEventListener("change", renderPreview);
+        renderSaved();
+    }
+
+    gallery.addEventListener("click", event => {
+
+        const button = event.target.closest(
+            "button[data-theme]"
+        );
+
+        if (!button) {
+            return;
+        }
+
+        const radio = document.querySelector(
+            `input[name="variant"][value="${button.dataset.theme}"]`
+        );
+
+        if (radio) {
+            radio.checked = true;
+            renderPreview();
+        }
     });
 
-    cardLast4.addEventListener("input", () => {
-        cardLast4.value = cardLast4.value.replace(/\D/g, "").slice(0, 4);
+    last4.addEventListener("input", () => {
+
+        last4.value = last4.value
+            .replace(/\D/g, "")
+            .slice(0, 4);
+
         renderPreview();
     });
 
-    cardForm.addEventListener("submit", event => {
+    [alias, holder].forEach(input => {
+        input.addEventListener(
+            "input",
+            renderPreview
+        );
+    });
+
+    document.querySelectorAll(
+        'input[name="variant"]'
+    ).forEach(radio => {
+
+        radio.addEventListener(
+            "change",
+            renderPreview
+        );
+    });
+
+    form.addEventListener("submit", async event => {
+
         event.preventDefault();
 
-        const alias = cardAlias.value.trim();
-        const last4 = cardLast4.value.trim();
-        const holder = cardHolder.value.trim() || "FALCONI-GIT";
-        const variant = getSelectedVariant();
+        try {
 
-        if (alias.length < 2) {
-            cardStatus.textContent = "El alias debe tener al menos 2 caracteres.";
-            return;
+            await request(
+                "/api/wallet/cards",
+                "POST",
+                {
+                    alias: alias.value.trim(),
+                    last4: last4.value.trim(),
+                    holder: holder.value.trim(),
+                    variant: selectedTheme()
+                }
+            );
+
+            form.reset();
+
+            holder.value = "FALCONI-GIT";
+
+            renderPreview();
+
+            await refresh();
+
+            status.textContent =
+                "Tarjeta guardada en SQLite.";
+
+        } catch (error) {
+
+            status.textContent = error.message;
         }
-
-        if (!validateLast4(last4)) {
-            cardStatus.textContent = "Debes escribir exactamente 4 dígitos.";
-            return;
-        }
-
-        const cards = getCards();
-
-        cards.unshift({
-            id: String(Date.now()),
-            alias,
-            last4,
-            holder,
-            variant
-        });
-
-        saveCards(cards);
-        renderSavedCards();
-
-        cardStatus.textContent = "Tarjeta guardada correctamente.";
-
-        cardAlias.value = "";
-        cardLast4.value = "";
-        cardHolder.value = "FALCONI-GIT";
-        document.querySelector('input[name="variant"][value="variant-1"]').checked = true;
-
-        renderPreview();
     });
 
-    renderPreview();
+    list.addEventListener("click", async event => {
+
+        const button = event.target.closest(
+            "button[data-card-id]"
+        );
+
+        if (!button) {
+            return;
+        }
+
+        if (!confirm(
+            "¿Eliminar esta tarjeta? Los movimientos se conservarán."
+        )) {
+            return;
+        }
+
+        try {
+
+            await request(
+                `/api/wallet/cards/${Number(button.dataset.cardId)}`,
+                "DELETE"
+            );
+
+            await refresh();
+
+            status.textContent =
+                "Tarjeta eliminada.";
+
+        } catch (error) {
+
+            status.textContent = error.message;
+        }
+    });
+
+    // =====================================
+    // IMPORTACION VOLUNTARIA
+    // =====================================
+
+    const migration = document.createElement(
+        "button"
+    );
+
+    migration.type = "button";
+    migration.className = "fg-theme-button";
+
+    migration.textContent =
+        "Importar tarjetas antiguas del navegador";
+
+    migration.style.marginTop = "12px";
+
+    list.parentElement.append(migration);
+
+    migration.addEventListener("click", async () => {
+
+        let oldCards = [];
+
+        try {
+            oldCards = JSON.parse(
+                localStorage.getItem(
+                    "falconi_git_cards_v1"
+                ) || "[]"
+            );
+        } catch {
+            oldCards = [];
+        }
+
+        if (
+            !Array.isArray(oldCards) ||
+            !oldCards.length
+        ) {
+            status.textContent =
+                "No hay tarjetas antiguas.";
+            return;
+        }
+
+        if (!confirm(
+            "Estas tarjetas estaban guardadas en este navegador. ¿Confirmas que son tuyas y deseas importarlas?"
+        )) {
+            return;
+        }
+
+        let imported = 0;
+
+        try {
+
+            for (const card of oldCards) {
+
+                if (
+                    !card ||
+                    typeof card.alias !== "string" ||
+                    !/^\d{4}$/.test(card.last4) ||
+                    !themes.some(t => t[0] === card.variant)
+                ) {
+                    continue;
+                }
+
+                if (cards.some(current =>
+                    current.alias === card.alias &&
+                    current.last4 === card.last4 &&
+                    current.variant === card.variant
+                )) {
+                    continue;
+                }
+
+                await request(
+                    "/api/wallet/cards",
+                    "POST",
+                    {
+                        alias: card.alias.slice(0, 30),
+                        last4: card.last4,
+                        holder: String(
+                            card.holder || "FALCONI-GIT"
+                        ).slice(0, 24),
+                        variant: card.variant
+                    }
+                );
+
+                imported++;
+            }
+
+            await refresh();
+
+            status.textContent =
+                `Importadas ${imported} tarjetas.`;
+
+        } catch (error) {
+
+            await refresh();
+
+            status.textContent =
+                `Importación parcial: ${error.message}`;
+        }
+    });
+
     renderTemplates();
-    renderSavedCards();
-}
+    renderPreview();
+
+    refresh().catch(error => {
+        list.textContent =
+            "No se pudieron cargar las tarjetas: " +
+            error.message;
+    });
+
+})();

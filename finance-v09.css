@@ -1,0 +1,282 @@
+/* FALCONI-GIT v0.9 */
+
+.fg-finance-v09 {
+    margin: 36px 0 45px;
+    color: #0F1B2D;
+}
+
+.fgv09-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.fgv09-heading h2 {
+    margin: 5px 0 8px;
+    font-size: clamp(24px, 2.6vw, 33px);
+}
+
+.fgv09-eyebrow {
+    color: #1E3A8A;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+}
+
+.fgv09-heading-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fgv09-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.fgv09-stat {
+    background: #FFFFFF;
+    border: 1px solid #DFE8F3;
+    border-radius: 17px;
+    padding: 23px;
+    box-shadow: 0 10px 25px #0F1B2D0D;
+}
+
+.fgv09-stat span {
+    display: block;
+    margin-bottom: 13px;
+    color: #64748B;
+    font-size: 12px;
+}
+
+.fgv09-stat strong {
+    font-size: clamp(18px, 2vw, 26px);
+    font-variant-numeric: tabular-nums;
+}
+
+.fgv09-stat-main {
+    background: linear-gradient(
+        120deg,
+        #0F1B2D,
+        #1E3A8A
+    );
+}
+
+.fgv09-stat-main span,
+.fgv09-stat-main strong {
+    color: #FFFFFF;
+}
+
+.fgv09-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.fgv09-panel {
+    padding: 24px;
+    background: #FFFFFF;
+    border: 1px solid #DFE8F3;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px #0F1B2D0D;
+    margin-bottom: 16px;
+}
+
+.fgv09-panel h3 {
+    margin: 0 0 15px;
+    font-size: 19px;
+    color: #0F1B2D;
+}
+
+.fgv09-chart {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 50px;
+    height: 220px;
+    padding: 12px 0 20px;
+}
+
+.fgv09-bar-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+}
+
+.fgv09-bar-track {
+    display: flex;
+    align-items: flex-end;
+    height: 150px;
+    width: 80px;
+}
+
+.fgv09-bar {
+    width: 100%;
+    border-radius: 10px 10px 3px 3px;
+    transition: height .4s ease;
+}
+
+.fgv09-income {
+    background: linear-gradient(
+        #32C6B5,
+        #087F5B
+    );
+}
+
+.fgv09-expense {
+    background: linear-gradient(
+        #60A5FA,
+        #1E3A8A
+    );
+}
+
+.fgv09-category,
+.fgv09-budget-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid #EDF2F9;
+    font-size: 13px;
+}
+
+.fgv09-budget-row {
+    margin-bottom: 10px;
+}
+
+.fgv09-progress {
+    height: 7px;
+    background: #E8EEF6;
+    border-radius: 9px;
+    overflow: hidden;
+}
+
+.fgv09-progress > div {
+    height: 100%;
+    border-radius: 9px;
+}
+
+.fgv09-warning {
+    display: block;
+    margin-top: 6px;
+    color: #9B4C15;
+}
+
+.fgv09-link {
+    border: none;
+    background: transparent;
+    color: #1E3A8A;
+    cursor: pointer;
+}
+
+.fgv09-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.fgv09-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.fg-finance-v09 input,
+.fg-finance-v09 select {
+    min-width: 0;
+    padding: 11px;
+    border: 1px solid #D7E2F0;
+    border-radius: 11px;
+    background: #F8FAFF;
+}
+
+.fg-finance-v09 button:not(.fgv09-link) {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 11px;
+    background: #1E3A8A;
+    color: #FFFFFF;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.fgv09-form button {
+    grid-column: 1 / -1;
+}
+
+.fgv09-assign-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 13px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #E1E9F4;
+    border-radius: 12px;
+    background: #FAFCFF;
+}
+
+.fgv09-assign-row strong {
+    display: block;
+}
+
+.fgv09-assign-row small {
+    display: block;
+    color: #64748B;
+    margin-top: 5px;
+}
+
+.fgv09-status {
+    min-height: 20px;
+    color: #1E3A8A;
+    font-weight: 700;
+}
+
+.movement-summary .summary-box:last-child {
+    background: linear-gradient(
+        115deg,
+        #0F1B2D,
+        #1E3A8A
+    );
+    border-color: #365A9A;
+}
+
+.movement-summary .summary-box:last-child h2,
+.movement-summary .summary-box:last-child p {
+    color: #FFFFFF;
+}
+
+@media (max-width: 800px) {
+
+    .fgv09-stats,
+    .fgv09-columns,
+    .fgv09-form {
+        grid-template-columns: 1fr;
+    }
+
+    .fgv09-panel {
+        padding: 16px;
+    }
+
+    .fgv09-assign-row {
+        flex-wrap: wrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fgv09-bar {
+        transition: none;
+    }
+}

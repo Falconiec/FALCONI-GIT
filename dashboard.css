@@ -911,3 +911,231 @@ button, select {
         border-radius: 15px;
     }
 }
+
+/*
+=========================================
+ FG-WALLET-HERO-081
+ FALCONI-GIT - MIS TARJETAS DASHBOARD
+=========================================
+*/
+
+/* CONTENEDOR PRINCIPAL */
+
+.dashboard-content .welcome-card.fg-wallet-active {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 0;
+
+    padding: clamp(22px, 3vw, 38px);
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    background: linear-gradient(
+        125deg,
+        #0F1B2D,
+        #152944 58%,
+        #1E3A8A
+    );
+}
+
+/* Mantener contenido sobre los reflejos */
+
+.dashboard-content
+.welcome-card.fg-wallet-active > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ENCABEZADO */
+
+.fg-wallet-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+    gap: 18px;
+
+    margin-bottom: 28px;
+}
+
+.fg-wallet-copy {
+    max-width: 650px;
+}
+
+.fg-wallet-eyebrow {
+    display: block;
+
+    margin-bottom: 15px;
+
+    color: #B9D4F3;
+
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: .14em;
+}
+
+.dashboard-content
+.fg-wallet-heading h2 {
+    color: #FFFFFF;
+
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.2;
+
+    margin: 0 0 12px;
+}
+
+.dashboard-content
+.fg-wallet-heading p {
+    margin: 0;
+
+    color: #D5E4F4;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ENLACE ADMINISTRAR */
+
+.fg-wallet-manage {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 11px 16px;
+
+    border: 1px solid rgba(224, 242, 254, .25);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, .09);
+    color: #FFFFFF !important;
+
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+
+    transition:
+        background-color .25s ease,
+        transform .25s ease;
+}
+
+.fg-wallet-manage:hover {
+    background: rgba(96, 165, 250, .20);
+    transform: translateY(-2px);
+}
+
+/* LISTA HORIZONTAL */
+
+.fg-wallet-list {
+    display: flex;
+    gap: 20px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: #607FA9 transparent;
+
+    padding: 5px 3px 19px;
+}
+
+/* CADA TARJETA */
+
+.fg-wallet-item {
+    flex: 0 0 clamp(250px, 30%, 350px);
+    min-width: 0;
+
+    scroll-snap-align: start;
+}
+
+.fg-wallet-item .fg-card-scene {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+/* IDENTIDAD DE CADA TARJETA */
+
+.fg-wallet-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    flex-wrap: wrap;
+    gap: 8px;
+
+    padding: 13px 2px 0;
+}
+
+.fg-wallet-meta strong {
+    color: #FFFFFF;
+    font-size: 13px;
+}
+
+.fg-wallet-meta small {
+    color: #BCD1EA;
+    font-size: 12px;
+}
+
+/* SIN TARJETAS */
+
+.fg-wallet-empty {
+    padding: 23px;
+
+    border: 1px dashed rgba(224, 242, 254, .3);
+    border-radius: 15px;
+
+    background: rgba(255, 255, 255, .045);
+}
+
+.fg-wallet-empty p {
+    margin: 0 0 14px;
+    color: #D5E4F4;
+}
+
+.fg-wallet-empty a {
+    color: #FFFFFF;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* MOVILES */
+
+@media (max-width: 767px) {
+
+    .dashboard-content
+    .welcome-card.fg-wallet-active {
+        padding: 22px 16px;
+        border-radius: 16px;
+    }
+
+    .fg-wallet-heading {
+        flex-direction: column;
+    }
+
+    .fg-wallet-item {
+        flex-basis: min(83vw, 320px);
+    }
+
+    .fg-wallet-list {
+        gap: 14px;
+    }
+}
+
+/* ACCESIBILIDAD */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .fg-wallet-manage {
+        transition: none !important;
+    }
+
+    .fg-wallet-list {
+        scroll-behavior: auto;
+    }
+}

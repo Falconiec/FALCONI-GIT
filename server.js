@@ -417,6 +417,21 @@ function parseMovement(body) {
 let dummyHash;
 
 async function api(req, res, pathname) {
+
+    if (await walletV09.handle(
+        req,
+        res,
+        pathname,
+        {
+            db,
+            getSession,
+            sendJSON,
+            readJSON,
+            limited
+        }
+    )) {
+        return;
+    }
     const method = req.method;
 
     // ------------------------------------
@@ -1019,7 +1034,17 @@ async function api(req, res, pathname) {
 
 // AquÃ­ estaban las rutas que faltaban.
 
+const walletV09 = require("./wallet-v09-api.js");
+
+walletV09.install(db);
+
+// FALCONI-WALLET-V09-INSTALLED
+
 const FILES = new Map([
+
+    ["/wallet-dashboard-v09.js", "wallet-dashboard-v09.js"],
+    ["/finance-v09.js", "finance-v09.js"],
+    ["/finance-v09.css", "finance-v09.css"],
 
     // PÃGINAS
     ["/", "index.html"],

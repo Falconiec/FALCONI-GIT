@@ -458,3 +458,317 @@
         font-size: 15px;
     }
 }
+
+/*
+==========================================
+ FG-CARDS-DESIGNS-082
+ FALCONI-GIT
+
+ Tres diseños:
+ 1. Azul Original
+ 2. Negro Titanio
+ 3. Verde Esmeralda
+==========================================
+*/
+
+/* REUTILIZAR LA TARJETA PREMIUM DEL LOGIN */
+
+.fg-cardskin {
+    width: 100%;
+    max-width: 520px;
+    margin: 0;
+
+    container-type: inline-size;
+}
+
+.fg-cardskin .fg-premium-card {
+    width: 100%;
+    aspect-ratio: 1.586;
+    border-radius: 5.2%;
+
+    box-shadow:
+        0 19px 29px -12px rgba(15, 27, 45, .38),
+        0 5px 10px rgba(0, 0, 0, .15),
+        inset 0 1px rgba(255, 255, 255, .34);
+
+    transition:
+        transform .28s ease,
+        box-shadow .28s ease;
+}
+
+.fg-cardskin .fg-card-content {
+    padding: 7% 8%;
+}
+
+.fg-cardskin .fg-card-number {
+    font-size: clamp(10px, 4.1cqw, 22px);
+    letter-spacing: .01em;
+}
+
+.fg-cardskin .fg-card-holder {
+    font-size: clamp(9px, 3.2cqw, 17px);
+    letter-spacing: .07em;
+}
+
+.fg-cardskin .fg-card-brand-symbol {
+    font-size: clamp(15px, 6cqw, 30px);
+}
+
+.fg-cardskin .fg-card-brand-name {
+    font-size: clamp(5px, 1.8cqw, 9px);
+}
+
+.fg-cardskin .fg-card-expiry-date {
+    font-size: clamp(10px, 3.5cqw, 17px);
+}
+
+.fg-cardskin .fg-card-corner {
+    font-size: clamp(17px, 6cqw, 30px);
+}
+
+/* ======================================
+   VARIANTE 1: AZUL ORIGINAL
+
+   Conserva la geometría y los materiales
+   definidos en premium-card.css.
+====================================== */
+
+.fg-cardskin--variant-1 .fg-premium-card {
+    background: linear-gradient(
+        130deg,
+        #0A1425 0%,
+        #0F1B2D 42%,
+        #1E3A8A 100%
+    );
+}
+
+/* ======================================
+   VARIANTE 2: NEGRO TITANIO
+====================================== */
+
+.fg-cardskin--variant-2 .fg-premium-card {
+    background: linear-gradient(
+        128deg,
+        #08090C 0%,
+        #17191D 47%,
+        #30333A 100%
+    );
+
+    border-color: #98A0AC;
+}
+
+.fg-cardskin--variant-2
+.fg-card-metal::before {
+    background: linear-gradient(
+        90deg,
+        #424850,
+        #E2E4E8 43%,
+        #858B94
+    );
+}
+
+.fg-cardskin--variant-2
+.fg-card-metal::after {
+    background:
+        repeating-linear-gradient(
+            110deg,
+            rgba(255, 255, 255, .08) 0 1px,
+            transparent 1px 5px
+        ),
+        linear-gradient(
+            90deg,
+            #191B20,
+            #4D5159 43%,
+            #101216
+        );
+
+    border-color: #B0B5BE;
+
+    box-shadow:
+        -8px 0 20px rgba(0, 0, 0, .58);
+}
+
+.fg-cardskin--variant-2
+.fg-card-shine::before {
+    background: linear-gradient(
+        90deg,
+        #4B5058,
+        #D9DCE1 45%,
+        #686F79
+    );
+}
+
+.fg-cardskin--variant-2
+.fg-card-shine::after {
+    background: radial-gradient(
+        ellipse at 45% 20%,
+        rgba(255, 255, 255, .18),
+        transparent 54%
+    );
+}
+
+/* ======================================
+   VARIANTE 3: VERDE ESMERALDA
+====================================== */
+
+.fg-cardskin--variant-3 .fg-premium-card {
+    background: linear-gradient(
+        128deg,
+        #071015 0%,
+        #091C1B 43%,
+        #064739 100%
+    );
+
+    border-color: #94B7B0;
+}
+
+.fg-cardskin--variant-3
+.fg-card-metal::before {
+    background: linear-gradient(
+        90deg,
+        #5B6670,
+        #EBEFF0 45%,
+        #909DA3
+    );
+}
+
+.fg-cardskin--variant-3
+.fg-card-metal::after {
+    background:
+        repeating-linear-gradient(
+            110deg,
+            rgba(200, 255, 237, .075) 0 1px,
+            transparent 1px 5px
+        ),
+        linear-gradient(
+            90deg,
+            #002D28,
+            #087862 44%,
+            #002B26
+        );
+
+    border-left-color: #93C9BB;
+    border-right-color: #76AFA1;
+}
+
+.fg-cardskin--variant-3
+.fg-card-shine::before {
+    background: linear-gradient(
+        90deg,
+        #465D5B,
+        #D8E2DF 42%,
+        #587C73
+    );
+}
+
+.fg-cardskin--variant-3
+.fg-card-shine::after {
+    background: radial-gradient(
+        ellipse at 45% 20%,
+        rgba(183, 255, 229, .17),
+        transparent 54%
+    );
+}
+
+/* ======================================
+   TARJETAS GUARDADAS
+====================================== */
+
+.card-preview-wrap,
+.templates-gallery,
+.saved-cards-list {
+    min-width: 0;
+}
+
+.saved-card-item {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.saved-card-item .fg-cardskin {
+    margin-inline: auto;
+}
+
+.saved-card-meta {
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.fg-theme-button {
+    cursor: pointer;
+
+    border: 1px solid #BDD3EC;
+    border-radius: 10px;
+
+    background: #F1F6FC;
+    color: #1E3A8A;
+
+    padding: 9px 13px;
+    font-weight: 700;
+}
+
+.fg-theme-button:hover {
+    background: #E0F2FE;
+}
+
+/* ======================================
+   BOTÓN GUARDAR TARJETA
+====================================== */
+
+.card-form-actions button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 18px;
+
+    color: #FFFFFF;
+    font: inherit;
+    font-weight: 700;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #1E3A8A;
+
+    box-shadow:
+        0 8px 17px rgba(30, 58, 138, .15);
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease;
+}
+
+.card-form-actions button:hover {
+    background: #254898;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 25px rgba(30, 58, 138, .24);
+}
+
+/* ======================================
+   TRANSICIONES
+====================================== */
+
+@media (hover: hover) and (pointer: fine) {
+    .fg-cardskin .fg-premium-card:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 25px 38px -14px rgba(15, 27, 45, .45),
+            inset 0 1px rgba(255, 255, 255, .34);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fg-cardskin .fg-premium-card,
+    .card-form-actions button {
+        transition: none;
+    }
+}
