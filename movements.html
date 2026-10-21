@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0F1B2D">
+
+    <title>Movimientos | FALCONI-GIT</title>
+
+    <link rel="stylesheet" href="./dashboard.css">
+    <link rel="stylesheet" href="./movements.css">
+
+    <script src="./translations.js" defer></script>
+    <script src="./language.js" defer></script>
+    <script src="./movements.js" defer></script>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            <span class="brand-icon">F.</span>
+            <strong>FALCONI-GIT</strong>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="./dashboard.html"
+               class="nav-item"
+               data-i18n="dashboardHome">
+                Inicio
+            </a>
+
+            <a href="./movements.html"
+               class="nav-item active"
+               data-i18n="dashboardMovements">
+                Movimientos
+            </a>
+
+            <span class="nav-item disabled"
+                  data-i18n="dashboardCategories">
+                Categorías
+            </span>
+
+            <span class="nav-item disabled"
+                  data-i18n="dashboardGoals">
+                Metas
+            </span>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button id="logoutButton"
+                    class="logout-button"
+                    data-i18n="logout">
+                Cerrar sesión
+            </button>
+        </div>
+    </aside>
+
+    <div class="main-column">
+
+        <header class="topbar">
+            <div class="topbar-brand">
+                <span class="mini-logo">F.</span>
+                <span>FALCONI-GIT</span>
+            </div>
+
+            <div class="topbar-actions">
+                <select id="language" aria-label="Idioma">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                </select>
+
+                <span class="avatar" id="avatar">F</span>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+
+            <div class="welcome">
+                <p class="eyebrow">FALCONI-GIT · ₽</p>
+
+                <h1 data-i18n="movementsTitle">
+                    Mis movimientos
+                </h1>
+
+                <p data-i18n="movementsSubtitle">
+                    Organiza tus ingresos y gastos en rublos.
+                </p>
+            </div>
+
+            <!-- RESUMEN -->
+            <section class="movement-summary">
+
+                <article class="summary-box">
+                    <p data-i18n="totalIncome">Ingresos</p>
+                    <h2 id="totalIncome">0,00 ₽</h2>
+                </article>
+
+                <article class="summary-box">
+                    <p data-i18n="totalExpenses">Gastos</p>
+                    <h2 id="totalExpenses">0,00 ₽</h2>
+                </article>
+
+                <article class="summary-box">
+                    <p data-i18n="currentBalance">Balance</p>
+                    <h2 id="currentBalance">0,00 ₽</h2>
+                </article>
+
+            </section>
+
+            <!-- NUEVO MOVIMIENTO -->
+            <section class="movement-panel">
+
+                <h2 data-i18n="newMovement">
+                    Nuevo movimiento
+                </h2>
+
+                <form id="movementForm">
+
+                    <div class="movement-field">
+                        <label for="type"
+                               data-i18n="movementType">
+                            Tipo de movimiento
+                        </label>
+
+                        <select id="type" required>
+                            <option value="expense"
+                                    data-i18n="expense">
+                                Gasto
+                            </option>
+                            <option value="income"
+                                    data-i18n="income">
+                                Ingreso
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="movement-field">
+                        <label for="description"
+                               data-i18n="movementDescription">
+                            Descripción
+                        </label>
+
+                        <input
+                            type="text"
+                            id="description"
+                            maxlength="100"
+                            placeholder="Ej. Supermercado"
+                            data-i18n-placeholder="descriptionPlaceholder"
+                            required
+                        >
+                    </div>
+
+                    <div class="movement-form-grid">
+
+                        <div class="movement-field">
+                            <label for="amount"
+                                   data-i18n="movementAmount">
+                                Cantidad (₽)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="amount"
+                                min="0.01"
+                                max="999999999.99"
+                                step="0.01"
+                                placeholder="0.00"
+                                required
+                            >
+                        </div>
+
+                        <div class="movement-field">
+                            <label for="category"
+                                   data-i18n="movementCategory">
+                                Categoría
+                            </label>
+
+                            <select id="category" required>
+                                <option value="food"
+                                        data-i18n="categoryFood">
+                                    Alimentación
+                                </option>
+                                <option value="transport"
+                                        data-i18n="categoryTransport">
+                                    Transporte
+                                </option>
+                                <option value="housing"
+                                        data-i18n="categoryHousing">
+                                    Vivienda
+                                </option>
+                                <option value="study"
+                                        data-i18n="categoryStudy">
+                                    Estudios
+                                </option>
+                                <option value="salary"
+                                        data-i18n="categorySalary">
+                                    Salario
+                                </option>
+                                <option value="other"
+                                        data-i18n="categoryOther">
+                                    Otros
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <button type="submit"
+                            class="movement-submit"
+                            id="saveMovement">
+                        <span data-i18n="saveMovement">
+                            Guardar movimiento
+                        </span>
+                        <span aria-hidden="true">→</span>
+                    </button>
+
+                    <p id="movementStatus"
+                       class="movement-status"
+                       role="status"></p>
+                </form>
+            </section>
+
+            <!-- HISTORIAL -->
+            <section class="movement-panel history-panel">
+                <h2 data-i18n="movementHistory">
+                    Historial de movimientos
+                </h2>
+
+                <div id="movementList" class="movement-list">
+                </div>
+
+                <p id="emptyMovements"
+                   class="empty-message"
+                   data-i18n="emptyMovements">
+                    Todavía no tienes movimientos registrados.
+                </p>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

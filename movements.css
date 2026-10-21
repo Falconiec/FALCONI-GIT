@@ -1,0 +1,212 @@
+
+/*
+ FALCONI-GIT v0.7
+ Módulo de movimientos
+*/
+
+.movement-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 35px;
+}
+
+.summary-box {
+    min-width: 0;
+    padding: 24px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+}
+
+.summary-box p {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.summary-box h2 {
+    margin: 0;
+    font-size: clamp(19px, 2vw, 29px);
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.movement-panel {
+    margin-top: 28px;
+    padding: 30px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: white;
+}
+
+.movement-panel h2 {
+    margin: 0 0 24px;
+    font-size: 21px;
+}
+
+.movement-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 20px;
+}
+
+.movement-field label {
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.movement-field input,
+.movement-field select {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+    padding: 0 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #FCFDFF;
+    color: var(--navy);
+    outline: none;
+}
+
+.movement-field input:focus,
+.movement-field select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(96,165,250,.15);
+}
+
+.movement-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.movement-submit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 54px;
+    padding: 0 20px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.movement-submit:hover {
+    background: var(--navy);
+}
+
+.movement-submit:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.movement-status {
+    margin: 14px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.movement-status:empty {
+    display: none;
+}
+
+/* HISTORIAL */
+
+.movement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.movement-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.movement-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--ice);
+    color: var(--blue);
+    border-radius: 12px;
+    font-size: 20px;
+}
+
+.movement-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.movement-info strong {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.movement-info small {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+}
+
+.movement-amount {
+    font-weight: 750;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.movement-delete {
+    border: 1px solid var(--border);
+    background: transparent;
+    border-radius: 9px;
+    padding: 9px;
+    cursor: pointer;
+    color: var(--muted);
+}
+
+.movement-delete:hover {
+    color: #B42332;
+}
+
+.empty-message {
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center;
+    padding: 35px 10px;
+}
+
+@media (max-width: 767px) {
+    .movement-summary {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .movement-form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .movement-panel {
+        padding: 22px 18px;
+    }
+
+    .movement-item {
+        flex-wrap: wrap;
+    }
+
+    .movement-amount {
+        margin-left: 56px;
+    }
+}
