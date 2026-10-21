@@ -443,3 +443,92 @@ Object.assign(translations.en, {
 Object.assign(translations.ru, {
     openMovements: "Открыть операции →"
 });
+
+/*
+==========================================
+ FALCONI-GIT v0.8
+ Traducciones de Financial Control
+ Español / Inglés / Ruso
+==========================================
+*/
+
+// ESPAÑOL
+
+Object.assign(translations.es, {
+    financialOverview: "Resumen financiero",
+    chartDescription: "Comparación de ingresos y gastos registrados.",
+
+    editMovement: "Editar",
+    updateMovement: "Actualizar movimiento",
+    cancelEdit: "Cancelar edición",
+    movementUpdated: "Movimiento actualizado correctamente.",
+
+    searchAndFilters: "Buscar y filtrar",
+    searchMovement: "Buscar movimiento",
+    searchPlaceholder: "Descripción...",
+
+    allTypes: "Todos",
+    allCategories: "Todas",
+
+    startDate: "Desde",
+    endDate: "Hasta",
+
+    clearFilters: "Limpiar filtros",
+
+    noFilterResults:
+        "No se encontraron movimientos con estos filtros."
+});
+
+// ENGLISH
+
+Object.assign(translations.en, {
+    financialOverview: "Financial overview",
+    chartDescription: "Comparison of recorded income and expenses.",
+
+    editMovement: "Edit",
+    updateMovement: "Update transaction",
+    cancelEdit: "Cancel editing",
+    movementUpdated: "Transaction updated successfully.",
+
+    searchAndFilters: "Search and filters",
+    searchMovement: "Search transaction",
+    searchPlaceholder: "Description...",
+
+    allTypes: "All",
+    allCategories: "All",
+
+    startDate: "From",
+    endDate: "To",
+
+    clearFilters: "Clear filters",
+
+    noFilterResults:
+        "No transactions match these filters."
+});
+
+// РУССКИЙ
+
+Object.assign(translations.ru, {
+    financialOverview: "Финансовый обзор",
+    chartDescription: "Сравнение доходов и расходов.",
+
+    editMovement: "Изменить",
+    updateMovement: "Обновить операцию",
+    cancelEdit: "Отменить редактирование",
+    movementUpdated: "Операция успешно обновлена.",
+
+    searchAndFilters: "Поиск и фильтры",
+    searchMovement: "Найти операцию",
+    searchPlaceholder: "Описание...",
+
+    allTypes: "Все",
+    allCategories: "Все",
+
+    startDate: "От",
+    endDate: "До",
+
+    clearFilters: "Сбросить фильтры",
+
+    noFilterResults:
+        "По заданным фильтрам операции не найдены."
+});
