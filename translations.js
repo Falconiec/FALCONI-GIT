@@ -428,3 +428,18 @@ Object.assign(translations.ru, {
     deleteMovement: "Удалить операцию",
     confirmDelete: "Удалить эту операцию?"
 });
+
+// FALCONI-GIT v0.7
+// Traducción del enlace a Movimientos
+
+Object.assign(translations.es, {
+    openMovements: "Abrir movimientos →"
+});
+
+Object.assign(translations.en, {
+    openMovements: "Open transactions →"
+});
+
+Object.assign(translations.ru, {
+    openMovements: "Открыть операции →"
+});
