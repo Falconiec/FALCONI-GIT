@@ -1,9 +1,11 @@
 
+// ==========================================
 // FALCONI-GIT
-// Login - Versión 0.1
-// Prototipo: todavía no existe autenticación real.
+// LOGIN.JS - VERSION 0.3
+// ==========================================
 
-// Obtener elementos del HTML
+// Elementos del formulario
+
 const loginForm = document.getElementById("loginForm");
 
 const email = document.getElementById("email");
@@ -15,20 +17,22 @@ const passwordError = document.getElementById("passwordError");
 const togglePassword = document.getElementById("togglePassword");
 const formStatus = document.getElementById("formStatus");
 
-const submitButton = loginForm.querySelector(
-    'button[type="submit"]'
-);
 
-// Mostrar y ocultar contraseña
+// ==========================================
+// MOSTRAR Y OCULTAR CONTRASEÑA
+// ==========================================
+
 togglePassword.addEventListener("click", function () {
 
     const isHidden = password.type === "password";
 
-    password.type = isHidden ? "text" : "password";
-
-    togglePassword.textContent = isHidden
-        ? "Ocultar"
-        : "Mostrar";
+    if (isHidden) {
+        password.type = "text";
+        togglePassword.textContent = "Ocultar";
+    } else {
+        password.type = "password";
+        togglePassword.textContent = "Mostrar";
+    }
 
     togglePassword.setAttribute(
         "aria-pressed",
@@ -37,12 +41,18 @@ togglePassword.addEventListener("click", function () {
 
     togglePassword.setAttribute(
         "aria-label",
-        isHidden ? "Ocultar contraseña" : "Mostrar contraseña"
+        isHidden
+            ? "Ocultar contraseña"
+            : "Mostrar contraseña"
     );
 
 });
 
-// Limpiar los errores anteriores
+
+// ==========================================
+// LIMPIAR ERRORES
+// ==========================================
+
 function clearErrors() {
 
     emailError.textContent = "";
@@ -53,17 +63,26 @@ function clearErrors() {
     password.removeAttribute("aria-invalid");
 }
 
-// Validar correo electrónico
-function isValidEmail(value) {
 
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+// ==========================================
+// VALIDAR CORREO
+// ==========================================
+
+function validEmail(value) {
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return emailPattern.test(value);
 
 }
 
-// Validar el formulario
+
+// ==========================================
+// ENVÍO DEL FORMULARIO
+// ==========================================
+
 loginForm.addEventListener("submit", function (event) {
 
-    // Evita recargar la página
     event.preventDefault();
 
     clearErrors();
@@ -71,65 +90,96 @@ loginForm.addEventListener("submit", function (event) {
     const emailValue = email.value.trim();
     const passwordValue = password.value;
 
-    let valid = true;
+    let hasError = false;
 
-    // Comprobar correo
+    // Verificar correo electrónico
+
     if (emailValue === "") {
 
-        emailError.textContent = "Introduce tu correo.";
+        emailError.textContent =
+            "Introduce tu correo electrónico.";
+
         email.setAttribute("aria-invalid", "true");
 
-        valid = false;
+        hasError = true;
 
-    } else if (!isValidEmail(emailValue)) {
+    } else if (!validEmail(emailValue)) {
 
-        emailError.textContent = "Introduce un correo válido.";
+        emailError.textContent =
+            "Introduce un correo válido.";
+
         email.setAttribute("aria-invalid", "true");
 
-        valid = false;
+        hasError = true;
     }
 
-    // Comprobar contraseña
+    // Verificar contraseña
+
     if (passwordValue === "") {
 
-        passwordError.textContent = "Introduce tu contraseña.";
+        passwordError.textContent =
+            "Introduce tu contraseña.";
+
         password.setAttribute("aria-invalid", "true");
 
-        valid = false;
+        hasError = true;
     }
 
-    if (!valid) {
+    // Si existen errores, detener el envío
+
+    if (hasError) {
         return;
     }
 
-    // Simulación de envío del formulario
-    submitButton.disabled = true;
-    submitButton.textContent = "Verificando...";
+    // Demostración: todavía no existe backend
 
     formStatus.textContent =
         "Formulario validado. La autenticación real estará disponible más adelante.";
 
-    // Restaurar botón (sin simular un acceso exitoso)
-    submitButton.disabled = false;
-    submitButton.innerHTML =
-        'Iniciar sesión <span aria-hidden="true">→</span>';
 });
 
-// Funciones que se desarrollarán en etapas posteriores
-document.getElementById("forgotPassword")
-    .addEventListener("click", function (event) {
 
-        event.preventDefault();
+// ==========================================
+// RECUPERAR CONTRASEÑA
+// ==========================================
 
-        formStatus.textContent =
-            "La recuperación de contraseña estará disponible próximamente.";
-    });
+const forgotLink = document.getElementById("forgotLink");
 
-document.getElementById("registerLink")
-    .addEventListener("click", function (event) {
+forgotLink.addEventListener("click", function (event) {
 
-        event.preventDefault();
+    event.preventDefault();
 
-        formStatus.textContent =
-            "El registro de usuarios estará disponible próximamente.";
-    });
+    formStatus.textContent =
+        "La recuperación de contraseña estará disponible próximamente.";
+
+});
+
+
+// ==========================================
+// CREAR CUENTA
+// ==========================================
+
+const registerLink = document.getElementById("registerLink");
+
+registerLink.addEventListener("click", function (event) {
+
+    event.preventDefault();
+
+    formStatus.textContent =
+        "El registro de usuarios estará disponible próximamente.";
+
+});
+
+
+// ==========================================
+// SELECTOR DE IDIOMA
+// ==========================================
+
+const languageSelect = document.getElementById("language");
+
+languageSelect.addEventListener("change", function () {
+
+    formStatus.textContent =
+        "La traducción de la interfaz se incorporará próximamente.";
+
+});

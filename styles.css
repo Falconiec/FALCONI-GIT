@@ -1,13 +1,22 @@
-/* FALCONI-GIT - Estilos principales */
+
+/* ========================================
+   FALCONI-GIT
+   CSS PRINCIPAL - LOGIN
+   ======================================== */
+
 :root {
-    --background: #f5f5f5;
-    --panel: #e8e8e8;
-    --text: #202020;
-    --muted: #777777;
-    --border: #d3d3d3;
-    --white: #ffffff;
-    --dark: #242424;
+    --navy: #0F1B2D;
+    --blue: #1E3A8A;
+    --accent: #60A5FA;
+    --ice: #E0F2FE;
+    --light: #F8FAFF;
+    --white: #FFFFFF;
+    --muted: #68758A;
+    --border: #DDE5F0;
+    --error: #B42332;
 }
+
+/* CONFIGURACIÓN GLOBAL */
 
 * {
     margin: 0;
@@ -17,271 +26,463 @@
 
 body {
     min-height: 100vh;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--background);
-    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    -webkit-font-smoothing: antialiased;
 }
 
-button, input, select {
+button,
+input,
+select {
     font: inherit;
 }
 
-a {
-    color: inherit;
+button,
+a,
+select {
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Contenedor principal */
+/* ESTRUCTURA PRINCIPAL */
 
-.login-container {
+.page {
     display: grid;
-    grid-template-columns: 52% 48%;
+    grid-template-columns: 53% 47%;
     min-height: 100vh;
 }
 
-/* Panel de identidad */
+/* ========================================
+   PANEL IZQUIERDO
+   ======================================== */
 
 .brand-panel {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 42px 8%;
-    background: var(--panel);
+    min-height: 100vh;
+    padding: 36px clamp(30px, 6vw, 100px);
     overflow: hidden;
+    color: var(--white);
+    background: var(--navy);
 }
+
+.brand-panel::before {
+    content: "";
+    position: absolute;
+    width: 550px;
+    height: 550px;
+    right: -280px;
+    top: 15%;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.brand-panel::after {
+    content: "";
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    right: -160px;
+    top: 28%;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* LOGO */
 
 .brand-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 13px;
+    position: relative;
+    z-index: 1;
 }
 
-.brand-logo {
-    width: 42px;
-    height: 42px;
+.logo-box {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: var(--white);
+    overflow: hidden;
+}
+
+.logo-box img {
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
 
-.brand-name {
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 2px;
+.logo-fallback {
+    display: none;
+    color: var(--navy);
+    font-family: Georgia, serif;
+    font-size: 31px;
 }
+
+.brand-name {
+    font-size: 17px;
+    font-weight: 750;
+    letter-spacing: 1.5px;
+}
+
+/* TEXTOS DE MARCA */
 
 .brand-content {
+    position: relative;
+    z-index: 1;
     width: 100%;
+    max-width: 620px;
+    margin: 45px 0;
 }
 
-.brand-label {
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 15px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 100px;
     font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 1.4px;
+    font-weight: 650;
+    color: var(--ice);
 }
 
-.brand-content h1 {
-    margin-top: 22px;
-    font-size: clamp(44px, 5vw, 76px);
-    line-height: 1.05;
-    letter-spacing: -3px;
+.eyebrow-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.brand-title {
+    max-width: 560px;
+    margin-top: 30px;
+    font-size: clamp(43px, 4.8vw, 70px);
+    line-height: 1.06;
+    font-weight: 700;
+    letter-spacing: -2.5px;
+}
+
+.brand-title span {
+    color: var(--accent);
 }
 
 .brand-description {
-    max-width: 390px;
-    margin-top: 22px;
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--muted);
+    max-width: 430px;
+    margin-top: 24px;
+    color: #B6C5DB;
+    font-size: 16px;
+    line-height: 1.8;
 }
 
-.brand-footer {
-    font-size: 12px;
-    color: var(--muted);
-}
+/* ========================================
+   TARJETA DECORATIVA
+   ======================================== */
 
-/* Tarjeta decorativa */
-
-.card-wrapper {
-    display: flex;
-    justify-content: center;
-    padding: 48px 0;
+.card-stage {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    margin-top: 55px;
+    padding: 18px 0 25px;
+    perspective: 1000px;
 }
 
 .finance-card {
     position: relative;
-    width: min(100%, 350px);
-    aspect-ratio: 1.6;
+    width: min(100%, 390px);
+    aspect-ratio: 1.64;
     overflow: hidden;
-    border-radius: 17px;
-    background: #292929;
-    transform: rotate(-8deg);
-    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.18);
-    transition: transform 0.3s ease;
+    border-radius: 19px;
+
+    background: linear-gradient(
+        130deg,
+        #1F2937 0%,
+        #111827 58%,
+        #202B42 100%
+    );
+
+    box-shadow:
+        0 35px 60px rgba(0,0,0,.38),
+        inset 0 1px rgba(255,255,255,.18);
+
+    transform: rotate(-7deg);
+    transition: transform .35s ease;
+    isolation: isolate;
 }
 
 .finance-card:hover {
-    transform: rotate(-3deg) translateY(-5px);
+    transform: rotate(-2deg) translateY(-6px);
 }
 
-.card-pattern {
+.card-diagonal-one {
+    position: absolute;
+    width: 145px;
+    height: 180%;
+    top: -40%;
+    left: 42%;
+    transform: rotate(43deg);
+
+    background: linear-gradient(
+        90deg,
+        #27374A,
+        #607087 48%,
+        #27374A
+    );
+
+    opacity: .78;
+}
+
+.card-diagonal-two {
+    position: absolute;
+    width: 48px;
+    height: 180%;
+    top: -40%;
+    left: 54%;
+    transform: rotate(43deg);
+
+    background: linear-gradient(
+        90deg,
+        #8FA2B9,
+        #D0DBE7,
+        #6E809A
+    );
+
+    opacity: .75;
+}
+
+.card-texture {
     position: absolute;
     inset: 0;
-    background:
-        linear-gradient(
-            135deg,
-            transparent 35%,
-            #606060 35%,
-            #606060 43%,
-            transparent 43%
-        ),
-        linear-gradient(
-            45deg,
-            transparent 53%,
-            #454545 53%,
-            #454545 71%,
-            transparent 71%
-        );
+
+    background: repeating-linear-gradient(
+        125deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,.025) 4px
+    );
 }
 
 .card-chip {
     position: absolute;
-    top: 28%;
+    top: 27%;
     left: 10%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 38px;
-    height: 29px;
-    border: 1px solid #b7b7b7;
-    border-radius: 6px;
-    background: #b0b0b0;
+    width: 43px;
+    height: 33px;
+    border: 1px solid #A8B0BB;
+    border-radius: 7px;
+
+    background: linear-gradient(
+        135deg,
+        #E1E4E8,
+        #99A4B2
+    );
+
+    overflow: hidden;
 }
 
-.card-chip span {
+.card-chip::before {
+    content: "";
+    position: absolute;
+    left: 45%;
+    top: 0;
     width: 1px;
     height: 100%;
-    background: #777;
+    background: #6B7889;
 }
 
-.card-brand {
+.card-chip::after {
+    content: "";
     position: absolute;
-    right: 24px;
-    bottom: 22px;
+    left: 0;
+    top: 47%;
+    width: 100%;
+    height: 1px;
+    background: #6B7889;
+}
+
+.card-mark {
+    position: absolute;
+    right: 28px;
+    bottom: 25px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 5px;
-    color: white;
-    font-size: 11px;
-    letter-spacing: 2px;
+    gap: 2px;
 }
 
-.card-logo {
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-    background: white;
-    border-radius: 50%;
+.card-mark strong {
+    font-family: Georgia, serif;
+    font-size: 35px;
+    font-weight: 400;
+    color: var(--white);
 }
 
-/* Panel de autenticación */
+.card-mark span {
+    font-size: 10px;
+    letter-spacing: 2.3px;
+    font-weight: 700;
+    color: var(--ice);
+}
+
+.card-note {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 26px;
+    font-size: 12px;
+    color: #AABBD2;
+}
+
+.card-note svg {
+    flex-shrink: 0;
+}
+
+.brand-footer {
+    position: relative;
+    z-index: 1;
+    color: #90A3BE;
+    font-size: 12px;
+    letter-spacing: .2px;
+}
+
+/* ========================================
+   PANEL DERECHO
+   ======================================== */
 
 .auth-panel {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 42px 8%;
+    min-height: 100vh;
+    padding: 36px clamp(28px, 5vw, 80px);
     background: var(--white);
 }
 
-.language-selector {
+.auth-top {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
 }
 
-.language-selector select {
-    padding: 8px;
+.language-select {
     border: 1px solid var(--border);
-    border-radius: 6px;
-    background: transparent;
+    border-radius: 10px;
+    background: var(--white);
+    padding: 11px 13px;
+    color: var(--navy);
+    font-size: 12px;
+    cursor: pointer;
 }
 
 .auth-content {
     width: 100%;
     max-width: 420px;
-    margin: auto;
-    padding: 40px 0;
+    margin: 60px auto;
 }
 
-.auth-heading h2 {
-    font-size: clamp(30px, 3vw, 42px);
+.auth-label {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+}
+
+.auth-title {
+    margin-top: 14px;
+    font-size: clamp(32px, 3vw, 43px);
+    line-height: 1.2;
     letter-spacing: -1.5px;
 }
 
-.auth-heading p {
+.auth-description {
     margin-top: 12px;
-    margin-bottom: 36px;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.6;
 }
 
-/* Campos */
+/* FORMULARIO */
+
+.login-form {
+    margin-top: 40px;
+}
 
 .form-group {
-    margin-bottom: 22px;
+    margin-bottom: 23px;
 }
 
-.form-group label {
+.form-label {
     display: block;
     margin-bottom: 10px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 650;
 }
 
-.form-group input {
+.form-input {
     width: 100%;
-    height: 52px;
-    padding: 0 15px;
+    height: 54px;
+    padding: 0 16px;
     border: 1px solid var(--border);
-    border-radius: 9px;
-    background: white;
+    border-radius: 11px;
+    background: #FCFDFF;
+    color: var(--navy);
+    font-size: 14px;
     outline: none;
+
+    transition:
+        border-color .2s,
+        box-shadow .2s;
 }
 
-.form-group input:focus {
-    border-color: var(--dark);
-    box-shadow: 0 0 0 2px #dddddd;
+.form-input::placeholder {
+    color: #98A3B3;
 }
 
-.form-group input[aria-invalid="true"] {
-    border-color: #a65d5d;
+.form-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(96,165,250,.17);
 }
 
-.password-wrapper {
+.form-input[aria-invalid="true"] {
+    border-color: var(--error);
+}
+
+/* CONTRASEÑA */
+
+.password-field {
     position: relative;
 }
 
-.password-wrapper input {
-    padding-right: 92px;
+.password-field .form-input {
+    padding-right: 88px;
 }
 
 .password-toggle {
     position: absolute;
     top: 50%;
-    right: 8px;
+    right: 9px;
     transform: translateY(-50%);
     border: none;
-    padding: 8px;
     background: transparent;
-    cursor: pointer;
+    padding: 10px;
+    color: var(--blue);
     font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
 }
 
 .error-message {
     display: block;
-    margin-top: 6px;
-    color: #963e3e;
+    margin-top: 7px;
+    color: var(--error);
     font-size: 12px;
 }
 
@@ -289,76 +490,218 @@ a {
     display: none;
 }
 
-.form-options {
-    text-align: right;
-    margin-bottom: 28px;
-    font-size: 12px;
+/* ENLACES */
+
+.forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -7px;
+    margin-bottom: 29px;
 }
 
-.login-button {
+.text-link {
+    color: var(--blue);
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.text-link:hover {
+    text-decoration: underline;
+}
+
+/* BOTÓN PRINCIPAL */
+
+.submit-button {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 52px;
-    padding: 0 18px;
-    background: var(--dark);
+    height: 56px;
+    padding: 0 20px;
     border: none;
-    border-radius: 9px;
-    color: white;
+    border-radius: 11px;
+    background: var(--blue);
+    color: var(--white);
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
+
+    transition:
+        background .2s,
+        transform .2s;
 }
 
-.login-button:hover {
-    opacity: 0.88;
+.submit-button:hover {
+    background: var(--navy);
+    transform: translateY(-1px);
 }
 
-.login-button:disabled {
-    opacity: 0.55;
+.submit-button:disabled {
+    opacity: .6;
     cursor: not-allowed;
+    transform: none;
 }
 
-.login-button span {
+.submit-arrow {
     font-size: 23px;
+    font-weight: 400;
 }
 
 .form-status {
-    margin-top: 14px;
-    font-size: 12px;
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.6;
 }
 
 .form-status:empty {
     display: none;
 }
 
-.register-section {
-    margin-top: 32px;
-    padding-top: 26px;
-    border-top: 1px solid var(--border);
-    text-align: center;
-    font-size: 13px;
-}
+/* REGISTRO */
 
-.register-section a {
-    font-weight: 700;
-    margin-left: 5px;
+.register-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 35px;
+    padding-top: 27px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
 }
 
 .auth-footer {
     display: flex;
     justify-content: space-between;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: #95A0AF;
     font-size: 11px;
-    color: var(--muted);
 }
 
-/* Accesibilidad */
+/* ACCESIBILIDAD */
 
-button:focus-visible,
 a:focus-visible,
+button:focus-visible,
 select:focus-visible {
-    outline: 2px solid var(--dark);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
+}
+
+/* ========================================
+   RESPONSIVE - TABLET
+   ======================================== */
+
+@media (max-width: 1100px) {
+
+    .page {
+        grid-template-columns: 48% 52%;
+    }
+
+    .brand-panel,
+    .auth-panel {
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+
+    .brand-title {
+        font-size: 48px;
+    }
+
+    .finance-card {
+        width: min(100%, 330px);
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MÓVIL
+   ======================================== */
+
+@media (max-width: 767px) {
+
+    .page {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-panel {
+        min-height: auto;
+        padding: 25px 24px;
+    }
+
+    .brand-header {
+        gap: 10px;
+    }
+
+    .logo-box {
+        width: 39px;
+        height: 39px;
+    }
+
+    .brand-name {
+        font-size: 14px;
+    }
+
+    .brand-content,
+    .brand-footer {
+        display: none;
+    }
+
+    .auth-panel {
+        min-height: calc(100vh - 89px);
+        min-height: calc(100dvh - 89px);
+        padding: 22px 24px 30px;
+    }
+
+    .auth-content {
+        margin: 35px auto 55px;
+    }
+
+    .auth-title {
+        font-size: 34px;
+    }
+
+    .login-form {
+        margin-top: 32px;
+    }
+
+    .auth-footer {
+        margin-top: 30px;
+    }
+}
+
+/* MÓVILES PEQUEÑOS */
+
+@media (max-width: 380px) {
+
+    .brand-panel {
+        padding: 20px;
+    }
+
+    .auth-panel {
+        padding: 20px;
+    }
+
+    .auth-title {
+        font-size: 30px;
+    }
+
+    .auth-content {
+        margin-top: 25px;
+    }
+}
+
+/* REDUCIR ANIMACIONES */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+    }
 }

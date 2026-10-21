@@ -1,6 +1,8 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,664 +10,11 @@
 
     <title>FALCONI-GIT | Iniciar sesión</title>
 
-    <style>
-        /* ========================================
-           FALCONI-GIT
-           Versión 0.2 - Login
-           ======================================== */
-
-        :root {
-            --navy: #0F1B2D;
-            --blue: #1E3A8A;
-            --accent: #60A5FA;
-            --ice: #E0F2FE;
-            --light: #F8FAFF;
-            --white: #FFFFFF;
-            --muted: #68758A;
-            --border: #DDE5F0;
-            --error: #B42332;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: var(--light);
-            color: var(--navy);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        button, input, select {
-            font: inherit;
-        }
-
-        button, a, select {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .page {
-            display: grid;
-            grid-template-columns: 53% 47%;
-            min-height: 100vh;
-        }
-
-        /* ========================================
-           PANEL IZQUIERDO
-           ======================================== */
-
-        .brand-panel {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 100vh;
-            padding: 36px clamp(30px, 6vw, 100px);
-            overflow: hidden;
-            color: var(--white);
-            background: var(--navy);
-        }
-
-        .brand-panel::before {
-            content: "";
-            position: absolute;
-            width: 550px;
-            height: 550px;
-            right: -280px;
-            top: 15%;
-            border: 1px solid rgba(255,255,255,.09);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .brand-panel::after {
-            content: "";
-            position: absolute;
-            width: 340px;
-            height: 340px;
-            right: -160px;
-            top: 28%;
-            border: 1px solid rgba(255,255,255,.07);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .brand-header {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-box {
-            width: 48px;
-            height: 48px;
-            display: grid;
-            place-items: center;
-            border-radius: 13px;
-            background: var(--white);
-            overflow: hidden;
-        }
-
-        .logo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .logo-fallback {
-            display: none;
-            color: var(--navy);
-            font-family: Georgia, serif;
-            font-size: 31px;
-        }
-
-        .brand-name {
-            font-size: 17px;
-            font-weight: 750;
-            letter-spacing: 1.5px;
-        }
-
-        .brand-content {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 620px;
-            margin: 45px 0;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            padding: 10px 15px;
-            border: 1px solid rgba(255,255,255,.16);
-            border-radius: 100px;
-            font-size: 11px;
-            letter-spacing: 1.4px;
-            font-weight: 650;
-            color: var(--ice);
-        }
-
-        .eyebrow-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--accent);
-        }
-
-        .brand-title {
-            max-width: 560px;
-            margin-top: 30px;
-            font-size: clamp(43px, 4.8vw, 70px);
-            line-height: 1.06;
-            font-weight: 700;
-            letter-spacing: -2.5px;
-        }
-
-        .brand-title span {
-            color: var(--accent);
-        }
-
-        .brand-description {
-            max-width: 430px;
-            margin-top: 24px;
-            color: #B6C5DB;
-            font-size: 16px;
-            line-height: 1.8;
-        }
-
-        /* ========================================
-           TARJETA DECORATIVA
-           ======================================== */
-
-        .card-stage {
-            position: relative;
-            width: 100%;
-            max-width: 440px;
-            margin-top: 55px;
-            padding: 18px 0 25px;
-            perspective: 1000px;
-        }
-
-        .finance-card {
-            position: relative;
-            width: min(100%, 390px);
-            aspect-ratio: 1.64;
-            overflow: hidden;
-            border-radius: 19px;
-            background: linear-gradient(
-                130deg,
-                #1F2937 0%,
-                #111827 58%,
-                #202B42 100%
-            );
-            box-shadow:
-                0 35px 60px rgba(0,0,0,.38),
-                inset 0 1px rgba(255,255,255,.18);
-            transform: rotate(-7deg);
-            transition: transform .35s ease;
-            isolation: isolate;
-        }
-
-        .finance-card:hover {
-            transform: rotate(-2deg) translateY(-6px);
-        }
-
-        .card-diagonal-one {
-            position: absolute;
-            width: 145px;
-            height: 180%;
-            top: -40%;
-            left: 42%;
-            transform: rotate(43deg);
-            background: linear-gradient(
-                90deg,
-                #27374A,
-                #607087 48%,
-                #27374A
-            );
-            opacity: .78;
-        }
-
-        .card-diagonal-two {
-            position: absolute;
-            width: 48px;
-            height: 180%;
-            top: -40%;
-            left: 54%;
-            transform: rotate(43deg);
-            background: linear-gradient(
-                90deg,
-                #8FA2B9,
-                #D0DBE7,
-                #6E809A
-            );
-            opacity: .75;
-        }
-
-        .card-texture {
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                125deg,
-                transparent 0px,
-                transparent 3px,
-                rgba(255,255,255,.025) 4px
-            );
-        }
-
-        .card-chip {
-            position: absolute;
-            top: 27%;
-            left: 10%;
-            width: 43px;
-            height: 33px;
-            border: 1px solid #A8B0BB;
-            border-radius: 7px;
-            background: linear-gradient(
-                135deg,
-                #E1E4E8,
-                #99A4B2
-            );
-            overflow: hidden;
-        }
-
-        .card-chip::before {
-            content: "";
-            position: absolute;
-            left: 45%;
-            top: 0;
-            width: 1px;
-            height: 100%;
-            background: #6B7889;
-        }
-
-        .card-chip::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 47%;
-            width: 100%;
-            height: 1px;
-            background: #6B7889;
-        }
-
-        .card-mark {
-            position: absolute;
-            right: 28px;
-            bottom: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-        }
-
-        .card-mark strong {
-            font-family: Georgia, serif;
-            font-size: 35px;
-            font-weight: 400;
-            color: var(--white);
-        }
-
-        .card-mark span {
-            font-size: 10px;
-            letter-spacing: 2.3px;
-            font-weight: 700;
-            color: var(--ice);
-        }
-
-        .card-note {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            margin-top: 26px;
-            font-size: 12px;
-            color: #AABBD2;
-        }
-
-        .card-note svg {
-            flex-shrink: 0;
-        }
-
-        .brand-footer {
-            position: relative;
-            z-index: 1;
-            color: #90A3BE;
-            font-size: 12px;
-            letter-spacing: .2px;
-        }
-
-        /* ========================================
-           PANEL DERECHO
-           ======================================== */
-
-        .auth-panel {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 100vh;
-            padding: 36px clamp(28px, 5vw, 80px);
-            background: var(--white);
-        }
-
-        .auth-top {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .language-select {
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: var(--white);
-            padding: 11px 13px;
-            color: var(--navy);
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .auth-content {
-            width: 100%;
-            max-width: 420px;
-            margin: 60px auto;
-        }
-
-        .auth-label {
-            color: var(--blue);
-            font-size: 12px;
-            font-weight: 750;
-            letter-spacing: 1.6px;
-            text-transform: uppercase;
-        }
-
-        .auth-title {
-            margin-top: 14px;
-            font-size: clamp(32px, 3vw, 43px);
-            line-height: 1.2;
-            letter-spacing: -1.5px;
-        }
-
-        .auth-description {
-            margin-top: 12px;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .login-form {
-            margin-top: 40px;
-        }
-
-        .form-group {
-            margin-bottom: 23px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 13px;
-            font-weight: 650;
-        }
-
-        .form-input {
-            width: 100%;
-            height: 54px;
-            padding: 0 16px;
-            border: 1px solid var(--border);
-            border-radius: 11px;
-            background: #FCFDFF;
-            color: var(--navy);
-            font-size: 14px;
-            outline: none;
-            transition: border-color .2s, box-shadow .2s;
-        }
-
-        .form-input::placeholder {
-            color: #98A3B3;
-        }
-
-        .form-input:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(96,165,250,.17);
-        }
-
-        .form-input[aria-invalid="true"] {
-            border-color: var(--error);
-        }
-
-        .password-field {
-            position: relative;
-        }
-
-        .password-field .form-input {
-            padding-right: 88px;
-        }
-
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            right: 9px;
-            transform: translateY(-50%);
-            border: none;
-            background: transparent;
-            padding: 10px;
-            color: var(--blue);
-            font-size: 12px;
-            font-weight: 650;
-            cursor: pointer;
-        }
-
-        .error-message {
-            display: block;
-            margin-top: 7px;
-            color: var(--error);
-            font-size: 12px;
-        }
-
-        .error-message:empty {
-            display: none;
-        }
-
-        .forgot-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: -7px;
-            margin-bottom: 29px;
-        }
-
-        .text-link {
-            color: var(--blue);
-            font-size: 13px;
-            font-weight: 650;
-            text-decoration: none;
-        }
-
-        .text-link:hover {
-            text-decoration: underline;
-        }
-
-        .submit-button {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            height: 56px;
-            padding: 0 20px;
-            border: none;
-            border-radius: 11px;
-            background: var(--blue);
-            color: var(--white);
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background .2s, transform .2s;
-        }
-
-        .submit-button:hover {
-            background: var(--navy);
-            transform: translateY(-1px);
-        }
-
-        .submit-button:disabled {
-            opacity: .6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .submit-arrow {
-            font-size: 23px;
-            font-weight: 400;
-        }
-
-        .form-status {
-            margin-top: 16px;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .form-status:empty {
-            display: none;
-        }
-
-        .register-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-top: 35px;
-            padding-top: 27px;
-            border-top: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .auth-footer {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            color: #95A0AF;
-            font-size: 11px;
-        }
-
-        /* Accesibilidad */
-
-        a:focus-visible,
-        button:focus-visible,
-        select:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
-        }
-
-        /* ========================================
-           RESPONSIVE
-           ======================================== */
-
-        @media (max-width: 1100px) {
-            .page {
-                grid-template-columns: 48% 52%;
-            }
-
-            .brand-panel,
-            .auth-panel {
-                padding-left: 35px;
-                padding-right: 35px;
-            }
-
-            .brand-title {
-                font-size: 48px;
-            }
-
-            .finance-card {
-                width: min(100%, 330px);
-            }
-        }
-
-        @media (max-width: 767px) {
-            .page {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .brand-panel {
-                min-height: auto;
-                padding: 25px 24px;
-            }
-
-            .brand-header {
-                gap: 10px;
-            }
-
-            .logo-box {
-                width: 39px;
-                height: 39px;
-            }
-
-            .brand-name {
-                font-size: 14px;
-            }
-
-            .brand-content,
-            .brand-footer {
-                display: none;
-            }
-
-            .auth-panel {
-                min-height: calc(100vh - 89px);
-                min-height: calc(100dvh - 89px);
-                padding: 22px 24px 30px;
-            }
-
-            .auth-content {
-                margin: 35px auto 55px;
-            }
-
-            .auth-title {
-                font-size: 34px;
-            }
-
-            .login-form {
-                margin-top: 32px;
-            }
-
-            .auth-footer {
-                margin-top: 30px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .brand-panel {
-                padding: 20px;
-            }
-
-            .auth-panel {
-                padding: 20px;
-            }
-
-            .auth-title {
-                font-size: 30px;
-            }
-
-            .auth-content {
-                margin-top: 25px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                transition: none !important;
-                animation: none !important;
-            }
-        }
-    </style>
+    <!-- Conexión con CSS -->
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <!-- Conexión con JavaScript -->
+    <script src="./js/login.js" defer></script>
 </head>
 
 <body>
@@ -677,12 +26,14 @@
 
             <header class="brand-header">
                 <div class="logo-box">
+
                     <img
-                        src="assets/images/logo.png"
+                        src="./assets/images/logo.png"
                         alt=""
                         id="brandLogo"
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
                     >
+
                     <span class="logo-fallback">F.</span>
                 </div>
 
@@ -708,12 +59,14 @@
                     tu vida en Rusia.
                 </p>
 
+                <!-- TARJETA DECORATIVA -->
                 <div class="card-stage">
 
-                    <!-- Tarjeta exclusivamente decorativa -->
-                    <div class="finance-card"
-                         role="img"
-                         aria-label="Tarjeta decorativa de FALCONI-GIT sin datos bancarios">
+                    <div
+                        class="finance-card"
+                        role="img"
+                        aria-label="Tarjeta decorativa FALCONI-GIT"
+                    >
 
                         <div class="card-diagonal-one"></div>
                         <div class="card-diagonal-two"></div>
@@ -729,12 +82,16 @@
                     </div>
 
                     <div class="card-note">
-                        <svg width="16" height="16"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.7"
-                             aria-hidden="true">
+
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            aria-hidden="true"
+                        >
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                             <path d="m9 12 2 2 4-4"/>
                         </svg>
@@ -756,6 +113,7 @@
         <section class="auth-panel">
 
             <header class="auth-top">
+
                 <select
                     class="language-select"
                     id="language"
@@ -765,6 +123,7 @@
                     <option value="en">English</option>
                     <option value="ru">Русский</option>
                 </select>
+
             </header>
 
             <div class="auth-content">
@@ -785,11 +144,14 @@
 
                 </div>
 
-                <form id="loginForm"
-                      class="login-form"
-                      novalidate>
+                <!-- FORMULARIO -->
+                <form
+                    id="loginForm"
+                    class="login-form"
+                    novalidate
+                >
 
-                    <!-- Correo electrónico -->
+                    <!-- CORREO -->
                     <div class="form-group">
 
                         <label class="form-label" for="email">
@@ -815,7 +177,7 @@
 
                     </div>
 
-                    <!-- Contraseña -->
+                    <!-- CONTRASEÑA -->
                     <div class="form-group">
 
                         <label class="form-label" for="password">
@@ -855,19 +217,33 @@
 
                     </div>
 
+                    <!-- RECUPERAR CONTRASEÑA -->
                     <div class="forgot-row">
-                        <a href="#" class="text-link" id="forgotLink">
+
+                        <a
+                            href="#"
+                            class="text-link"
+                            id="forgotLink"
+                        >
                             ¿Olvidaste tu contraseña?
                         </a>
+
                     </div>
 
+                    <!-- BOTÓN -->
                     <button
                         class="submit-button"
                         type="submit"
                         id="submitButton"
                     >
+
                         <span>Iniciar sesión</span>
-                        <span class="submit-arrow" aria-hidden="true">→</span>
+
+                        <span
+                            class="submit-arrow"
+                            aria-hidden="true"
+                        >→</span>
+
                     </button>
 
                     <p
@@ -878,140 +254,34 @@
 
                 </form>
 
+                <!-- REGISTRO -->
                 <div class="register-area">
+
                     <span>¿Aún no tienes cuenta?</span>
 
-                    <a href="#" class="text-link" id="registerLink">
+                    <a
+                        href="#"
+                        class="text-link"
+                        id="registerLink"
+                    >
                         Crear cuenta
                     </a>
+
                 </div>
 
             </div>
 
             <footer class="auth-footer">
+
                 <span>© 2026 FALCONI-GIT</span>
+
                 <span>Interfaz en desarrollo</span>
+
             </footer>
 
         </section>
 
     </main>
-
-    <script>
-        // ======================================
-        // FALCONI-GIT - JAVASCRIPT
-        // Validación de demostración
-        // ======================================
-
-        const loginForm = document.getElementById("loginForm");
-        const email = document.getElementById("email");
-        const password = document.getElementById("password");
-
-        const emailError = document.getElementById("emailError");
-        const passwordError = document.getElementById("passwordError");
-
-        const togglePassword = document.getElementById("togglePassword");
-        const formStatus = document.getElementById("formStatus");
-
-        // Mostrar u ocultar contraseña
-        togglePassword.addEventListener("click", function () {
-
-            const isHidden = password.type === "password";
-
-            password.type = isHidden ? "text" : "password";
-
-            togglePassword.textContent = isHidden
-                ? "Ocultar"
-                : "Mostrar";
-
-            togglePassword.setAttribute(
-                "aria-pressed",
-                String(isHidden)
-            );
-
-            togglePassword.setAttribute(
-                "aria-label",
-                isHidden ? "Ocultar contraseña" : "Mostrar contraseña"
-            );
-        });
-
-        // Limpiar mensajes de error
-        function clearErrors() {
-            emailError.textContent = "";
-            passwordError.textContent = "";
-            formStatus.textContent = "";
-
-            email.removeAttribute("aria-invalid");
-            password.removeAttribute("aria-invalid");
-        }
-
-        // Validación sencilla de correo
-        function validEmail(value) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-        }
-
-        // Comprobar formulario
-        loginForm.addEventListener("submit", function (event) {
-
-            event.preventDefault();
-            clearErrors();
-
-            const emailValue = email.value.trim();
-            const passwordValue = password.value;
-
-            let hasError = false;
-
-            if (emailValue === "") {
-                emailError.textContent = "Introduce tu correo electrónico.";
-                email.setAttribute("aria-invalid", "true");
-                hasError = true;
-            } else if (!validEmail(emailValue)) {
-                emailError.textContent = "Introduce un correo válido.";
-                email.setAttribute("aria-invalid", "true");
-                hasError = true;
-            }
-
-            if (passwordValue === "") {
-                passwordError.textContent = "Introduce tu contraseña.";
-                password.setAttribute("aria-invalid", "true");
-                hasError = true;
-            }
-
-            if (hasError) {
-                return;
-            }
-
-            // No se realiza autenticación real.
-            formStatus.textContent =
-                "Formulario correcto. La autenticación real se implementará más adelante.";
-        });
-
-        // Enlaces de funciones futuras
-        document.getElementById("forgotLink")
-            .addEventListener("click", function (event) {
-                event.preventDefault();
-
-                formStatus.textContent =
-                    "La recuperación de contraseña estará disponible próximamente.";
-            });
-
-        document.getElementById("registerLink")
-            .addEventListener("click", function (event) {
-                event.preventDefault();
-
-                formStatus.textContent =
-                    "El registro de usuarios estará disponible próximamente.";
-            });
-
-        // Selector de idioma todavía no funcional
-        document.getElementById("language")
-            .addEventListener("change", function () {
-
-                formStatus.textContent =
-                    "La traducción de la interfaz se incorporará próximamente.";
-
-            });
-    </script>
 
 </body>
 </html>
