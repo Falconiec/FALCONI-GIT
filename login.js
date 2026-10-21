@@ -169,17 +169,3 @@ registerLink.addEventListener("click", function (event) {
     window.location.href = "./register.html";
 
 });
-
-
-// ==========================================
-// SELECTOR DE IDIOMA
-// ==========================================
-
-const languageSelect = document.getElementById("language");
-
-languageSelect.addEventListener("change", function () {
-
-    formStatus.textContent =
-        "La traducción de la interfaz se incorporará próximamente.";
-
-});
