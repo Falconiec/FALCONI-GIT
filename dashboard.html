@@ -4,316 +4,237 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0F1B2D">
 
     <title>Dashboard | FALCONI-GIT</title>
 
-    <!-- ESTILOS DEL DASHBOARD -->
     <link rel="stylesheet" href="./dashboard.css">
 
-    <!-- SISTEMA MULTILINGÜE -->
     <script src="./translations.js" defer></script>
     <script src="./language.js" defer></script>
-
-    <!-- FUNCIONALIDADES DEL DASHBOARD -->
     <script src="./dashboard.js" defer></script>
 </head>
 
 <body>
 
-    <!-- ESTRUCTURA PRINCIPAL -->
-    <div class="app-layout">
+<div class="app-layout">
 
-        <!-- ===================================
-             BARRA LATERAL
-             =================================== -->
+    <!-- BARRA LATERAL -->
+    <aside class="sidebar">
 
-        <aside class="sidebar">
+        <!-- LOGO FALCONI-GIT -->
+        <div class="sidebar-brand">
 
-            <!-- IDENTIDAD -->
-            <div class="sidebar-brand">
+            <span class="brand-icon"
+                  aria-label="Logo FALCONI-GIT">
+                F.
+            </span>
 
-                <span class="brand-icon">F.</span>
-
-                <strong>FALCONI-GIT</strong>
-
-            </div>
-
-            <!-- NAVEGACIÓN -->
-            <nav
-                class="sidebar-nav"
-                aria-label="Navegación principal"
-            >
-
-                <!-- INICIO -->
-                <a
-                    href="./dashboard.html"
-                    class="nav-item active"
-                    aria-current="page"
-                    data-i18n="dashboardHome"
-                >
-                    Inicio
-                </a>
-
-                <!-- MOVIMIENTOS: FUNCIONAL -->
-                <a
-                    href="./movements.html"
-                    class="nav-item"
-                    data-i18n="dashboardMovements"
-                >
-                    Movimientos
-                </a>
-
-                <!-- CATEGORÍAS: PRÓXIMAMENTE -->
-                <span
-                    class="nav-item disabled"
-                    data-i18n="dashboardCategories"
-                >
-                    Categorías
-                </span>
-
-                <!-- METAS: PRÓXIMAMENTE -->
-                <span
-                    class="nav-item disabled"
-                    data-i18n="dashboardGoals"
-                >
-                    Metas
-                </span>
-
-                <!-- CONFIGURACIÓN: PRÓXIMAMENTE -->
-                <span
-                    class="nav-item disabled"
-                    data-i18n="dashboardSettings"
-                >
-                    Configuración
-                </span>
-
-            </nav>
-
-            <!-- CERRAR SESIÓN -->
-            <div class="sidebar-footer">
-
-                <button
-                    type="button"
-                    id="logoutButton"
-                    class="logout-button"
-                    data-i18n="logout"
-                >
-                    Cerrar sesión
-                </button>
-
-            </div>
-
-        </aside>
-
-        <!-- ===================================
-             CONTENIDO DERECHO
-             =================================== -->
-
-        <div class="main-column">
-
-            <!-- BARRA SUPERIOR -->
-            <header class="topbar">
-
-                <div class="topbar-brand">
-
-                    <span class="mini-logo">F.</span>
-
-                    <span>FALCONI-GIT</span>
-
-                </div>
-
-                <div class="topbar-actions">
-
-                    <!-- SELECTOR DE IDIOMAS -->
-                    <select
-                        id="language"
-                        aria-label="Seleccionar idioma"
-                    >
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                        <option value="ru">Русский</option>
-                    </select>
-
-                    <!-- PERFIL -->
-                    <span
-                        class="avatar"
-                        id="avatar"
-                        aria-label="Perfil de usuario"
-                    >
-                        F
-                    </span>
-
-                </div>
-
-            </header>
-
-            <!-- ===================================
-                 DASHBOARD PRINCIPAL
-                 =================================== -->
-
-            <main class="dashboard-content">
-
-                <!-- BIENVENIDA -->
-                <section class="welcome">
-
-                    <p
-                        class="eyebrow"
-                        data-i18n="dashboardLabel"
-                    >
-                        TU ESPACIO PERSONAL
-                    </p>
-
-                    <!-- Nombre obtenido del servidor -->
-                    <h1 id="welcomeName">
-                        Bienvenido.
-                    </h1>
-
-                    <p data-i18n="dashboardSubtitle">
-                        Organiza tu espacio financiero desde aquí.
-                    </p>
-
-                </section>
-
-                <!-- ===================================
-                     TARJETA PRINCIPAL
-                     =================================== -->
-
-                <section class="welcome-card">
-
-                    <div>
-
-                        <span class="card-kicker">
-                            FALCONI-GIT
-                        </span>
-
-                        <h2 data-i18n="dashboardReady">
-                            Tu espacio está preparado.
-                        </h2>
-
-                        <p data-i18n="dashboardReadyDescription">
-                            Pronto podrás registrar movimientos,
-                            organizar gastos y establecer metas
-                            personales.
-                        </p>
-
-                    </div>
-
-                    <!-- TARJETA DECORATIVA -->
-                    <div
-                        class="decorative-card"
-                        aria-hidden="true"
-                    >
-
-                        <span class="decorative-mark">
-                            F.
-                        </span>
-
-                    </div>
-
-                </section>
-
-                <!-- ===================================
-                     SECCIONES DEL PROYECTO
-                     =================================== -->
-
-                <h2
-                    class="section-heading"
-                    data-i18n="dashboardModules"
-                >
-                    Tu espacio de trabajo
-                </h2>
-
-                <section class="module-grid">
-
-                    <!-- MOVIMIENTOS -->
-                    <article class="module-card">
-
-                        <div class="module-icon">
-                            ↗
-                        </div>
-
-                        <h3 data-i18n="dashboardMovements">
-                            Movimientos
-                        </h3>
-
-                        <p data-i18n="movementsDescription">
-                            Organiza ingresos y gastos.
-                        </p>
-
-                        <!-- ENLACE FUNCIONAL -->
-                        <a
-                            href="./movements.html"
-                            class="module-link"
-                            data-i18n="openMovements"
-                        >
-                            Abrir movimientos →
-                        </a>
-
-                    </article>
-
-                    <!-- CATEGORÍAS -->
-                    <article class="module-card">
-
-                        <div class="module-icon">
-                            ▦
-                        </div>
-
-                        <h3 data-i18n="dashboardCategories">
-                            Categorías
-                        </h3>
-
-                        <p data-i18n="categoriesDescription">
-                            Clasifica tus operaciones.
-                        </p>
-
-                        <span
-                            class="soon"
-                            data-i18n="comingSoon"
-                        >
-                            Próximamente
-                        </span>
-
-                    </article>
-
-                    <!-- METAS PERSONALES -->
-                    <article class="module-card">
-
-                        <div class="module-icon">
-                            ◎
-                        </div>
-
-                        <h3 data-i18n="dashboardGoals">
-                            Metas
-                        </h3>
-
-                        <p data-i18n="goalsDescription">
-                            Planifica tus objetivos.
-                        </p>
-
-                        <span
-                            class="soon"
-                            data-i18n="comingSoon"
-                        >
-                            Próximamente
-                        </span>
-
-                    </article>
-
-                </section>
-
-                <!-- MENSAJES DEL SERVIDOR -->
-                <p
-                    id="dashboardStatus"
-                    role="status"
-                ></p>
-
-            </main>
+            <strong>FALCONI-GIT</strong>
 
         </div>
 
+        <!-- NAVEGACIÓN -->
+        <nav class="sidebar-nav"
+             aria-label="Navegación principal">
+
+            <a href="./dashboard.html"
+               class="nav-item active"
+               aria-current="page"
+               data-i18n="dashboardHome">
+                Inicio
+            </a>
+
+            <a href="./movements.html"
+               class="nav-item"
+               data-i18n="dashboardMovements">
+                Movimientos
+            </a>
+
+            <span class="nav-item disabled"
+                  data-i18n="dashboardCategories">
+                Categorías
+            </span>
+
+            <span class="nav-item disabled"
+                  data-i18n="dashboardGoals">
+                Metas
+            </span>
+
+            <span class="nav-item disabled"
+                  data-i18n="dashboardSettings">
+                Configuración
+            </span>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button type="button"
+                    id="logoutButton"
+                    class="logout-button"
+                    data-i18n="logout">
+                Cerrar sesión
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- CONTENIDO -->
+    <div class="main-column">
+
+        <!-- BARRA SUPERIOR -->
+        <header class="topbar">
+
+            <div class="topbar-brand">
+                <span class="mini-logo">F.</span>
+                <span>FALCONI-GIT</span>
+            </div>
+
+            <div class="topbar-actions">
+
+                <select id="language"
+                        aria-label="Seleccionar idioma">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                </select>
+
+                <span class="avatar"
+                      id="avatar"
+                      aria-label="Perfil">
+                    F
+                </span>
+
+            </div>
+
+        </header>
+
+        <!-- DASHBOARD -->
+        <main class="dashboard-content">
+
+            <section class="welcome">
+
+                <p class="eyebrow"
+                   data-i18n="dashboardLabel">
+                    TU ESPACIO PERSONAL
+                </p>
+
+                <h1 id="welcomeName">
+                    Bienvenido.
+                </h1>
+
+                <p data-i18n="dashboardSubtitle">
+                    Organiza tu espacio financiero desde aquí.
+                </p>
+
+            </section>
+
+            <!-- TARJETA PRINCIPAL -->
+            <section class="welcome-card">
+
+                <div>
+                    <span class="card-kicker">
+                        FALCONI-GIT
+                    </span>
+
+                    <h2 data-i18n="dashboardReady">
+                        Tu espacio está preparado.
+                    </h2>
+
+                    <p data-i18n="dashboardReadyDescription">
+                        Organiza movimientos, gastos
+                        y objetivos personales.
+                    </p>
+                </div>
+
+                <div class="decorative-card"
+                     aria-hidden="true">
+                    <span class="decorative-mark">F.</span>
+                </div>
+
+            </section>
+
+            <!-- MÓDULOS -->
+            <h2 class="section-heading"
+                data-i18n="dashboardModules">
+                Tu espacio de trabajo
+            </h2>
+
+            <section class="module-grid">
+
+                <!-- MOVIMIENTOS -->
+                <article class="module-card">
+
+                    <div class="module-icon">↗</div>
+
+                    <h3 data-i18n="dashboardMovements">
+                        Movimientos
+                    </h3>
+
+                    <p data-i18n="movementsDescription">
+                        Organiza ingresos y gastos.
+                    </p>
+
+                    <a href="./movements.html"
+                       class="module-link"
+                       data-i18n="openMovements">
+                        Abrir movimientos →
+                    </a>
+
+                </article>
+
+                <!-- CATEGORÍAS -->
+                <article class="module-card">
+
+                    <div class="module-icon">▦</div>
+
+                    <h3 data-i18n="dashboardCategories">
+                        Categorías
+                    </h3>
+
+                    <p data-i18n="categoriesDescription">
+                        Clasifica tus operaciones.
+                    </p>
+
+                    <span class="soon"
+                          data-i18n="comingSoon">
+                        Próximamente
+                    </span>
+
+                </article>
+
+                <!-- METAS -->
+                <article class="module-card">
+
+                    <div class="module-icon">◎</div>
+
+                    <h3 data-i18n="dashboardGoals">
+                        Metas
+                    </h3>
+
+                    <p data-i18n="goalsDescription">
+                        Planifica tus objetivos.
+                    </p>
+
+                    <span class="soon"
+                          data-i18n="comingSoon">
+                        Próximamente
+                    </span>
+
+                </article>
+
+            </section>
+
+            <p id="dashboardStatus"
+               role="status"></p>
+
+        </main>
+
     </div>
+
+</div>
 
 </body>
 </html>

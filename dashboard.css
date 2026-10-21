@@ -397,3 +397,41 @@ button, select {
     outline-offset: 4px;
     border-radius: 3px;
 }
+
+/* =====================================
+   FALCONI-GIT v0.8
+   Logo de respaldo sin imagen externa
+   ===================================== */
+
+.sidebar-brand .brand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    background: linear-gradient(
+        135deg,
+        #1e3a8a,
+        #60a5fa
+    );
+
+    color: #ffffff;
+
+    border-radius: 13px;
+
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+/* Mantener el logo alineado */
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
