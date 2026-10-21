@@ -851,3 +851,51 @@ select:focus-visible {
     }
 }
 }
+
+/*
+ FALCONI-GIT
+ Identidad visual unificada
+ Logo tipográfico inspirado en la tarjeta
+*/
+
+.falconi-logo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    color: #ffffff;
+}
+
+.falconi-logo-symbol {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 33px;
+    font-weight: 700;
+    font-style: normal;
+    letter-spacing: -2px;
+}
+
+.falconi-logo-caption {
+    margin-top: 3px;
+    font-family: Arial, sans-serif;
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+/* Logo compacto para encabezados */
+.falconi-logo--small
+.falconi-logo-symbol {
+    font-size: 27px;
+}
+
+.falconi-logo--small
+.falconi-logo-caption {
+    font-size: 6px;
+}
+
+/* Permitir usar el logo sobre fondo blanco */
+.falconi-logo--dark {
+    color: #0F1B2D;
+}
