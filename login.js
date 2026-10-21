@@ -1,10 +1,9 @@
 
 /*
- FALCONI-GIT
- Login multilingüe v0.5
+ FALCONI-GIT - LOGIN
+ Autenticación con servidor
 */
 
-// Elementos
 const loginForm = document.getElementById("loginForm");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
@@ -17,41 +16,30 @@ const togglePassword = document.getElementById("togglePassword");
 const registerLink = document.getElementById("registerLink");
 const forgotLink = document.getElementById("forgotLink");
 
-// Conservar las claves de los mensajes activos
+const submitButton = document.getElementById("submitButton");
+
 let emailErrorKey = "";
 let passwordErrorKey = "";
 let statusKey = "";
 
-// Mostrar / ocultar contraseña
 function updatePasswordToggle() {
-    const isVisible = password.type === "text";
+    const visible = password.type === "text";
 
-    togglePassword.textContent = t(isVisible ? "hide" : "show");
-    togglePassword.setAttribute("aria-pressed", String(isVisible));
+    togglePassword.textContent = t(visible ? "hide" : "show");
+    togglePassword.setAttribute("aria-pressed", String(visible));
     togglePassword.setAttribute(
-        "aria-label",
-        t(isVisible ? "hide" : "show")
+        "aria-label", t(visible ? "hide" : "show")
     );
 }
 
 togglePassword.addEventListener("click", function () {
-    password.type = password.type === "password"
-        ? "text"
-        : "password";
+    password.type =
+        password.type === "password" ? "text" : "password";
 
     updatePasswordToggle();
 });
 
-// Mostrar errores
-function showLoginError(field, element, key) {
-    element.textContent = t(key);
-    field.setAttribute("aria-invalid", "true");
-
-    if (field === email) emailErrorKey = key;
-    if (field === password) passwordErrorKey = key;
-}
-
-function clearLoginErrors() {
+function clearErrors() {
     emailError.textContent = "";
     passwordError.textContent = "";
     formStatus.textContent = "";
@@ -64,38 +52,79 @@ function clearLoginErrors() {
     password.removeAttribute("aria-invalid");
 }
 
+function showError(field, element, key) {
+    element.textContent = t(key);
+    field.setAttribute("aria-invalid", "true");
+
+    if (field === email) emailErrorKey = key;
+    if (field === password) passwordErrorKey = key;
+}
+
 function validEmail(value) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-// Validar formulario
-loginForm.addEventListener("submit", function (event) {
+loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
-    clearLoginErrors();
+    clearErrors();
 
     let valid = true;
 
-    if (email.value.trim() === "") {
-        showLoginError(email, emailError, "emailRequired");
+    if (!email.value.trim()) {
+        showError(email, emailError, "emailRequired");
         valid = false;
+
     } else if (!validEmail(email.value.trim())) {
-        showLoginError(email, emailError, "emailInvalid");
+        showError(email, emailError, "emailInvalid");
         valid = false;
     }
 
-    if (password.value === "") {
-        showLoginError(password, passwordError, "passwordRequired");
+    if (!password.value) {
+        showError(password, passwordError, "passwordRequired");
         valid = false;
     }
 
     if (!valid) return;
 
-    // No existe autenticación real todavía.
-    statusKey = "loginSuccess";
-    formStatus.textContent = t(statusKey);
+    submitButton.disabled = true;
+
+    try {
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+                email: email.value.trim(),
+                password: password.value
+            })
+        });
+
+        if (response.status === 429) {
+            statusKey = "tooManyAttempts";
+            formStatus.textContent = t(statusKey);
+            return;
+        }
+
+        if (!response.ok) {
+            statusKey = "invalidCredentials";
+            formStatus.textContent = t(statusKey);
+            return;
+        }
+
+        password.value = "";
+        window.location.replace("./dashboard.html");
+
+    } catch {
+        statusKey = "serverError";
+        formStatus.textContent = t(statusKey);
+
+    } finally {
+        submitButton.disabled = false;
+    }
 });
 
-// Borrar error al modificar el campo
 email.addEventListener("input", function () {
     emailError.textContent = "";
     emailErrorKey = "";
@@ -108,35 +137,22 @@ password.addEventListener("input", function () {
     password.removeAttribute("aria-invalid");
 });
 
-// Navegación al registro
 registerLink.addEventListener("click", function (event) {
     event.preventDefault();
     window.location.href = "./register.html";
 });
 
-// Recuperación pendiente
 forgotLink.addEventListener("click", function (event) {
     event.preventDefault();
-
-    statusKey = "recoveryPending";
-    formStatus.textContent = t(statusKey);
+    window.location.href = "./forgot-password.html";
 });
 
-// Mantener mensajes traducidos cuando cambia el idioma
 document.addEventListener("languageChanged", function () {
     updatePasswordToggle();
 
-    if (emailErrorKey) {
-        emailError.textContent = t(emailErrorKey);
-    }
-
-    if (passwordErrorKey) {
-        passwordError.textContent = t(passwordErrorKey);
-    }
-
-    if (statusKey) {
-        formStatus.textContent = t(statusKey);
-    }
+    if (emailErrorKey) emailError.textContent = t(emailErrorKey);
+    if (passwordErrorKey) passwordError.textContent = t(passwordErrorKey);
+    if (statusKey) formStatus.textContent = t(statusKey);
 });
 
 updatePasswordToggle();

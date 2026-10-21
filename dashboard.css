@@ -1,0 +1,376 @@
+
+:root {
+    --navy: #0F1B2D;
+    --blue: #1E3A8A;
+    --accent: #60A5FA;
+    --ice: #E0F2FE;
+    --light: #F8FAFF;
+    --white: #FFFFFF;
+    --muted: #68758A;
+    --border: #DDE5F0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--light);
+    color: var(--navy);
+}
+
+button, select {
+    font: inherit;
+}
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--navy);
+    color: white;
+    padding: 30px 18px;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 10px;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: white;
+    color: var(--navy);
+    font: 28px Georgia, serif;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 55px;
+}
+
+.nav-item {
+    display: block;
+    padding: 15px;
+    border-radius: 10px;
+    color: #C1CEE0;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-item.active {
+    background: var(--blue);
+    color: white;
+    font-weight: 650;
+}
+
+.nav-item.disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #40516D;
+    border-radius: 10px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background: var(--blue);
+}
+
+/* CONTENIDO */
+
+.main-column {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 45px;
+    border-bottom: 1px solid var(--border);
+    background: white;
+}
+
+.topbar-brand {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-weight: 750;
+    font-size: 13px;
+}
+
+.mini-logo {
+    font: 25px Georgia, serif;
+}
+
+.topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.topbar select {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--ice);
+    color: var(--blue);
+    font-weight: 750;
+}
+
+.dashboard-content {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 48px;
+}
+
+.eyebrow {
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 2px;
+    color: var(--blue);
+}
+
+.welcome h1 {
+    font-size: clamp(32px, 4vw, 48px);
+    letter-spacing: -1.5px;
+    margin: 15px 0 8px;
+}
+
+.welcome p:last-child {
+    color: var(--muted);
+    font-size: 15px;
+}
+
+/* TARJETA PRINCIPAL */
+
+.welcome-card {
+    margin-top: 38px;
+    min-height: 260px;
+    padding: 35px 42px;
+    border-radius: 22px;
+    background: var(--navy);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    overflow: hidden;
+}
+
+.card-kicker {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+}
+
+.welcome-card h2 {
+    font-size: clamp(24px, 3vw, 34px);
+    max-width: 460px;
+}
+
+.welcome-card p {
+    color: #B6C5DB;
+    max-width: 480px;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.decorative-card {
+    width: 210px;
+    height: 135px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    background: linear-gradient(
+        130deg,
+        #223B60,
+        #6D8AAB 48%,
+        #1E3A8A 49%,
+        #172642
+    );
+    transform: rotate(-10deg);
+    box-shadow: 0 25px 35px rgba(0,0,0,.3);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.decorative-mark {
+    font: 35px Georgia, serif;
+}
+
+/* MÓDULOS */
+
+.section-heading {
+    margin: 44px 0 22px;
+    font-size: 22px;
+}
+
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.module-card {
+    min-height: 210px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 27px;
+}
+
+.module-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--ice);
+    color: var(--blue);
+    font-size: 22px;
+}
+
+.module-card h3 {
+    margin: 20px 0 9px;
+}
+
+.module-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.soon {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 11px;
+    color: var(--blue);
+    font-weight: 700;
+}
+
+#dashboardStatus {
+    color: var(--muted);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+    .sidebar {
+        width: 205px;
+    }
+
+    .dashboard-content {
+        padding: 30px;
+    }
+
+    .module-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .sidebar {
+        width: 100%;
+        padding: 12px 16px;
+    }
+
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .sidebar-brand,
+    .sidebar-nav {
+        display: none;
+    }
+
+    .sidebar-footer {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .logout-button {
+        width: auto;
+    }
+
+    .topbar {
+        height: 65px;
+        padding: 0 20px;
+    }
+
+    .topbar-brand {
+        display: flex;
+    }
+
+    .dashboard-content {
+        padding: 26px 20px;
+    }
+
+    .welcome-card {
+        padding: 28px 24px;
+    }
+
+    .decorative-card {
+        display: none;
+    }
+
+    .module-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .module-card {
+        min-height: 175px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+    }
+}
