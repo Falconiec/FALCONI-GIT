@@ -466,3 +466,448 @@ button, select {
     font-family: Georgia, "Times New Roman", serif;
     font-weight: 700;
 }
+
+
+/*
+==========================================
+ FG-DASHBOARD-PREMIUM-081
+ FALCONI-GIT v0.8.1
+
+ Premium Dashboard Experience
+ Paleta original conservada
+==========================================
+*/
+
+.app-layout {
+    --fg-navy: #0F1B2D;
+    --fg-blue: #1E3A8A;
+    --fg-accent: #60A5FA;
+    --fg-ice: #E0F2FE;
+    --fg-light: #F8FAFF;
+    --fg-border: #DFE8F3;
+
+    --fg-ease:
+        cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ======================================
+   1. BARRA LATERAL PREMIUM
+====================================== */
+
+.sidebar {
+    background: linear-gradient(
+        165deg,
+        #0F1B2D 0%,
+        #13253E 58%,
+        #0C1628 100%
+    );
+
+    box-shadow:
+        5px 0 25px rgba(15, 27, 45, .07);
+}
+
+.sidebar-brand {
+    transition:
+        opacity .25s ease;
+}
+
+.sidebar-brand strong {
+    color: #FFFFFF;
+    letter-spacing: .045em;
+}
+
+.sidebar-nav .nav-item {
+    border-radius: 12px;
+
+    transition:
+        color .25s ease,
+        background-color .25s ease,
+        transform .3s var(--fg-ease),
+        box-shadow .25s ease;
+}
+
+.sidebar-nav .nav-item.active {
+    color: #FFFFFF;
+
+    background: linear-gradient(
+        105deg,
+        rgba(96, 165, 250, .20),
+        rgba(96, 165, 250, .07)
+    );
+
+    box-shadow:
+        inset 3px 0 #60A5FA,
+        0 5px 15px rgba(0, 0, 0, .09);
+}
+
+.sidebar-nav .nav-item.disabled {
+    opacity: .48;
+    cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .sidebar-nav a.nav-item:hover {
+        background: rgba(96, 165, 250, .12);
+        color: #FFFFFF;
+        transform: translateX(3px);
+    }
+}
+
+/* Cerrar sesión */
+
+.sidebar-footer .logout-button {
+    border-radius: 12px;
+
+    transition:
+        background-color .25s ease,
+        color .25s ease,
+        transform .25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .sidebar-footer .logout-button:hover {
+        background-color: rgba(96, 165, 250, .12);
+    }
+}
+
+/* ======================================
+   2. SUPERFICIE PRINCIPAL
+====================================== */
+
+.main-column {
+    background: linear-gradient(
+        155deg,
+        #F8FAFF 0%,
+        #F1F5FB 100%
+    );
+}
+
+/* ======================================
+   3. TOPBAR PREMIUM
+====================================== */
+
+.topbar {
+    background: rgba(255, 255, 255, .96);
+
+    border-bottom:
+        1px solid #DFE8F3;
+
+    box-shadow:
+        0 7px 24px rgba(15, 27, 45, .025);
+}
+
+.topbar-brand {
+    color: #0F1B2D;
+    letter-spacing: .03em;
+}
+
+.topbar-actions select,
+.topbar select {
+    border-radius: 11px;
+
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease;
+}
+
+.topbar-actions select:focus,
+.topbar select:focus {
+    outline: none;
+    border-color: #60A5FA;
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, .12);
+}
+
+/* Avatar */
+
+.topbar .avatar {
+    background: linear-gradient(
+        135deg,
+        #0F1B2D,
+        #1E3A8A
+    );
+
+    color: #FFFFFF;
+
+    box-shadow:
+        0 5px 12px rgba(30, 58, 138, .16);
+
+    transition:
+        box-shadow .25s ease,
+        transform .25s ease;
+}
+
+/* ======================================
+   4. BIENVENIDA
+====================================== */
+
+.dashboard-content .welcome h1 {
+    color: #0F1B2D;
+    letter-spacing: -.035em;
+}
+
+.dashboard-content .welcome .eyebrow {
+    color: #1E3A8A;
+    letter-spacing: .11em;
+}
+
+.dashboard-content .welcome p {
+    line-height: 1.65;
+}
+
+/* ======================================
+   5. TARJETA PRINCIPAL PREMIUM
+====================================== */
+
+.dashboard-content .welcome-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    border: 1px solid rgba(142, 176, 213, .30);
+    border-radius: 22px;
+
+    background: linear-gradient(
+        122deg,
+        #0F1B2D 0%,
+        #172B49 52%,
+        #1E3A8A 100%
+    );
+
+    box-shadow:
+        0 25px 45px -22px rgba(15, 27, 45, .45),
+        inset 0 1px rgba(255, 255, 255, .22);
+
+    transition:
+        box-shadow .35s ease,
+        transform .35s var(--fg-ease);
+}
+
+/* Reflejo plateado */
+
+.dashboard-content .welcome-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            115deg,
+            transparent 30%,
+            rgba(224, 242, 254, .025) 43%,
+            rgba(224, 242, 254, .12) 49%,
+            rgba(224, 242, 254, .025) 55%,
+            transparent 68%
+        );
+
+    opacity: .85;
+}
+
+.dashboard-content .welcome-card h2 {
+    color: #FFFFFF;
+    letter-spacing: -.02em;
+}
+
+.dashboard-content .welcome-card p {
+    color: #D3E2F3;
+    line-height: 1.7;
+}
+
+.dashboard-content .card-kicker {
+    color: #B7D2F1;
+    letter-spacing: .13em;
+}
+
+/* Tarjeta decorativa interna */
+
+.dashboard-content .decorative-card {
+    border:
+        1px solid rgba(225, 239, 255, .35);
+
+    background: linear-gradient(
+        135deg,
+        #12233A 0%,
+        #2A4466 42%,
+        #AABDD0 49%,
+        #213955 61%,
+        #101E33 100%
+    );
+
+    box-shadow:
+        0 22px 35px rgba(0, 0, 0, .24),
+        inset 0 1px rgba(255, 255, 255, .27);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .dashboard-content .welcome-card:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 30px 52px -22px rgba(15, 27, 45, .51),
+            inset 0 1px rgba(255, 255, 255, .22);
+    }
+}
+
+/* ======================================
+   6. MÓDULOS FINANCIEROS
+====================================== */
+
+.dashboard-content .section-heading {
+    color: #0F1B2D;
+    letter-spacing: -.025em;
+}
+
+.dashboard-content .module-card {
+    position: relative;
+
+    background: #FFFFFF;
+
+    border: 1px solid #DFE8F3;
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 24px rgba(15, 27, 45, .045);
+
+    transition:
+        transform .3s var(--fg-ease),
+        box-shadow .3s ease,
+        border-color .3s ease;
+}
+
+.dashboard-content .module-card h3 {
+    color: #0F1B2D;
+}
+
+.dashboard-content .module-card p {
+    color: #64748B;
+    line-height: 1.7;
+}
+
+.dashboard-content .module-icon {
+    background: #E0F2FE;
+    color: #1E3A8A;
+
+    border-radius: 13px;
+}
+
+.dashboard-content .module-link {
+    color: #1E3A8A;
+    font-weight: 700;
+}
+
+.dashboard-content .soon {
+    color: #64748B;
+}
+
+/* Movimiento sutil */
+
+@media (hover: hover) and (pointer: fine) {
+    .dashboard-content .module-card:hover {
+        transform: translateY(-5px);
+
+        border-color: #B5CCE8;
+
+        box-shadow:
+            0 20px 38px rgba(15, 27, 45, .105);
+    }
+
+    .dashboard-content .module-link:hover {
+        color: #60A5FA;
+    }
+}
+
+/* ======================================
+   7. MICROANIMACIONES DE ENTRADA
+====================================== */
+
+@keyframes fg-dashboard-enter {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard-content > .welcome {
+    animation:
+        fg-dashboard-enter
+        .7s var(--fg-ease) backwards;
+}
+
+.dashboard-content > .welcome-card {
+    animation:
+        fg-dashboard-enter
+        .85s var(--fg-ease) .12s backwards;
+}
+
+.dashboard-content > .section-heading {
+    animation:
+        fg-dashboard-enter
+        .7s var(--fg-ease) .2s backwards;
+}
+
+.dashboard-content .module-card {
+    animation:
+        fg-dashboard-enter
+        .75s var(--fg-ease) backwards;
+}
+
+.dashboard-content .module-card:nth-child(1) {
+    animation-delay: .23s;
+}
+
+.dashboard-content .module-card:nth-child(2) {
+    animation-delay: .31s;
+}
+
+.dashboard-content .module-card:nth-child(3) {
+    animation-delay: .39s;
+}
+
+/* ======================================
+   8. ACCESIBILIDAD
+====================================== */
+
+.sidebar-nav a.nav-item:focus-visible,
+.dashboard-content a:focus-visible,
+.topbar select:focus-visible,
+.sidebar-footer button:focus-visible {
+    outline: 2px solid #60A5FA;
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-content > .welcome,
+    .dashboard-content > .welcome-card,
+    .dashboard-content > .section-heading,
+    .dashboard-content .module-card {
+        animation: none !important;
+    }
+
+    .dashboard-content .welcome-card,
+    .dashboard-content .module-card,
+    .sidebar-nav .nav-item {
+        transition: none !important;
+    }
+}
+
+/* ======================================
+   9. PANTALLAS PEQUEÑAS
+====================================== */
+
+@media (max-width: 767px) {
+    .dashboard-content .welcome-card {
+        border-radius: 16px;
+    }
+
+    .dashboard-content .module-card {
+        border-radius: 15px;
+    }
+}

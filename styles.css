@@ -1176,3 +1176,545 @@ a {
         filter: brightness(1.025);
     }
 }
+
+/*
+==========================================
+ FALCONI-GIT v0.8.1
+ PREMIUM LOGIN EXPERIENCE
+
+ Animaciones e interacciones visuales
+ Sin modificar autenticación
+==========================================
+*/
+
+/* ======================================
+   1. ANIMACIONES DE ENTRADA
+====================================== */
+
+@keyframes fg-premium-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fg-premium-slide {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Logo superior */
+
+.page .brand-header {
+    animation:
+        fg-premium-reveal
+        .7s ease-out backwards;
+}
+
+/* Texto pequeño */
+
+.page .brand-content .eyebrow {
+    animation:
+        fg-premium-reveal
+        .7s ease-out .12s backwards;
+}
+
+/* Título principal */
+
+.page .brand-content .brand-title {
+    animation:
+        fg-premium-reveal
+        .85s cubic-bezier(.22, 1, .36, 1)
+        .2s backwards;
+}
+
+/* Descripción */
+
+.page .brand-content .brand-description {
+    animation:
+        fg-premium-reveal
+        .75s ease-out .32s backwards;
+}
+
+/* Tarjeta 3D */
+
+.page .brand-panel .card-stage {
+    animation:
+        fg-premium-reveal
+        .9s cubic-bezier(.22, 1, .36, 1)
+        .42s backwards;
+}
+
+/* ======================================
+   2. ENTRADA DEL FORMULARIO
+====================================== */
+
+.page .auth-top {
+    animation:
+        fg-premium-reveal
+        .65s ease-out .1s backwards;
+}
+
+.page .auth-heading {
+    animation:
+        fg-premium-slide
+        .8s cubic-bezier(.22, 1, .36, 1)
+        .18s backwards;
+}
+
+/* Campos en secuencia */
+
+.page .login-form .form-group:nth-child(1) {
+    animation:
+        fg-premium-reveal
+        .65s ease-out .34s backwards;
+}
+
+.page .login-form .form-group:nth-child(2) {
+    animation:
+        fg-premium-reveal
+        .65s ease-out .43s backwards;
+}
+
+/* Recuperación de contraseña */
+
+.page .login-form .forgot-row {
+    animation:
+        fg-premium-reveal
+        .65s ease-out .5s backwards;
+}
+
+/* Botón principal */
+
+.page .login-form .submit-button {
+    animation:
+        fg-premium-reveal
+        .7s ease-out .57s backwards;
+}
+
+/* Crear cuenta */
+
+.page .register-area {
+    animation:
+        fg-premium-reveal
+        .7s ease-out .65s backwards;
+}
+
+/* ======================================
+   3. CAMPOS PREMIUM
+====================================== */
+
+.page .auth-panel .form-input {
+    transition:
+        border-color .25s ease,
+        background-color .25s ease,
+        box-shadow .3s ease,
+        transform .25s ease;
+}
+
+/* Al seleccionar un campo */
+
+.page .auth-panel .form-input:focus {
+    background-color: #FFFFFF;
+
+    border-color: #60A5FA;
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, .12),
+        0 6px 20px rgba(15, 27, 45, .045);
+
+    outline: none;
+}
+
+/* Etiqueta que responde al focus */
+
+.page .auth-panel .form-group .form-label {
+    transition:
+        color .25s ease,
+        transform .25s ease;
+}
+
+.page .auth-panel .form-group:focus-within
+.form-label {
+    color: #1E3A8A;
+    transform: translateY(-2px);
+}
+
+/* Campo cuando contiene texto */
+
+.page .auth-panel .form-input:not(:placeholder-shown) {
+    background-color: #FFFFFF;
+}
+
+/* Estado de error: conservar visibilidad */
+
+.page .auth-panel .form-input[aria-invalid="true"] {
+    border-color: #B42332;
+    box-shadow:
+        0 0 0 3px rgba(180, 35, 50, .10);
+}
+
+/* ======================================
+   4. BOTÓN PREMIUM
+====================================== */
+
+.page .submit-button {
+    transition:
+        transform .25s cubic-bezier(.22, 1, .36, 1),
+        background-color .25s ease,
+        box-shadow .3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .page .submit-button:not(:disabled):hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 14px 28px rgba(30, 58, 138, .20);
+    }
+
+    .page .submit-button:hover .submit-arrow {
+        transform: translateX(4px);
+    }
+}
+
+/* Flecha animada */
+
+.page .submit-arrow {
+    display: inline-block;
+
+    transition:
+        transform .25s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Pulsación */
+
+.page .submit-button:not(:disabled):active {
+    transform: translateY(0) scale(.99);
+}
+
+/* ======================================
+   5. ENLACES PREMIUM
+====================================== */
+
+.page .auth-panel .text-link {
+    transition:
+        color .25s ease,
+        opacity .25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .page .auth-panel .text-link:hover {
+        color: #60A5FA;
+    }
+}
+
+/* ======================================
+   6. SELECTOR DE IDIOMA
+====================================== */
+
+.page .language-select {
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease;
+}
+
+.page .language-select:focus {
+    border-color: #60A5FA;
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, .12);
+}
+
+/* ======================================
+   7. ACCESIBILIDAD
+====================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .page .brand-header,
+    .page .brand-content .eyebrow,
+    .page .brand-content .brand-title,
+    .page .brand-content .brand-description,
+    .page .brand-panel .card-stage,
+    .page .auth-top,
+    .page .auth-heading,
+    .page .login-form .form-group,
+    .page .login-form .forgot-row,
+    .page .login-form .submit-button,
+    .page .register-area {
+        animation: none !important;
+    }
+
+    .page .auth-panel .form-input,
+    .page .submit-button,
+    .page .submit-arrow,
+    .page .auth-panel .text-link {
+        transition: none !important;
+    }
+}
+
+/*
+==========================================
+ FALCONI-GIT v0.8.1
+ PREMIUM REGISTER EXPERIENCE
+
+ Estilos exclusivos para register.html
+ No modifica la lógica de autenticación.
+==========================================
+*/
+
+/* 1. SUPERFICIES */
+
+.falconi-register-premium .auth-panel {
+    background:
+        radial-gradient(
+            ellipse at 100% 0%,
+            rgba(224, 242, 254, .38),
+            transparent 43%
+        ),
+        linear-gradient(
+            160deg,
+            #FFFFFF 0%,
+            #F8FAFF 100%
+        );
+}
+
+.falconi-register-premium .brand-panel {
+    background-color: #0F1B2D;
+}
+
+/* 2. TÍTULOS */
+
+.falconi-register-premium .auth-title {
+    color: #0F1B2D;
+    letter-spacing: -1.2px;
+}
+
+.falconi-register-premium .auth-description {
+    color: #64748B;
+    line-height: 1.7;
+}
+
+/* 3. FORMULARIO */
+
+.falconi-register-premium form .form-group {
+    transition:
+        transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+
+.falconi-register-premium form .form-label,
+.falconi-register-premium form label {
+    transition: color .25s ease;
+}
+
+/* 4. CAMPOS */
+
+.falconi-register-premium form input:not(
+    [type="checkbox"]
+):not(
+    [type="radio"]
+) {
+    border: 1px solid #DDE5F0;
+    border-radius: 12px;
+    background: #F8FAFF;
+
+    transition:
+        border-color .25s ease,
+        box-shadow .3s ease,
+        background-color .25s ease;
+}
+
+.falconi-register-premium form input:not(
+    [type="checkbox"]
+):not(
+    [type="radio"]
+):focus {
+    outline: none;
+    background: #FFFFFF;
+    border-color: #60A5FA;
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, .12),
+        0 8px 24px rgba(15, 27, 45, .04);
+}
+
+/* 5. CAMPOS CON TEXTO */
+
+.falconi-register-premium form
+input:not([type="checkbox"]):not([type="radio"]):not(:placeholder-shown) {
+    background: #FFFFFF;
+}
+/* 6. LABELS ACTIVOS */
+
+.falconi-register-premium
+.form-group:focus-within .form-label {
+    color: #1E3A8A;
+}
+
+/* 7. ERRORES DE VALIDACIÓN */
+
+.falconi-register-premium
+input[aria-invalid="true"] {
+    border-color: #B42332 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(180, 35, 50, .1) !important;
+}
+
+/* 8. BOTÓN PRINCIPAL */
+
+.falconi-register-premium
+form button[type="submit"] {
+    border-radius: 12px;
+
+    transition:
+        transform .25s cubic-bezier(.22, 1, .36, 1),
+        box-shadow .3s ease,
+        background-color .25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .falconi-register-premium
+    form button[type="submit"]:not(:disabled):hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 15px 30px rgba(30, 58, 138, .2);
+    }
+}
+
+.falconi-register-premium
+form button[type="submit"]:not(:disabled):active {
+    transform: scale(.99);
+}
+
+/* 9. INDICADORES DE CONTRASEÑA */
+
+/* Conserva los colores definidos
+   por las validaciones existentes. */
+
+.falconi-register-premium .password-strength,
+.falconi-register-premium .strength-bar,
+.falconi-register-premium .strength-fill,
+.falconi-register-premium .password-meter {
+    transition:
+        width .35s ease,
+        background-color .3s ease,
+        border-color .3s ease;
+}
+
+.falconi-register-premium
+.password-requirements {
+    border-radius: 12px;
+}
+
+/* 10. ENLACES */
+
+.falconi-register-premium a {
+    transition:
+        color .2s ease,
+        opacity .2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .falconi-register-premium
+    .auth-panel a:hover {
+        color: #60A5FA;
+    }
+}
+
+/* 11. ANIMACIONES DE ENTRADA */
+
+@keyframes fg-register-enter {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.falconi-register-premium .brand-header {
+    animation:
+        fg-register-enter .7s ease-out backwards;
+}
+
+.falconi-register-premium .auth-heading {
+    animation:
+        fg-register-enter .8s ease-out .12s backwards;
+}
+
+.falconi-register-premium form .form-group {
+    animation:
+        fg-register-enter .7s ease-out backwards;
+}
+
+.falconi-register-premium
+form .form-group:nth-child(1) {
+    animation-delay: .2s;
+}
+
+.falconi-register-premium
+form .form-group:nth-child(2) {
+    animation-delay: .28s;
+}
+
+.falconi-register-premium
+form .form-group:nth-child(3) {
+    animation-delay: .36s;
+}
+
+.falconi-register-premium
+form .form-group:nth-child(4) {
+    animation-delay: .44s;
+}
+
+.falconi-register-premium
+form button[type="submit"] {
+    animation:
+        fg-register-enter .7s ease-out .52s backwards;
+}
+
+/* 12. ACCESIBILIDAD */
+
+@media (prefers-reduced-motion: reduce) {
+    .falconi-register-premium
+    .brand-header,
+
+    .falconi-register-premium
+    .auth-heading,
+
+    .falconi-register-premium
+    form .form-group,
+
+    .falconi-register-premium
+    form button[type="submit"] {
+        animation: none !important;
+    }
+
+    .falconi-register-premium
+    form input,
+
+    .falconi-register-premium
+    form button,
+
+    .falconi-register-premium a {
+        transition: none !important;
+    }
+}

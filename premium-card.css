@@ -380,3 +380,195 @@
         transition: none;
     }
 }
+
+/*
+========================================
+ FG-PREMIUM-AUTH-PATCH-v081
+ FALCONI-GIT - Premium Auth
+
+ Login / Registro / Recuperacion
+========================================
+*/
+
+/* LOGO ORIGINAL FALCONI */
+
+.logo-box .fg-auth-mark {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: #0F1B2D !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.fg-auth-mark-symbol {
+    display: block;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+.fg-auth-mark-caption {
+    display: block;
+
+    margin-top: 3px;
+
+    font-family: Arial, sans-serif;
+    font-size: 5px;
+    font-weight: 800;
+    letter-spacing: .7px;
+}
+
+/* SUPERFICIE DEL FORMULARIO */
+
+.falconi-auth-premium .auth-panel {
+    background:
+        radial-gradient(
+            ellipse at 100% 0%,
+            rgba(224, 242, 254, .18),
+            transparent 43%
+        ),
+        #FFFFFF;
+}
+
+/* TITULOS */
+
+.falconi-auth-premium .auth-title {
+    color: #0F1B2D;
+    letter-spacing: -1.2px;
+}
+
+.falconi-auth-premium .auth-description {
+    color: #64748B;
+    line-height: 1.7;
+}
+
+/* FORMULARIOS */
+
+.falconi-auth-premium .form-input {
+    border-radius: 12px;
+    background: #F8FAFF;
+
+    transition:
+        border-color .25s ease,
+        box-shadow .3s ease,
+        background-color .25s ease;
+}
+
+.falconi-auth-premium .form-input:focus {
+    background: #FFFFFF;
+    border-color: #60A5FA;
+    outline: none;
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, .12),
+        0 8px 24px rgba(15, 27, 45, .04);
+}
+
+/* ETIQUETAS */
+
+.falconi-auth-premium
+.form-group .form-label {
+    transition: color .25s ease;
+}
+
+.falconi-auth-premium
+.form-group:focus-within .form-label {
+    color: #1E3A8A;
+}
+
+/* VALIDACIONES */
+
+.falconi-auth-premium
+.form-input[aria-invalid="true"] {
+    border-color: #B42332 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(180, 35, 50, .1) !important;
+}
+
+/* BOTONES */
+
+.falconi-auth-premium .submit-button {
+    border-radius: 12px;
+
+    transition:
+        transform .25s ease,
+        box-shadow .3s ease,
+        background-color .25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+    .falconi-auth-premium
+    .submit-button:not(:disabled):hover {
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 15px 30px rgba(30, 58, 138, .2);
+    }
+}
+
+/* REQUISITOS DE CONTRASENA */
+
+.falconi-auth-premium
+.password-requirements,
+.falconi-auth-premium
+.password-rules {
+    border-radius: 12px;
+    line-height: 1.65;
+}
+
+.falconi-auth-premium
+.password-strength,
+.falconi-auth-premium
+.strength-fill {
+    transition:
+        width .3s ease,
+        background-color .3s ease;
+}
+
+/* ANIMACIONES SUAVES */
+
+@keyframes fg-auth-premium-enter {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.falconi-auth-premium .auth-heading {
+    animation:
+        fg-auth-premium-enter
+        .75s ease-out backwards;
+}
+
+.falconi-auth-premium .brand-header {
+    animation:
+        fg-auth-premium-enter
+        .65s ease-out backwards;
+}
+
+/* RESPETAR MOVIMIENTO REDUCIDO */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .falconi-auth-premium .auth-heading,
+    .falconi-auth-premium .brand-header {
+        animation: none !important;
+    }
+}
