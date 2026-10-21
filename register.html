@@ -1,14 +1,16 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0F1B2D">
 
     <title>Crear cuenta | FALCONI-GIT</title>
 
-    <!-- Reutilizamos el CSS del login -->
+    <!-- Estilos existentes -->
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="./responsive.css">
 
@@ -21,7 +23,7 @@
     <main class="page">
 
         <!-- PANEL IZQUIERDO -->
-        <section class="brand-panel">
+        <section class="brand-panel" aria-label="FALCONI-GIT">
 
             <header class="brand-header">
                 <div class="logo-box">
@@ -109,6 +111,7 @@
                     novalidate
                 >
 
+                    <!-- NOMBRE -->
                     <div class="form-group">
                         <label class="form-label" for="username">
                             Nombre de usuario
@@ -121,17 +124,17 @@
                             name="username"
                             placeholder="Tu nombre"
                             autocomplete="username"
+                            minlength="3"
+                            maxlength="40"
                             aria-describedby="usernameError"
                             required
                         >
 
-                        <small
-                            class="error-message"
-                            id="usernameError"
-                            aria-live="polite"
-                        ></small>
+                        <small class="error-message"
+                               id="usernameError"></small>
                     </div>
 
+                    <!-- CORREO -->
                     <div class="form-group">
                         <label class="form-label" for="email">
                             Correo electrónico
@@ -148,79 +151,152 @@
                             required
                         >
 
-                        <small
-                            class="error-message"
-                            id="emailError"
-                            aria-live="polite"
-                        ></small>
+                        <small class="error-message"
+                               id="emailError"></small>
                     </div>
 
+                    <!-- CONTRASEÑA -->
                     <div class="form-group">
                         <label class="form-label" for="password">
                             Contraseña
                         </label>
 
-                        <input
-                            class="form-input"
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Crea una contraseña"
-                            autocomplete="new-password"
-                            aria-describedby="passwordError"
-                            required
-                        >
+                        <div class="password-field">
 
-                        <small
-                            class="error-message"
-                            id="passwordError"
-                            aria-live="polite"
-                        ></small>
+                            <input
+                                class="form-input"
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Crea una contraseña"
+                                autocomplete="new-password"
+                                aria-describedby="passwordRequirements passwordError"
+                                required
+                            >
+
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                id="togglePassword"
+                                aria-label="Mostrar contraseña"
+                                aria-pressed="false"
+                            >
+                                Mostrar
+                            </button>
+
+                        </div>
+
+                        <!-- Indicador de seguridad -->
+                        <div class="password-security"
+                             id="passwordSecurity">
+
+                            <div class="security-header">
+                                <span>Seguridad de contraseña</span>
+                                <span id="strengthText">Sin evaluar</span>
+                            </div>
+
+                            <div class="strength-track">
+                                <div
+                                    class="strength-fill"
+                                    id="strengthFill"
+                                ></div>
+                            </div>
+
+                            <div
+                                class="password-requirements"
+                                id="passwordRequirements"
+                            >
+                                <p id="ruleLength">
+                                    ○ Mínimo 8 caracteres
+                                </p>
+
+                                <p id="ruleUpper">
+                                    ○ Una letra mayúscula
+                                </p>
+
+                                <p id="ruleLower">
+                                    ○ Una letra minúscula
+                                </p>
+
+                                <p id="ruleNumber">
+                                    ○ Un número
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <small class="error-message"
+                               id="passwordError"></small>
                     </div>
 
+                    <!-- CONFIRMAR CONTRASEÑA -->
                     <div class="form-group">
                         <label class="form-label" for="confirmPassword">
                             Confirmar contraseña
                         </label>
 
-                        <input
-                            class="form-input"
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            placeholder="Repite tu contraseña"
-                            autocomplete="new-password"
-                            aria-describedby="confirmPasswordError"
-                            required
-                        >
+                        <div class="password-field">
 
-                        <small
-                            class="error-message"
-                            id="confirmPasswordError"
-                            aria-live="polite"
-                        ></small>
+                            <input
+                                class="form-input"
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Repite tu contraseña"
+                                autocomplete="new-password"
+                                aria-describedby="matchMessage confirmPasswordError"
+                                required
+                            >
+
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                id="toggleConfirmPassword"
+                                aria-label="Mostrar confirmación de contraseña"
+                                aria-pressed="false"
+                            >
+                                Mostrar
+                            </button>
+
+                        </div>
+
+                        <p id="matchMessage"
+                           class="password-match"
+                           aria-live="polite"></p>
+
+                        <small class="error-message"
+                               id="confirmPasswordError"></small>
                     </div>
 
+                    <!-- TÉRMINOS -->
                     <div class="form-group">
-                        <label>
+                        <label class="terms-label">
                             <input
                                 type="checkbox"
                                 id="acceptTerms"
+                                aria-describedby="termsError"
                                 required
                             >
-                            Acepto los términos y la política de privacidad
+
+                            <span>
+                                Acepto los términos y la
+                                política de privacidad.
+                            </span>
                         </label>
 
-                        <small
-                            class="error-message"
-                            id="termsError"
-                            aria-live="polite"
-                        ></small>
+                        <small class="error-message"
+                               id="termsError"></small>
                     </div>
 
-                    <button type="submit" class="submit-button">
+                    <!-- BOTÓN -->
+                    <button
+                        type="submit"
+                        class="submit-button"
+                        id="registerButton"
+                    >
                         <span>Crear cuenta</span>
-                        <span class="submit-arrow" aria-hidden="true">→</span>
+                        <span class="submit-arrow"
+                              aria-hidden="true">→</span>
                     </button>
 
                     <p

@@ -1,10 +1,13 @@
 
+
 // ==========================================
-// FALCONI-GIT
-// REGISTRO DE USUARIOS - PROTOTIPO
+// FALCONI-GIT - REGISTRO
+// Versión 0.4
+// Validaciones interactivas
 // ==========================================
 
-// Obtener elementos
+// ELEMENTOS DEL FORMULARIO
+
 const registerForm = document.getElementById("registerForm");
 
 const username = document.getElementById("username");
@@ -15,109 +18,349 @@ const acceptTerms = document.getElementById("acceptTerms");
 
 const registerStatus = document.getElementById("registerStatus");
 
-// Mostrar un error junto a un campo
-function showError(fieldId, message) {
+const togglePassword = document.getElementById("togglePassword");
+const toggleConfirmPassword = document.getElementById(
+    "toggleConfirmPassword"
+);
 
-    const errorElement = document.getElementById(fieldId);
+const strengthText = document.getElementById("strengthText");
+const strengthFill = document.getElementById("strengthFill");
+const matchMessage = document.getElementById("matchMessage");
 
-    errorElement.textContent = message;
+// ==========================================
+// MOSTRAR Y OCULTAR CONTRASEÑAS
+// ==========================================
+
+function setupPasswordToggle(button, input) {
+
+    button.addEventListener("click", function () {
+
+        const isHidden = input.type === "password";
+
+        input.type = isHidden ? "text" : "password";
+
+        button.textContent = isHidden ? "Ocultar" : "Mostrar";
+
+        button.setAttribute(
+            "aria-pressed",
+            String(isHidden)
+        );
+
+        button.setAttribute(
+            "aria-label",
+            isHidden ? "Ocultar contraseña" : "Mostrar contraseña"
+        );
+    });
 }
 
-// Limpiar los errores
+setupPasswordToggle(togglePassword, password);
+setupPasswordToggle(toggleConfirmPassword, confirmPassword);
+
+// ==========================================
+// REQUISITOS DE CONTRASEÑA
+// ==========================================
+
+function getPasswordRules(value) {
+
+    return {
+        length: value.length >= 8,
+        upper: /[A-Z]/.test(value),
+        lower: /[a-z]/.test(value),
+        number: /[0-9]/.test(value)
+    };
+}
+
+// Actualizar cada requisito visualmente
+
+function updateRule(id, valid, text) {
+
+    const element = document.getElementById(id);
+
+    element.textContent = (valid ? "✓ " : "○ ") + text;
+
+    element.classList.toggle("rule-valid", valid);
+}
+
+// ==========================================
+// INDICADOR DE CONTRASEÑA
+// ==========================================
+
+function updatePasswordStrength() {
+
+    const value = password.value;
+    const rules = getPasswordRules(value);
+
+    updateRule(
+        "ruleLength",
+        rules.length,
+        "Mínimo 8 caracteres"
+    );
+
+    updateRule(
+        "ruleUpper",
+        rules.upper,
+        "Una letra mayúscula"
+    );
+
+    updateRule(
+        "ruleLower",
+        rules.lower,
+        "Una letra minúscula"
+    );
+
+    updateRule(
+        "ruleNumber",
+        rules.number,
+        "Un número"
+    );
+
+    // Contamos cuántos requisitos se cumplen
+    const score = Object.values(rules).filter(Boolean).length;
+
+    // El indicador representa requisitos cumplidos,
+    // no una evaluación criptográfica de seguridad.
+    const percentage = value.length === 0 ? 0 : score * 25;
+
+    strengthFill.style.width = percentage + "%";
+
+    if (value.length === 0) {
+
+        strengthText.textContent = "Sin evaluar";
+        strengthFill.dataset.level = "empty";
+
+    } else if (score <= 2) {
+
+        strengthText.textContent = "Faltan requisitos";
+        strengthFill.dataset.level = "low";
+
+    } else if (score === 3) {
+
+        strengthText.textContent = "Casi lista";
+        strengthFill.dataset.level = "medium";
+
+    } else {
+
+        strengthText.textContent = "Requisitos cumplidos";
+        strengthFill.dataset.level = "complete";
+    }
+}
+
+password.addEventListener("input", function () {
+
+    updatePasswordStrength();
+    updatePasswordMatch();
+
+    clearFieldError(password, "passwordError");
+});
+
+// ==========================================
+// COMPARAR CONTRASEÑAS
+// ==========================================
+
+function updatePasswordMatch() {
+
+    const value = confirmPassword.value;
+
+    matchMessage.classList.remove(
+        "match-success",
+        "match-error"
+    );
+
+    if (value === "") {
+
+        matchMessage.textContent = "";
+        return;
+    }
+
+    if (password.value === value) {
+
+        matchMessage.textContent = "✓ Las contraseñas coinciden";
+        matchMessage.classList.add("match-success");
+
+    } else {
+
+        matchMessage.textContent = "Las contraseñas no coinciden";
+        matchMessage.classList.add("match-error");
+    }
+}
+
+confirmPassword.addEventListener("input", function () {
+
+    updatePasswordMatch();
+
+    clearFieldError(
+        confirmPassword,
+        "confirmPasswordError"
+    );
+});
+
+// ==========================================
+// ERRORES DE VALIDACIÓN
+// ==========================================
+
+function showError(field, errorId, message) {
+
+    document.getElementById(errorId).textContent = message;
+
+    field.setAttribute("aria-invalid", "true");
+}
+
+function clearFieldError(field, errorId) {
+
+    document.getElementById(errorId).textContent = "";
+
+    field.removeAttribute("aria-invalid");
+}
+
 function clearErrors() {
 
-    const errors = document.querySelectorAll(".error-message");
+    registerForm.querySelectorAll(".error-message")
+        .forEach(function (element) {
 
-    errors.forEach(function (error) {
-        error.textContent = "";
-    });
+            element.textContent = "";
+        });
 
-    const fields = registerForm.querySelectorAll("input");
+    registerForm.querySelectorAll("input")
+        .forEach(function (element) {
 
-    fields.forEach(function (field) {
-        field.removeAttribute("aria-invalid");
-    });
+            element.removeAttribute("aria-invalid");
+        });
 
     registerStatus.textContent = "";
 }
 
-// Comprobar correo
+// Limpiar errores cuando el usuario corrige campos
+
+username.addEventListener("input", function () {
+    clearFieldError(username, "usernameError");
+});
+
+email.addEventListener("input", function () {
+    clearFieldError(email, "emailError");
+});
+
+acceptTerms.addEventListener("change", function () {
+    clearFieldError(acceptTerms, "termsError");
+});
+
+// ==========================================
+// VALIDAR CORREO
+// ==========================================
+
 function validEmail(value) {
+
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-// Validar al pulsar Crear cuenta
+// ==========================================
+// VALIDAR FORMULARIO COMPLETO
+// ==========================================
+
 registerForm.addEventListener("submit", function (event) {
 
     event.preventDefault();
     clearErrors();
 
     let isValid = true;
+    let firstInvalidField = null;
+
+    function invalidate(field, errorId, message) {
+
+        showError(field, errorId, message);
+
+        if (!firstInvalidField) {
+            firstInvalidField = field;
+        }
+
+        isValid = false;
+    }
 
     const usernameValue = username.value.trim();
     const emailValue = email.value.trim();
 
+    // Nombre
     if (usernameValue.length < 3) {
 
-        showError(
+        invalidate(
+            username,
             "usernameError",
             "El nombre debe tener al menos 3 caracteres."
         );
 
-        username.setAttribute("aria-invalid", "true");
-        isValid = false;
+    } else if (usernameValue.length > 40) {
+
+        invalidate(
+            username,
+            "usernameError",
+            "El nombre no puede superar 40 caracteres."
+        );
     }
 
+    // Correo
     if (!validEmail(emailValue)) {
 
-        showError(
+        invalidate(
+            email,
             "emailError",
             "Introduce un correo electrónico válido."
         );
-
-        email.setAttribute("aria-invalid", "true");
-        isValid = false;
     }
 
-    if (password.value.length < 8) {
+    // Contraseña
+    const rules = getPasswordRules(password.value);
+    const allRulesValid = Object.values(rules).every(Boolean);
 
-        showError(
+    if (!allRulesValid) {
+
+        invalidate(
+            password,
             "passwordError",
-            "La contraseña debe tener al menos 8 caracteres."
+            "La contraseña debe cumplir los cuatro requisitos."
+        );
+    }
+
+    // Confirmación
+    if (confirmPassword.value === "") {
+
+        invalidate(
+            confirmPassword,
+            "confirmPasswordError",
+            "Confirma tu contraseña."
         );
 
-        password.setAttribute("aria-invalid", "true");
-        isValid = false;
-    }
+    } else if (password.value !== confirmPassword.value) {
 
-    if (confirmPassword.value !== password.value) {
-
-        showError(
+        invalidate(
+            confirmPassword,
             "confirmPasswordError",
             "Las contraseñas no coinciden."
         );
-
-        confirmPassword.setAttribute("aria-invalid", "true");
-        isValid = false;
     }
 
+    // Términos
     if (!acceptTerms.checked) {
 
-        showError(
+        invalidate(
+            acceptTerms,
             "termsError",
             "Debes aceptar las condiciones para continuar."
         );
-
-        acceptTerms.setAttribute("aria-invalid", "true");
-        isValid = false;
     }
 
+    // Si algo falla, enfocar el primer campo inválido
     if (!isValid) {
+
+        firstInvalidField.focus();
         return;
     }
 
-    // Prototipo: aún no crea cuentas reales.
+    // Prototipo: no se crean usuarios reales
     registerStatus.textContent =
-        "Formulario validado correctamente. El registro real estará disponible cuando implementemos el servidor.";
+        "Datos validados correctamente. El registro real se habilitará cuando implementemos el backend.";
 
+    // No guardamos ni enviamos contraseñas.
 });
+
+// Inicializar los indicadores
+updatePasswordStrength();
+updatePasswordMatch();
