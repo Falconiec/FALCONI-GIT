@@ -899,3 +899,65 @@ select:focus-visible {
 .falconi-logo--dark {
     color: #0F1B2D;
 }
+
+/* ==========================================
+   FALCONI-GIT
+   CORRECCIÓN DEFINITIVA DEL LOGO DEL INDEX
+   ========================================== */
+
+.logo-box {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+
+    background: #ffffff !important;
+    border-radius: 13px !important;
+    overflow: hidden;
+}
+
+/* Mostrar el logo dentro del recuadro blanco */
+
+.logo-box .falconi-logo {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: #0F1B2D !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Letra F. */
+
+.logo-box .falconi-logo-symbol {
+    display: block !important;
+
+    color: #0F1B2D !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 27px !important;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+/* Nombre FALCONI debajo */
+
+.logo-box .falconi-logo-caption {
+    display: block !important;
+
+    margin-top: 3px;
+
+    color: #0F1B2D !important;
+    font-family: Arial, sans-serif;
+    font-size: 5px !important;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+}
