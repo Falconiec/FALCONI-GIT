@@ -15,12 +15,11 @@
     <script src="./language.js" defer></script>
     <script src="./movements.js" defer></script>
 </head>
-<body>
 
+<body>
 <div class="app-layout">
 
     <aside class="sidebar">
-
         <div class="sidebar-brand">
             <span class="brand-icon">F.</span>
             <strong>FALCONI-GIT</strong>
@@ -35,6 +34,7 @@
 
             <a href="./movements.html"
                class="nav-item active"
+               aria-current="page"
                data-i18n="dashboardMovements">
                 Movimientos
             </a>
@@ -48,12 +48,19 @@
                   data-i18n="dashboardGoals">
                 Metas
             </span>
+
+            <span class="nav-item disabled"
+                  data-i18n="dashboardSettings">
+                Configuración
+            </span>
         </nav>
 
         <div class="sidebar-footer">
-            <button id="logoutButton"
-                    class="logout-button"
-                    data-i18n="logout">
+            <button
+                id="logoutButton"
+                type="button"
+                class="logout-button"
+                data-i18n="logout">
                 Cerrar sesión
             </button>
         </div>
@@ -80,8 +87,9 @@
 
         <main class="dashboard-content">
 
-            <div class="welcome">
-                <p class="eyebrow">FALCONI-GIT · ₽</p>
+            <!-- ENCABEZADO -->
+            <section class="welcome">
+                <p class="eyebrow">FALCONI-GIT · v0.8</p>
 
                 <h1 data-i18n="movementsTitle">
                     Mis movimientos
@@ -90,9 +98,9 @@
                 <p data-i18n="movementsSubtitle">
                     Organiza tus ingresos y gastos en rublos.
                 </p>
-            </div>
+            </section>
 
-            <!-- RESUMEN -->
+            <!-- RESUMEN FINANCIERO -->
             <section class="movement-summary">
 
                 <article class="summary-box">
@@ -112,12 +120,66 @@
 
             </section>
 
-            <!-- NUEVO MOVIMIENTO -->
+            <!-- GRÁFICO -->
             <section class="movement-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2 data-i18n="financialOverview">
+                            Resumen financiero
+                        </h2>
 
-                <h2 data-i18n="newMovement">
-                    Nuevo movimiento
-                </h2>
+                        <p class="panel-description"
+                           data-i18n="chartDescription">
+                            Comparación de ingresos y gastos.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="chart-area"
+                     role="img"
+                     id="financialChart"
+                     aria-label="Comparación de ingresos y gastos">
+
+                    <div class="chart-column">
+                        <div class="chart-track">
+                            <div id="incomeBar"
+                                 class="chart-bar income-bar"></div>
+                        </div>
+
+                        <strong id="incomeChartValue">0 ₽</strong>
+                        <span data-i18n="totalIncome">Ingresos</span>
+                    </div>
+
+                    <div class="chart-column">
+                        <div class="chart-track">
+                            <div id="expenseBar"
+                                 class="chart-bar expense-bar"></div>
+                        </div>
+
+                        <strong id="expenseChartValue">0 ₽</strong>
+                        <span data-i18n="totalExpenses">Gastos</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- FORMULARIO: CREAR Y EDITAR -->
+            <section class="movement-panel" id="editorPanel">
+
+                <div class="panel-heading">
+                    <h2 id="formTitle"
+                        data-i18n="newMovement">
+                        Nuevo movimiento
+                    </h2>
+
+                    <button type="button"
+                            id="cancelEdit"
+                            class="secondary-button"
+                            data-i18n="cancelEdit"
+                            hidden>
+                        Cancelar edición
+                    </button>
+                </div>
 
                 <form id="movementForm">
 
@@ -146,13 +208,12 @@
                         </label>
 
                         <input
-                            type="text"
                             id="description"
+                            type="text"
                             maxlength="100"
                             placeholder="Ej. Supermercado"
                             data-i18n-placeholder="descriptionPlaceholder"
-                            required
-                        >
+                            required>
                     </div>
 
                     <div class="movement-form-grid">
@@ -164,14 +225,12 @@
                             </label>
 
                             <input
-                                type="number"
                                 id="amount"
+                                type="number"
                                 min="0.01"
                                 max="999999999.99"
                                 step="0.01"
-                                placeholder="0.00"
-                                required
-                            >
+                                required>
                         </div>
 
                         <div class="movement-field">
@@ -185,22 +244,27 @@
                                         data-i18n="categoryFood">
                                     Alimentación
                                 </option>
+
                                 <option value="transport"
                                         data-i18n="categoryTransport">
                                     Transporte
                                 </option>
+
                                 <option value="housing"
                                         data-i18n="categoryHousing">
                                     Vivienda
                                 </option>
+
                                 <option value="study"
                                         data-i18n="categoryStudy">
                                     Estudios
                                 </option>
+
                                 <option value="salary"
                                         data-i18n="categorySalary">
                                     Salario
                                 </option>
+
                                 <option value="other"
                                         data-i18n="categoryOther">
                                     Otros
@@ -210,10 +274,12 @@
 
                     </div>
 
-                    <button type="submit"
-                            class="movement-submit"
-                            id="saveMovement">
-                        <span data-i18n="saveMovement">
+                    <button
+                        type="submit"
+                        id="saveMovement"
+                        class="movement-submit">
+                        <span id="saveButtonText"
+                              data-i18n="saveMovement">
                             Guardar movimiento
                         </span>
                         <span aria-hidden="true">→</span>
@@ -225,25 +291,154 @@
                 </form>
             </section>
 
+            <!-- FILTROS -->
+            <section class="movement-panel">
+
+                <div class="panel-heading">
+                    <h2 data-i18n="searchAndFilters">
+                        Buscar y filtrar
+                    </h2>
+
+                    <button
+                        type="button"
+                        id="clearFilters"
+                        class="secondary-button"
+                        data-i18n="clearFilters">
+                        Limpiar filtros
+                    </button>
+                </div>
+
+                <div class="filter-grid">
+
+                    <div class="movement-field">
+                        <label for="searchInput"
+                               data-i18n="searchMovement">
+                            Buscar movimiento
+                        </label>
+
+                        <input
+                            type="search"
+                            id="searchInput"
+                            placeholder="Descripción..."
+                            data-i18n-placeholder="searchPlaceholder">
+                    </div>
+
+                    <div class="movement-field">
+                        <label for="filterType"
+                               data-i18n="movementType">
+                            Tipo de movimiento
+                        </label>
+
+                        <select id="filterType">
+                            <option value="all"
+                                    data-i18n="allTypes">
+                                Todos
+                            </option>
+
+                            <option value="income"
+                                    data-i18n="income">
+                                Ingreso
+                            </option>
+
+                            <option value="expense"
+                                    data-i18n="expense">
+                                Gasto
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="movement-field">
+                        <label for="filterCategory"
+                               data-i18n="movementCategory">
+                            Categoría
+                        </label>
+
+                        <select id="filterCategory">
+                            <option value="all"
+                                    data-i18n="allCategories">
+                                Todas
+                            </option>
+
+                            <option value="food"
+                                    data-i18n="categoryFood">
+                                Alimentación
+                            </option>
+
+                            <option value="transport"
+                                    data-i18n="categoryTransport">
+                                Transporte
+                            </option>
+
+                            <option value="housing"
+                                    data-i18n="categoryHousing">
+                                Vivienda
+                            </option>
+
+                            <option value="study"
+                                    data-i18n="categoryStudy">
+                                Estudios
+                            </option>
+
+                            <option value="salary"
+                                    data-i18n="categorySalary">
+                                Salario
+                            </option>
+
+                            <option value="other"
+                                    data-i18n="categoryOther">
+                                Otros
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="movement-field">
+                        <label for="startDate"
+                               data-i18n="startDate">
+                            Desde
+                        </label>
+
+                        <input type="date" id="startDate">
+                    </div>
+
+                    <div class="movement-field">
+                        <label for="endDate"
+                               data-i18n="endDate">
+                            Hasta
+                        </label>
+
+                        <input type="date" id="endDate">
+                    </div>
+
+                </div>
+            </section>
+
             <!-- HISTORIAL -->
             <section class="movement-panel history-panel">
-                <h2 data-i18n="movementHistory">
-                    Historial de movimientos
-                </h2>
 
-                <div id="movementList" class="movement-list">
+                <div class="panel-heading">
+                    <h2 data-i18n="movementHistory">
+                        Historial de movimientos
+                    </h2>
+
+                    <span id="resultCount"
+                          class="result-count">
+                        0
+                    </span>
                 </div>
+
+                <div id="movementList"
+                     class="movement-list"></div>
 
                 <p id="emptyMovements"
                    class="empty-message"
                    data-i18n="emptyMovements">
                     Todavía no tienes movimientos registrados.
                 </p>
+
             </section>
 
         </main>
     </div>
 </div>
-
 </body>
 </html>

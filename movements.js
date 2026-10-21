@@ -1,21 +1,36 @@
 
 /*
- FALCONI-GIT v0.7
- Movimientos financieros
+========================================
+ FALCONI-GIT v0.8
+ Gestión de movimientos financieros
+========================================
 */
 
-const movementForm = document.getElementById("movementForm");
-const movementList = document.getElementById("movementList");
-const emptyMovements = document.getElementById("emptyMovements");
-const movementStatus = document.getElementById("movementStatus");
+"use strict";
 
-const saveButton = document.getElementById("saveMovement");
-const logoutButton = document.getElementById("logoutButton");
+// ELEMENTOS HTML
+const $ = id => document.getElementById(id);
 
-const avatar = document.getElementById("avatar");
+const form = $("movementForm");
+const list = $("movementList");
+const status = $("movementStatus");
+const submitButton = $("saveMovement");
 
 let movements = [];
-let messageKey = "";
+let editingId = null;
+let lastMessage = "";
+
+// ========================================
+// IDIOMA Y FORMATO
+// ========================================
+
+function getLanguage() {
+    if (typeof currentLanguage !== "undefined") {
+        return currentLanguage;
+    }
+
+    return "es";
+}
 
 function money(kopeks) {
     const locales = {
@@ -25,7 +40,7 @@ function money(kopeks) {
     };
 
     return new Intl.NumberFormat(
-        locales[currentLanguage] || "es-ES",
+        locales[getLanguage()] || "es-ES",
         {
             style: "currency",
             currency: "RUB"
@@ -34,198 +49,421 @@ function money(kopeks) {
 }
 
 function showMessage(key) {
-    messageKey = key;
-    movementStatus.textContent = t(key);
+    lastMessage = key;
+    status.textContent = t(key);
 }
 
-function updateSummary() {
+function categoryLabel(category) {
+    const key =
+        "category" +
+        category.charAt(0).toUpperCase() +
+        category.slice(1);
+
+    return t(key);
+}
+
+function formatDate(timestamp) {
+    const locales = {
+        es: "es-ES",
+        en: "en-US",
+        ru: "ru-RU"
+    };
+
+    return new Intl.DateTimeFormat(
+        locales[getLanguage()] || "es-ES",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    ).format(new Date(timestamp));
+}
+
+// ========================================
+// TOTALES FINANCIEROS
+// ========================================
+
+function calculateTotals(items) {
     let income = 0;
     let expenses = 0;
 
-    for (const movement of movements) {
-        if (movement.type === "income") {
-            income += movement.amount_kopeks;
+    for (const item of items) {
+        if (item.type === "income") {
+            income += item.amount_kopeks;
         } else {
-            expenses += movement.amount_kopeks;
+            expenses += item.amount_kopeks;
         }
     }
 
-    document.getElementById("totalIncome").textContent =
-        money(income);
-
-    document.getElementById("totalExpenses").textContent =
-        money(expenses);
-
-    document.getElementById("currentBalance").textContent =
-        money(income - expenses);
+    return { income, expenses };
 }
 
-function renderMovements() {
-    movementList.replaceChildren();
+function renderSummary() {
+    const { income, expenses } =
+        calculateTotals(movements);
 
-    emptyMovements.hidden = movements.length > 0;
+    $("totalIncome").textContent = money(income);
+    $("totalExpenses").textContent = money(expenses);
 
-    for (const movement of movements) {
-        const item = document.createElement("article");
-        item.className = "movement-item";
+    $("currentBalance").textContent =
+        money(income - expenses);
+
+    const maximum = Math.max(income, expenses, 1);
+
+    $("incomeBar").style.height =
+        `${(income / maximum) * 100}%`;
+
+    $("expenseBar").style.height =
+        `${(expenses / maximum) * 100}%`;
+
+    $("incomeChartValue").textContent =
+        money(income);
+
+    $("expenseChartValue").textContent =
+        money(expenses);
+
+    $("financialChart").setAttribute(
+        "aria-label",
+        `${t("totalIncome")}: ${money(income)}. ` +
+        `${t("totalExpenses")}: ${money(expenses)}.`
+    );
+}
+
+// ========================================
+// FECHAS Y FILTROS
+// ========================================
+
+function localDate(timestamp) {
+    const date = new Date(timestamp);
+
+    const year = date.getFullYear();
+
+    const month = String(
+        date.getMonth() + 1
+    ).padStart(2, "0");
+
+    const day = String(
+        date.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+function filteredMovements() {
+    const search =
+        $("searchInput").value
+            .trim()
+            .toLocaleLowerCase();
+
+    const type = $("filterType").value;
+    const category = $("filterCategory").value;
+    const start = $("startDate").value;
+    const end = $("endDate").value;
+
+    return movements.filter(item => {
+        const matchesSearch =
+            item.description
+                .toLocaleLowerCase()
+                .includes(search);
+
+        const matchesType =
+            type === "all" || item.type === type;
+
+        const matchesCategory =
+            category === "all" ||
+            item.category === category;
+
+        const date = localDate(item.created_at);
+
+        const matchesStart =
+            !start || date >= start;
+
+        const matchesEnd =
+            !end || date <= end;
+
+        return (
+            matchesSearch &&
+            matchesType &&
+            matchesCategory &&
+            matchesStart &&
+            matchesEnd
+        );
+    });
+}
+
+// ========================================
+// CREAR BOTONES
+// ========================================
+
+function makeButton(label, className, callback) {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.textContent = label;
+    button.className = className;
+
+    button.addEventListener("click", callback);
+
+    return button;
+}
+
+// ========================================
+// MOSTRAR HISTORIAL
+// ========================================
+
+function renderList() {
+    const filtered = filteredMovements();
+
+    list.replaceChildren();
+
+    $("resultCount").textContent =
+        String(filtered.length);
+
+    const empty = $("emptyMovements");
+
+    empty.hidden = filtered.length > 0;
+
+    if (filtered.length === 0) {
+        empty.textContent = movements.length === 0
+            ? t("emptyMovements")
+            : t("noFilterResults");
+    }
+
+    for (const item of filtered) {
+        const row = document.createElement("article");
+        row.className = "movement-item";
 
         const icon = document.createElement("div");
         icon.className = "movement-icon";
+
         icon.textContent =
-            movement.type === "income" ? "↙" : "↗";
+            item.type === "income" ? "↙" : "↗";
 
         const info = document.createElement("div");
         info.className = "movement-info";
 
         const title = document.createElement("strong");
-        title.textContent = movement.description;
+        title.textContent = item.description;
 
         const details = document.createElement("small");
 
-        const category = t(
-            "category" +
-            movement.category.charAt(0).toUpperCase() +
-            movement.category.slice(1)
-        );
-
-        details.textContent = category;
+        details.textContent =
+            `${categoryLabel(item.category)} · ` +
+            formatDate(item.created_at);
 
         info.append(title, details);
 
         const amount = document.createElement("span");
-        amount.className = "movement-amount";
-        amount.textContent =
-            (movement.type === "income" ? "+" : "−") +
-            money(movement.amount_kopeks);
 
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "movement-delete";
-        remove.textContent = "×";
-        remove.setAttribute(
-            "aria-label",
-            t("deleteMovement")
+        amount.className =
+            `movement-amount ${item.type}`;
+
+        amount.textContent =
+            (item.type === "income" ? "+" : "−") +
+            money(item.amount_kopeks);
+
+        const actions = document.createElement("div");
+        actions.className = "movement-actions";
+
+        const editButton = makeButton(
+            t("editMovement"),
+            "edit-button",
+            () => beginEdit(item)
         );
 
-        remove.addEventListener("click", function () {
-            deleteMovement(movement.id);
-        });
+        const deleteButton = makeButton(
+            t("deleteMovement"),
+            "delete-button",
+            () => deleteMovement(item.id)
+        );
 
-        item.append(icon, info, amount, remove);
-        movementList.appendChild(item);
+        actions.append(editButton, deleteButton);
+
+        row.append(
+            icon,
+            info,
+            amount,
+            actions
+        );
+
+        list.append(row);
     }
-
-    updateSummary();
 }
 
-async function checkSession() {
-    const response = await fetch("/api/me", {
-        credentials: "same-origin"
+// ========================================
+// ACTUALIZAR INTERFAZ
+// ========================================
+
+function render() {
+    renderSummary();
+    renderList();
+}
+
+// ========================================
+// EDICIÓN DE MOVIMIENTOS
+// ========================================
+
+function resetEditor() {
+    editingId = null;
+
+    form.reset();
+
+    $("cancelEdit").hidden = true;
+
+    $("formTitle").textContent =
+        t("newMovement");
+
+    $("saveButtonText").textContent =
+        t("saveMovement");
+}
+
+function beginEdit(item) {
+    editingId = item.id;
+
+    $("type").value = item.type;
+    $("description").value = item.description;
+
+    $("amount").value =
+        (item.amount_kopeks / 100).toFixed(2);
+
+    $("category").value = item.category;
+
+    $("formTitle").textContent =
+        t("editMovement");
+
+    $("saveButtonText").textContent =
+        t("updateMovement");
+
+    $("cancelEdit").hidden = false;
+
+    $("editorPanel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
     });
 
-    if (!response.ok) {
-        window.location.replace("./index.html");
-        return false;
+    $("description").focus();
+}
+
+// ========================================
+// VALIDAR FORMULARIO
+// ========================================
+
+function movementPayload() {
+    const amount = Number($("amount").value);
+
+    const description =
+        $("description").value.trim();
+
+    if (
+        description.length === 0 ||
+        description.length > 100 ||
+        !Number.isFinite(amount) ||
+        amount <= 0 ||
+        amount > 999999999.99 ||
+        Math.abs(
+            amount * 100 -
+            Math.round(amount * 100)
+        ) > 0.00001
+    ) {
+        throw new Error("INVALID_MOVEMENT");
     }
 
-    const data = await response.json();
+    return {
+        type: $("type").value,
+        description,
+        category: $("category").value,
+        amount_kopeks: Math.round(amount * 100)
+    };
+}
 
-    avatar.textContent =
-        data.user.username.charAt(0).toUpperCase();
+// ========================================
+// PETICIONES AL SERVIDOR
+// ========================================
 
-    return true;
+async function apiRequest(url, options = {}) {
+    const response = await fetch(url, {
+        credentials: "same-origin",
+        ...options
+    });
+
+    if (response.status === 401) {
+        window.location.replace("./index.html");
+        throw new Error("UNAUTHORIZED");
+    }
+
+    if (!response.ok) {
+        throw new Error(`HTTP_${response.status}`);
+    }
+
+    return response.json();
 }
 
 async function loadMovements() {
-    try {
-        const response = await fetch("/api/movements", {
-            credentials: "same-origin"
-        });
+    const data = await apiRequest("/api/movements");
 
-        if (response.status === 401) {
-            window.location.replace("./index.html");
-            return;
-        }
+    movements = data.movements;
 
-        if (!response.ok) {
-            throw new Error("LOAD_FAILED");
-        }
-
-        const data = await response.json();
-
-        movements = data.movements;
-        renderMovements();
-
-    } catch {
-        showMessage("movementLoadError");
-    }
+    render();
 }
 
-movementForm.addEventListener("submit", async function (event) {
+// ========================================
+// GUARDAR O EDITAR MOVIMIENTO
+// ========================================
+
+form.addEventListener("submit", async event => {
     event.preventDefault();
 
-    const type = document.getElementById("type").value;
-    const description =
-        document.getElementById("description").value.trim();
-    const category =
-        document.getElementById("category").value;
+    let payload;
 
-    const amountField = document.getElementById("amount");
-    const numericAmount = Number(amountField.value);
-
-    if (
-        !Number.isFinite(numericAmount) ||
-        numericAmount <= 0 ||
-        numericAmount > 999999999.99 ||
-        Math.abs(
-            numericAmount * 100 -
-            Math.round(numericAmount * 100)
-        ) > 0.00001 ||
-        description.length === 0
-    ) {
+    try {
+        payload = movementPayload();
+    } catch {
         showMessage("movementInvalid");
         return;
     }
 
-    const amountKopeks = Math.round(numericAmount * 100);
-
-    saveButton.disabled = true;
+    submitButton.disabled = true;
 
     try {
-        const response = await fetch("/api/movements", {
-            method: "POST",
+        const isEditing = editingId !== null;
+
+        const url = isEditing
+            ? `/api/movements/${editingId}`
+            : "/api/movements";
+
+        await apiRequest(url, {
+            method: isEditing ? "PATCH" : "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
-            credentials: "same-origin",
-            body: JSON.stringify({
-                type,
-                description,
-                category,
-                amount_kopeks: amountKopeks
-            })
+
+            body: JSON.stringify(payload)
         });
 
-        if (response.status === 401) {
-            window.location.replace("./index.html");
-            return;
-        }
+        resetEditor();
 
-        if (!response.ok) {
-            throw new Error("SAVE_FAILED");
-        }
-
-        movementForm.reset();
-        showMessage("movementSaved");
         await loadMovements();
 
-    } catch {
-        showMessage("movementSaveError");
+        showMessage(
+            isEditing
+                ? "movementUpdated"
+                : "movementSaved"
+        );
+
+    } catch (error) {
+        if (error.message !== "UNAUTHORIZED") {
+            showMessage("movementSaveError");
+        }
 
     } finally {
-        saveButton.disabled = false;
+        submitButton.disabled = false;
     }
 });
+
+// ========================================
+// ELIMINAR MOVIMIENTOS
+// ========================================
 
 async function deleteMovement(id) {
     if (!window.confirm(t("confirmDelete"))) {
@@ -233,75 +471,140 @@ async function deleteMovement(id) {
     }
 
     try {
-        const response = await fetch(
+        await apiRequest(
             `/api/movements/${id}`,
             {
-                method: "DELETE",
-                credentials: "same-origin"
+                method: "DELETE"
             }
         );
 
-        if (response.status === 401) {
-            window.location.replace("./index.html");
-            return;
+        if (editingId === id) {
+            resetEditor();
         }
 
-        if (!response.ok) {
-            throw new Error("DELETE_FAILED");
-        }
-
-        showMessage("movementDeleted");
         await loadMovements();
 
-    } catch {
-        showMessage("movementDeleteError");
+        showMessage("movementDeleted");
+
+    } catch (error) {
+        if (error.message !== "UNAUTHORIZED") {
+            showMessage("movementDeleteError");
+        }
     }
 }
 
-logoutButton.addEventListener("click", async function () {
-    logoutButton.disabled = true;
+// ========================================
+// CANCELAR EDICIÓN
+// ========================================
 
-    try {
-        const response = await fetch("/api/logout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "same-origin",
-            body: JSON.stringify({})
-        });
+$("cancelEdit").addEventListener(
+    "click",
+    resetEditor
+);
 
-        if (!response.ok) {
-            throw new Error("LOGOUT_FAILED");
-        }
+// ========================================
+// LIMPIAR FILTROS
+// ========================================
 
-        window.location.replace("./index.html");
+$("clearFilters").addEventListener("click", () => {
+    $("searchInput").value = "";
+    $("filterType").value = "all";
+    $("filterCategory").value = "all";
+    $("startDate").value = "";
+    $("endDate").value = "";
 
-    } catch {
-        logoutButton.disabled = false;
-        showMessage("serverError");
-    }
+    renderList();
 });
 
-document.addEventListener("languageChanged", function () {
-    renderMovements();
+// ========================================
+// FILTROS AUTOMÁTICOS
+// ========================================
 
-    if (messageKey) {
-        movementStatus.textContent = t(messageKey);
+for (const id of [
+    "searchInput",
+    "filterType",
+    "filterCategory",
+    "startDate",
+    "endDate"
+]) {
+    $(id).addEventListener("input", renderList);
+    $(id).addEventListener("change", renderList);
+}
+
+// ========================================
+// CERRAR SESIÓN
+// ========================================
+
+$("logoutButton").addEventListener(
+    "click",
+    async () => {
+        const button = $("logoutButton");
+
+        button.disabled = true;
+
+        try {
+            await apiRequest("/api/logout", {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: "{}"
+            });
+
+            window.location.replace("./index.html");
+
+        } catch {
+            button.disabled = false;
+            showMessage("serverError");
+        }
     }
-});
+);
 
-async function initializeMovements() {
-    try {
-        const authenticated = await checkSession();
+// ========================================
+// CAMBIAR IDIOMA
+// ========================================
 
-        if (authenticated) {
-            await loadMovements();
+document.addEventListener(
+    "languageChanged",
+    () => {
+        render();
+
+        if (editingId !== null) {
+            $("formTitle").textContent =
+                t("editMovement");
+
+            $("saveButtonText").textContent =
+                t("updateMovement");
         }
 
-    } catch {
-        showMessage("serverError");
+        if (lastMessage) {
+            status.textContent = t(lastMessage);
+        }
+    }
+);
+
+// ========================================
+// INICIAR MOVIMIENTOS
+// ========================================
+
+async function startMovements() {
+    try {
+        const profile = await apiRequest("/api/me");
+
+        $("avatar").textContent =
+            profile.user.username
+                .charAt(0)
+                .toUpperCase();
+
+        await loadMovements();
+
+    } catch (error) {
+        if (error.message !== "UNAUTHORIZED") {
+            showMessage("movementLoadError");
+        }
     }
 }
 
-initializeMovements();
+startMovements();

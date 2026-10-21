@@ -1,28 +1,13 @@
 
 /*
-==========================================
- FALCONI-GIT
- Backend v0.7
-
- Node.js + SQLite
-
- Funcionalidades:
- - Registro de usuarios
- - Inicio de sesión
- - Cierre de sesión
- - Recuperación de contraseña
- - Dashboard
- - Registro de ingresos y gastos
- - Consulta de movimientos
- - Eliminación de movimientos
-==========================================
+========================================
+ FALCONI-GIT v0.8
+ Backend de desarrollo local
+ Node.js 24 + SQLite
+========================================
 */
 
 "use strict";
-
-// ==========================================
-// 1. IMPORTAR MÓDULOS
-// ==========================================
 
 const http = require("node:http");
 const fs = require("node:fs");
@@ -33,28 +18,25 @@ const { DatabaseSync } = require("node:sqlite");
 
 const scrypt = promisify(crypto.scrypt);
 
-
-// ==========================================
-// 2. CONFIGURACIÓN DEL SERVIDOR
-// ==========================================
+// CONFIGURACIÓN
 
 const HOST = "127.0.0.1";
 const PORT = 3000;
-
 const ORIGIN = `http://${HOST}:${PORT}`;
-
 const ROOT = __dirname;
+
+const SESSION_MS = 7 * 24 * 60 * 60 * 1000;
+const RESET_MS = 15 * 60 * 1000;
 
 if (process.env.NODE_ENV === "production") {
     throw new Error(
-        "Este servidor es solo para desarrollo local."
+        "Este servidor es únicamente para desarrollo local."
     );
 }
 
-
-// ==========================================
-// 3. BASE DE DATOS
-// ==========================================
+// ========================================
+// BASE DE DATOS
+// ========================================
 
 const dataDir = path.join(ROOT, "data");
 
@@ -69,101 +51,51 @@ const db = new DatabaseSync(
 db.exec(`
     PRAGMA journal_mode = WAL;
     PRAGMA foreign_keys = ON;
-`);
 
-
-// ==========================================
-// 4. TABLA DE USUARIOS
-// ==========================================
-
-db.exec(`
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-
         username TEXT NOT NULL,
-
         email TEXT NOT NULL UNIQUE,
-
         password_hash TEXT NOT NULL,
-
         created_at INTEGER NOT NULL
     );
-`);
 
-
-// ==========================================
-// 5. TABLA DE SESIONES
-// ==========================================
-
-db.exec(`
     CREATE TABLE IF NOT EXISTS sessions (
         token_hash TEXT PRIMARY KEY,
-
         user_id INTEGER NOT NULL,
-
         expires_at INTEGER NOT NULL,
-
-        FOREIGN KEY (user_id)
+        FOREIGN KEY(user_id)
             REFERENCES users(id)
             ON DELETE CASCADE
     );
-`);
 
-
-// ==========================================
-// 6. RECUPERACIÓN DE CONTRASEÑAS
-// ==========================================
-
-db.exec(`
     CREATE TABLE IF NOT EXISTS password_resets (
         token_hash TEXT PRIMARY KEY,
-
         user_id INTEGER NOT NULL,
-
         expires_at INTEGER NOT NULL,
-
-        FOREIGN KEY (user_id)
+        FOREIGN KEY(user_id)
             REFERENCES users(id)
             ON DELETE CASCADE
     );
-`);
 
-
-// ==========================================
-// 7. TABLA DE MOVIMIENTOS
-// NUEVO EN V0.7
-// ==========================================
-
-db.exec(`
     CREATE TABLE IF NOT EXISTS movements (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-
         user_id INTEGER NOT NULL,
-
         type TEXT NOT NULL
             CHECK(type IN ('income', 'expense')),
-
         description TEXT NOT NULL,
-
         category TEXT NOT NULL
             CHECK(category IN (
-                'food',
-                'transport',
-                'housing',
-                'study',
-                'salary',
-                'other'
+                'food', 'transport', 'housing',
+                'study', 'salary', 'other'
             )),
-
         amount_kopeks INTEGER NOT NULL
             CHECK(
                 amount_kopeks >= 1
                 AND amount_kopeks <= 99999999999
             ),
-
         created_at INTEGER NOT NULL,
-
-        FOREIGN KEY (user_id)
+        FOREIGN KEY(user_id)
             REFERENCES users(id)
             ON DELETE CASCADE
     );
@@ -172,88 +104,48 @@ db.exec(`
         ON movements(user_id, created_at);
 `);
 
+// ========================================
+// UTILIDADES DE SEGURIDAD
+// ========================================
 
-// ==========================================
-// 8. SEGURIDAD Y UTILIDADES
-// ==========================================
-
-const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000;
-
-const RESET_DURATION = 15 * 60 * 1000;
-
-
-// Generar tokens aleatorios
-
-function generateToken() {
-
+function token() {
     return crypto.randomBytes(32).toString("hex");
-
 }
 
-
-// Crear hash de token
-
-function hashToken(token) {
-
-    return crypto
-        .createHash("sha256")
-        .update(token)
+function tokenHash(value) {
+    return crypto.createHash("sha256")
+        .update(value)
         .digest("hex");
-
 }
-
-
-// Crear hash de contraseña
 
 async function hashPassword(password) {
-
     const salt = crypto.randomBytes(16).toString("hex");
+    const hash = await scrypt(password, salt, 64);
 
-    const derived = await scrypt(
-        password,
-        salt,
-        64
-    );
-
-    return `${salt}:${derived.toString("hex")}`;
-
+    return `${salt}:${hash.toString("hex")}`;
 }
 
-
-// Verificar contraseña
-
 async function verifyPassword(password, stored) {
-
     if (typeof stored !== "string") {
         return false;
     }
 
     const [salt, hash] = stored.split(":");
 
-    if (!salt || !/^[a-f0-9]{128}$/.test(hash || "")) {
+    if (
+        !salt ||
+        !/^[a-f0-9]{128}$/.test(hash || "")
+    ) {
         return false;
     }
 
+    const actual = await scrypt(password, salt, 64);
     const expected = Buffer.from(hash, "hex");
 
-    const actual = await scrypt(
-        password,
-        salt,
-        64
-    );
-
-    return crypto.timingSafeEqual(
-        expected,
-        actual
-    );
-
+    return crypto.timingSafeEqual(actual, expected);
 }
 
-
-// Validar contraseñas
-
 function validPassword(value) {
-
     return (
         typeof value === "string" &&
         value.length >= 8 &&
@@ -262,140 +154,116 @@ function validPassword(value) {
         /\p{Ll}/u.test(value) &&
         /\p{Nd}/u.test(value)
     );
-
 }
 
-
-// Validar correos electrónicos
-
 function validEmail(value) {
-
     return (
         typeof value === "string" &&
         value.length <= 254 &&
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
     );
-
 }
-
-
-// Enviar respuestas JSON
 
 function json(res, status, data) {
-
-    const body = JSON.stringify(data);
-
     res.writeHead(status, {
-        "Content-Type":
-            "application/json; charset=utf-8",
-
+        "Content-Type": "application/json; charset=utf-8",
         "Cache-Control": "no-store",
-
         "X-Content-Type-Options": "nosniff",
-
-        "Referrer-Policy": "no-referrer",
-
         "X-Frame-Options": "DENY",
-
-        "Content-Security-Policy":
-            "default-src 'none'"
+        "Referrer-Policy": "no-referrer"
     });
 
-    res.end(body);
-
+    res.end(JSON.stringify(data));
 }
 
-
-// Leer datos enviados desde formularios
-
 async function readBody(req) {
-
-    let body = "";
-    let length = 0;
+    const chunks = [];
+    let size = 0;
 
     for await (const chunk of req) {
+        size += chunk.length;
 
-        length += chunk.length;
-
-        if (length > 10000) {
+        if (size > 10000) {
             throw new Error("REQUEST_TOO_LARGE");
         }
 
-        body += chunk.toString("utf8");
+        chunks.push(chunk);
     }
 
+    let data;
+
     try {
-
-        const parsed = JSON.parse(body);
-
-        if (
-            !parsed ||
-            typeof parsed !== "object" ||
-            Array.isArray(parsed)
-        ) {
-            throw new Error("INVALID_JSON");
-        }
-
-        return parsed;
-
+        data = JSON.parse(
+            Buffer.concat(chunks).toString("utf8")
+        );
     } catch {
         throw new Error("INVALID_JSON");
     }
 
+    if (
+        !data ||
+        typeof data !== "object" ||
+        Array.isArray(data)
+    ) {
+        throw new Error("INVALID_JSON");
+    }
+
+    return data;
 }
 
-
-// ==========================================
-// 9. COOKIES Y SESIONES
-// ==========================================
+// ========================================
+// COOKIES Y SESIONES
+// ========================================
 
 function getCookie(req, name) {
+    const parts = (req.headers.cookie || "").split(";");
 
-    const header = req.headers.cookie || "";
-
-    const cookie = header.split(";").find(
-        part => part.trim().startsWith(name + "=")
+    const found = parts.find(
+        value => value.trim().startsWith(name + "=")
     );
 
-    return cookie
-        ? cookie.trim().substring(name.length + 1)
+    return found
+        ? found.trim().slice(name.length + 1)
         : null;
-
 }
 
-
-function setSessionCookie(res, token) {
-
+function setCookie(res, value, maxAge) {
     res.setHeader(
         "Set-Cookie",
-        `falconi_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${SESSION_DURATION / 1000}`
+        `falconi_session=${value}; HttpOnly; ` +
+        `SameSite=Strict; Path=/; Max-Age=${maxAge}`
     );
-
 }
 
+function createSession(res, userId) {
+    const value = token();
 
-function clearSessionCookie(res) {
-
-    res.setHeader(
-        "Set-Cookie",
-        "falconi_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0"
+    db.prepare(`
+        INSERT INTO sessions(
+            token_hash,
+            user_id,
+            expires_at
+        )
+        VALUES (?, ?, ?)
+    `).run(
+        tokenHash(value),
+        userId,
+        Date.now() + SESSION_MS
     );
 
+    setCookie(res, value, SESSION_MS / 1000);
 }
 
-
-// Obtener usuario desde su sesión
+function clearCookie(res) {
+    setCookie(res, "", 0);
+}
 
 function getSession(req) {
-
-    const token = getCookie(
-        req,
-        "falconi_session"
-    );
+    const value = getCookie(req, "falconi_session");
 
     if (
-        !token ||
-        !/^[a-f0-9]{64}$/.test(token)
+        !value ||
+        !/^[a-f0-9]{64}$/.test(value)
     ) {
         return null;
     }
@@ -405,263 +273,108 @@ function getSession(req) {
             users.id,
             users.username,
             users.email
-
         FROM sessions
-
         JOIN users
-            ON sessions.user_id = users.id
-
+            ON users.id = sessions.user_id
         WHERE sessions.token_hash = ?
           AND sessions.expires_at > ?
     `).get(
-        hashToken(token),
+        tokenHash(value),
         Date.now()
     ) || null;
-
 }
 
-
-// Crear una sesión nueva
-
-function createSession(res, userId) {
-
-    const token = generateToken();
-
-    db.prepare(`
-        INSERT INTO sessions (
-            token_hash,
-            user_id,
-            expires_at
-        )
-
-        VALUES (?, ?, ?)
-    `).run(
-        hashToken(token),
-        userId,
-        Date.now() + SESSION_DURATION
-    );
-
-    setSessionCookie(res, token);
-
-}
-
-
-// ==========================================
-// 10. LIMITAR INTENTOS
-// ==========================================
+// ========================================
+// LÍMITE DE SOLICITUDES
+// ========================================
 
 const attempts = new Map();
 
-function limited(req, action, max = 10) {
-
-    const key =
-        `${req.socket.remoteAddress}:${action}`;
-
+function limited(req, action, maximum = 10) {
+    const key = `${req.socket.remoteAddress}:${action}`;
     const now = Date.now();
-
-    const windowMs = 15 * 60 * 1000;
 
     let record = attempts.get(key);
 
-    if (
-        !record ||
-        now > record.expires
-    ) {
+    if (!record || now >= record.expires) {
         record = {
             count: 0,
-            expires: now + windowMs
+            expires: now + 15 * 60 * 1000
         };
     }
 
     record.count++;
-
     attempts.set(key, record);
 
-    return record.count > max;
-
+    return record.count > maximum;
 }
 
+// ========================================
+// VALIDACIÓN DE MOVIMIENTOS
+// ========================================
 
-// ==========================================
-// 11. ARCHIVOS PÚBLICOS PERMITIDOS
-// ==========================================
+const VALID_TYPES = [
+    "income",
+    "expense"
+];
 
-const PUBLIC_FILES = new Map([
+const VALID_CATEGORIES = [
+    "food",
+    "transport",
+    "housing",
+    "study",
+    "salary",
+    "other"
+];
 
-    // Login y autenticación
+function parseMovement(body) {
+    const type = body.type;
+    const category = body.category;
 
-    ["/", "index.html"],
+    const description =
+        typeof body.description === "string"
+            ? body.description.trim()
+            : "";
 
-    ["/index.html", "index.html"],
-
-    ["/register.html", "register.html"],
-
-    ["/forgot-password.html", "forgot-password.html"],
-
-    ["/reset-password.html", "reset-password.html"],
-
-
-    // Dashboard
-
-    ["/dashboard.html", "dashboard.html"],
-
-    ["/dashboard.css", "dashboard.css"],
-
-    ["/dashboard.js", "dashboard.js"],
-
-
-    // NUEVO: Movimientos
-
-    ["/movements.html", "movements.html"],
-
-    ["/movements.css", "movements.css"],
-
-    ["/movements.js", "movements.js"],
-
-
-    // Estilos generales
-
-    ["/styles.css", "styles.css"],
-
-    ["/responsive.css", "responsive.css"],
-
-
-    // JavaScript
-
-    ["/login.js", "login.js"],
-
-    ["/register.js", "register.js"],
-
-    ["/translations.js", "translations.js"],
-
-    ["/language.js", "language.js"],
-
-    ["/forgot-password.js", "forgot-password.js"],
-
-    ["/reset-password.js", "reset-password.js"]
-
-]);
-
-
-const MIME = {
-
-    ".html": "text/html",
-
-    ".css": "text/css",
-
-    ".js": "text/javascript",
-
-    ".png": "image/png",
-
-    ".jpg": "image/jpeg",
-
-    ".svg": "image/svg+xml"
-
-};
-
-
-// ==========================================
-// 12. SERVIR ARCHIVOS HTML, CSS Y JS
-// ==========================================
-
-function serveFile(req, res, pathname) {
-
-    let file = PUBLIC_FILES.get(pathname);
-
-    // Permitir imágenes de marca
+    const amount = body.amount_kopeks;
 
     if (
-        !file &&
-        /^\/assets\/images\/[a-zA-Z0-9_.-]+\.(png|jpg|svg)$/
-            .test(pathname)
+        !VALID_TYPES.includes(type) ||
+        !VALID_CATEGORIES.includes(category) ||
+        description.length < 1 ||
+        description.length > 100 ||
+        !Number.isSafeInteger(amount) ||
+        amount < 1 ||
+        amount > 99999999999
     ) {
-
-        file = pathname.slice(1);
-
+        return null;
     }
 
-    if (!file) {
-
-        return json(res, 404, {
-            error: "Not found"
-        });
-
-    }
-
-    const fullPath = path.join(ROOT, file);
-
-    fs.readFile(fullPath, (error, content) => {
-
-        if (error) {
-
-            return json(res, 404, {
-                error: "File not found"
-            });
-
-        }
-
-        const extension = path.extname(fullPath);
-
-        const textFile = [
-            ".html",
-            ".css",
-            ".js"
-        ].includes(extension);
-
-        res.writeHead(200, {
-
-            "Content-Type":
-                (MIME[extension] ||
-                    "application/octet-stream") +
-                (textFile ? "; charset=utf-8" : ""),
-
-            "X-Content-Type-Options": "nosniff",
-
-            "X-Frame-Options": "DENY",
-
-            "Referrer-Policy": "no-referrer",
-
-            "Cache-Control": "no-store",
-
-            "Content-Security-Policy":
-                "default-src 'self'; " +
-                "script-src 'self' 'unsafe-inline'; " +
-                "style-src 'self' 'unsafe-inline'; " +
-                "img-src 'self' data:; " +
-                "connect-src 'self'; " +
-                "object-src 'none'; " +
-                "frame-ancestors 'none'; " +
-                "base-uri 'self'"
-        });
-
-        res.end(content);
-
-    });
-
+    return {
+        type,
+        category,
+        description,
+        amount
+    };
 }
 
+// ========================================
+// API
+// ========================================
 
-// ==========================================
-// 13. API DEL SERVIDOR
-// ==========================================
+let dummyHash = null;
 
 async function api(req, res, pathname) {
 
-    // ======================================
-    // REGISTRO DE USUARIOS
-    // ======================================
-
+    // REGISTRO
     if (
         pathname === "/api/register" &&
         req.method === "POST"
     ) {
-
         if (limited(req, "register", 10)) {
-
             return json(res, 429, {
                 error: "Demasiados intentos."
             });
-
         }
 
         const body = await readBody(req);
@@ -676,46 +389,39 @@ async function api(req, res, pathname) {
                 ? body.email.trim().toLowerCase()
                 : "";
 
-        const password = body.password;
-
         if (
             username.length < 3 ||
             username.length > 40 ||
             !validEmail(email) ||
-            !validPassword(password)
+            !validPassword(body.password)
         ) {
-
             return json(res, 400, {
                 error: "Datos de registro inválidos."
             });
-
         }
 
-        const exists = db.prepare(`
+        const existing = db.prepare(`
             SELECT id
             FROM users
             WHERE email = ?
         `).get(email);
 
-        if (exists) {
-
+        if (existing) {
             return json(res, 409, {
                 error: "No se pudo registrar este correo."
             });
-
         }
 
         const passwordHash =
-            await hashPassword(password);
+            await hashPassword(body.password);
 
         const result = db.prepare(`
-            INSERT INTO users (
+            INSERT INTO users(
                 username,
                 email,
                 password_hash,
                 created_at
             )
-
             VALUES (?, ?, ?, ?)
         `).run(
             username,
@@ -729,28 +435,18 @@ async function api(req, res, pathname) {
             Number(result.lastInsertRowid)
         );
 
-        return json(res, 201, {
-            ok: true
-        });
-
+        return json(res, 201, { ok: true });
     }
 
-
-    // ======================================
-    // INICIAR SESIÓN
-    // ======================================
-
+    // INICIO DE SESIÓN
     if (
         pathname === "/api/login" &&
         req.method === "POST"
     ) {
-
         if (limited(req, "login", 10)) {
-
             return json(res, 429, {
                 error: "Demasiados intentos."
             });
-
         }
 
         const body = await readBody(req);
@@ -760,18 +456,14 @@ async function api(req, res, pathname) {
                 ? body.email.trim().toLowerCase()
                 : "";
 
-        const password = body.password;
-
         if (
             !validEmail(email) ||
-            typeof password !== "string" ||
-            password.length > 128
+            typeof body.password !== "string" ||
+            body.password.length > 128
         ) {
-
             return json(res, 401, {
-                error: "Correo o contraseña incorrectos."
+                error: "Credenciales incorrectas."
             });
-
         }
 
         const user = db.prepare(`
@@ -780,109 +472,70 @@ async function api(req, res, pathname) {
             WHERE email = ?
         `).get(email);
 
-        const verified = user
-            ? await verifyPassword(
-                password,
-                user.password_hash
-            )
-            : await verifyPassword(
-                password,
-                dummyHash
-            );
+        const verified = await verifyPassword(
+            body.password,
+            user ? user.password_hash : dummyHash
+        );
 
         if (!user || !verified) {
-
             return json(res, 401, {
-                error: "Correo o contraseña incorrectos."
+                error: "Credenciales incorrectas."
             });
-
         }
 
         createSession(res, user.id);
 
-        return json(res, 200, {
-            ok: true
-        });
-
+        return json(res, 200, { ok: true });
     }
 
-
-    // ======================================
-    // PERFIL DE USUARIO
-    // ======================================
-
+    // USUARIO ACTUAL
     if (
         pathname === "/api/me" &&
         req.method === "GET"
     ) {
-
         const user = getSession(req);
 
-        if (!user) {
-
-            return json(res, 401, {
-                error: "Sesión no iniciada."
+        return user
+            ? json(res, 200, { user })
+            : json(res, 401, {
+                error: "Sin sesión."
             });
-
-        }
-
-        return json(res, 200, {
-            user
-        });
-
     }
 
-
-    // ======================================
     // CERRAR SESIÓN
-    // ======================================
-
     if (
         pathname === "/api/logout" &&
         req.method === "POST"
     ) {
-
-        const token = getCookie(
+        const value = getCookie(
             req,
             "falconi_session"
         );
 
         if (
-            token &&
-            /^[a-f0-9]{64}$/.test(token)
+            value &&
+            /^[a-f0-9]{64}$/.test(value)
         ) {
-
             db.prepare(`
                 DELETE FROM sessions
                 WHERE token_hash = ?
-            `).run(hashToken(token));
-
+            `).run(tokenHash(value));
         }
 
-        clearSessionCookie(res);
+        clearCookie(res);
 
-        return json(res, 200, {
-            ok: true
-        });
-
+        return json(res, 200, { ok: true });
     }
 
-
-    // ======================================
-    // SOLICITAR RECUPERACIÓN
-    // ======================================
-
+    // RECUPERACIÓN DE CONTRASEÑA
     if (
         pathname === "/api/forgot-password" &&
         req.method === "POST"
     ) {
-
         if (limited(req, "forgot", 5)) {
-
             return json(res, 429, {
                 error: "Demasiados intentos."
             });
-
         }
 
         const body = await readBody(req);
@@ -901,8 +554,7 @@ async function api(req, res, pathname) {
             : null;
 
         if (user) {
-
-            const token = generateToken();
+            const value = token();
 
             db.prepare(`
                 DELETE FROM password_resets
@@ -910,109 +562,99 @@ async function api(req, res, pathname) {
             `).run(user.id);
 
             db.prepare(`
-                INSERT INTO password_resets (
+                INSERT INTO password_resets(
                     token_hash,
                     user_id,
                     expires_at
                 )
-
                 VALUES (?, ?, ?)
             `).run(
-                hashToken(token),
+                tokenHash(value),
                 user.id,
-                Date.now() + RESET_DURATION
+                Date.now() + RESET_MS
             );
-
-            // Desarrollo local:
-            // Mostrar enlace solamente en terminal
 
             console.log(
                 "\n--- RECUPERACIÓN FALCONI-GIT ---"
             );
 
             console.log(
-                `${ORIGIN}/reset-password.html?token=${token}`
+                `${ORIGIN}/reset-password.html?token=${value}`
             );
 
             console.log(
                 "Enlace válido durante 15 minutos.\n"
             );
-
         }
 
         return json(res, 200, {
-
             ok: true,
-
             message:
                 "Si existe una cuenta, se han generado las instrucciones."
-
         });
-
     }
 
-
-    // ======================================
-    // CAMBIAR CONTRASEÑA
-    // ======================================
-
+    // RESTABLECER CONTRASEÑA
     if (
         pathname === "/api/reset-password" &&
         req.method === "POST"
     ) {
-
         if (limited(req, "reset", 10)) {
-
             return json(res, 429, {
                 error: "Demasiados intentos."
             });
-
         }
 
         const body = await readBody(req);
 
-        const token = body.token;
-
-        const newPassword = body.password;
-
         if (
-            typeof token !== "string" ||
-            !/^[a-f0-9]{64}$/.test(token) ||
-            !validPassword(newPassword)
+            typeof body.token !== "string" ||
+            !/^[a-f0-9]{64}$/.test(body.token) ||
+            !validPassword(body.password)
         ) {
-
             return json(res, 400, {
                 error: "Enlace o contraseña inválidos."
             });
-
         }
 
         const record = db.prepare(`
             SELECT user_id
-
             FROM password_resets
-
             WHERE token_hash = ?
               AND expires_at > ?
         `).get(
-            hashToken(token),
+            tokenHash(body.token),
             Date.now()
         );
 
         if (!record) {
-
             return json(res, 400, {
                 error: "El enlace ha caducado."
             });
-
         }
 
         const passwordHash =
-            await hashPassword(newPassword);
+            await hashPassword(body.password);
 
         db.exec("BEGIN IMMEDIATE");
 
         try {
+            const consumed = db.prepare(`
+                DELETE FROM password_resets
+                WHERE token_hash = ?
+                  AND expires_at > ?
+            `).run(
+                tokenHash(body.token),
+                Date.now()
+            );
+
+            if (consumed.changes !== 1) {
+                db.exec("ROLLBACK");
+
+                return json(res, 400, {
+                    error: "Enlace inválido."
+                });
+            }
 
             db.prepare(`
                 UPDATE users
@@ -1036,40 +678,29 @@ async function api(req, res, pathname) {
             db.exec("COMMIT");
 
         } catch (error) {
-
             db.exec("ROLLBACK");
-
             throw error;
-
         }
 
-        clearSessionCookie(res);
+        clearCookie(res);
 
-        return json(res, 200, {
-            ok: true
-        });
-
+        return json(res, 200, { ok: true });
     }
 
-
-    // ======================================
-    // MOVIMIENTOS - CONSULTAR
-    // NUEVO EN V0.7
-    // ======================================
+    // ====================================
+    // CONSULTAR MOVIMIENTOS
+    // ====================================
 
     if (
         pathname === "/api/movements" &&
         req.method === "GET"
     ) {
-
         const user = getSession(req);
 
         if (!user) {
-
             return json(res, 401, {
-                error: "Sesión no iniciada."
+                error: "Sin sesión."
             });
-
         }
 
         const movements = db.prepare(`
@@ -1080,90 +711,46 @@ async function api(req, res, pathname) {
                 category,
                 amount_kopeks,
                 created_at
-
             FROM movements
-
             WHERE user_id = ?
-
             ORDER BY created_at DESC, id DESC
         `).all(user.id);
 
         return json(res, 200, {
             movements
         });
-
     }
 
-
-    // ======================================
-    // MOVIMIENTOS - CREAR
-    // NUEVO EN V0.7
-    // ======================================
+    // ====================================
+    // CREAR MOVIMIENTO
+    // ====================================
 
     if (
         pathname === "/api/movements" &&
         req.method === "POST"
     ) {
-
         const user = getSession(req);
 
         if (!user) {
-
             return json(res, 401, {
-                error: "Sesión no iniciada."
+                error: "Sin sesión."
             });
-
         }
 
-        if (limited(req, "movements-create", 100)) {
-
+        if (limited(req, "create-movement", 100)) {
             return json(res, 429, {
                 error: "Demasiadas solicitudes."
             });
-
         }
 
-        const body = await readBody(req);
+        const movement = parseMovement(
+            await readBody(req)
+        );
 
-        const type = body.type;
-
-        const description =
-            typeof body.description === "string"
-                ? body.description.trim()
-                : "";
-
-        const category = body.category;
-
-        const amount = body.amount_kopeks;
-
-        const validTypes = [
-            "income",
-            "expense"
-        ];
-
-        const validCategories = [
-            "food",
-            "transport",
-            "housing",
-            "study",
-            "salary",
-            "other"
-        ];
-
-        if (
-            !validTypes.includes(type) ||
-            description.length < 1 ||
-            description.length > 100 ||
-            !validCategories.includes(category) ||
-            !Number.isSafeInteger(amount) ||
-            amount < 1 ||
-            amount > 99999999999
-        ) {
-
+        if (!movement) {
             return json(res, 400, {
                 error: "Movimiento inválido."
             });
-
         }
 
         const count = db.prepare(`
@@ -1173,15 +760,13 @@ async function api(req, res, pathname) {
         `).get(user.id);
 
         if (count.total >= 1000) {
-
             return json(res, 409, {
                 error: "Límite de movimientos alcanzado."
             });
-
         }
 
         const result = db.prepare(`
-            INSERT INTO movements (
+            INSERT INTO movements(
                 user_id,
                 type,
                 description,
@@ -1189,126 +774,255 @@ async function api(req, res, pathname) {
                 amount_kopeks,
                 created_at
             )
-
             VALUES (?, ?, ?, ?, ?, ?)
         `).run(
             user.id,
-            type,
-            description,
-            category,
-            amount,
+            movement.type,
+            movement.description,
+            movement.category,
+            movement.amount,
             Date.now()
         );
 
         return json(res, 201, {
-
             ok: true,
-
             id: Number(result.lastInsertRowid)
-
         });
-
     }
 
-
-    // ======================================
-    // MOVIMIENTOS - ELIMINAR
-    // NUEVO EN V0.7
-    // ======================================
-
-    const deleteMatch = pathname.match(
+    const match = pathname.match(
         /^\/api\/movements\/([1-9][0-9]*)$/
     );
 
-    if (
-        deleteMatch &&
-        req.method === "DELETE"
-    ) {
+    // ====================================
+    // EDITAR MOVIMIENTO
+    // NUEVO EN V0.8
+    // ====================================
 
+    if (
+        match &&
+        req.method === "PATCH"
+    ) {
         const user = getSession(req);
 
         if (!user) {
-
             return json(res, 401, {
-                error: "Sesión no iniciada."
+                error: "Sin sesión."
             });
-
         }
 
-        if (limited(req, "movements-delete", 100)) {
-
+        if (limited(req, "edit-movement", 100)) {
             return json(res, 429, {
                 error: "Demasiadas solicitudes."
             });
-
         }
 
-        const movementId =
-            Number(deleteMatch[1]);
+        const id = Number(match[1]);
 
-        if (!Number.isSafeInteger(movementId)) {
-
+        if (!Number.isSafeInteger(id)) {
             return json(res, 400, {
-                error: "Identificador inválido."
+                error: "ID inválido."
             });
+        }
 
+        const movement = parseMovement(
+            await readBody(req)
+        );
+
+        if (!movement) {
+            return json(res, 400, {
+                error: "Movimiento inválido."
+            });
         }
 
         const result = db.prepare(`
-            DELETE FROM movements
+            UPDATE movements
+
+            SET type = ?,
+                description = ?,
+                category = ?,
+                amount_kopeks = ?
 
             WHERE id = ?
               AND user_id = ?
         `).run(
-            movementId,
+            movement.type,
+            movement.description,
+            movement.category,
+            movement.amount,
+            id,
             user.id
         );
 
-        if (result.changes === 0) {
-
+        if (result.changes !== 1) {
             return json(res, 404, {
                 error: "Movimiento no encontrado."
             });
-
         }
 
-        return json(res, 200, {
-            ok: true
-        });
-
+        return json(res, 200, { ok: true });
     }
 
+    // ====================================
+    // ELIMINAR MOVIMIENTO
+    // ====================================
 
-    // ======================================
-    // RUTA DESCONOCIDA
-    // ======================================
+    if (
+        match &&
+        req.method === "DELETE"
+    ) {
+        const user = getSession(req);
+
+        if (!user) {
+            return json(res, 401, {
+                error: "Sin sesión."
+            });
+        }
+
+        if (limited(req, "delete-movement", 100)) {
+            return json(res, 429, {
+                error: "Demasiadas solicitudes."
+            });
+        }
+
+        const id = Number(match[1]);
+
+        if (!Number.isSafeInteger(id)) {
+            return json(res, 400, {
+                error: "ID inválido."
+            });
+        }
+
+        const result = db.prepare(`
+            DELETE FROM movements
+            WHERE id = ?
+              AND user_id = ?
+        `).run(id, user.id);
+
+        if (result.changes !== 1) {
+            return json(res, 404, {
+                error: "Movimiento no encontrado."
+            });
+        }
+
+        return json(res, 200, { ok: true });
+    }
 
     return json(res, 404, {
-
         error: "Ruta de API no encontrada."
-
     });
-
 }
 
+// ========================================
+// ARCHIVOS PERMITIDOS
+// ========================================
 
-// ==========================================
-// 14. INICIAR SERVIDOR
-// ==========================================
+const FILES = new Map([
+    ["/", "index.html"],
+    ["/index.html", "index.html"],
+    ["/register.html", "register.html"],
+    ["/forgot-password.html", "forgot-password.html"],
+    ["/reset-password.html", "reset-password.html"],
+    ["/dashboard.html", "dashboard.html"],
+    ["/movements.html", "movements.html"],
 
-let dummyHash = null;
+    ["/styles.css", "styles.css"],
+    ["/responsive.css", "responsive.css"],
+    ["/dashboard.css", "dashboard.css"],
+    ["/movements.css", "movements.css"],
+
+    ["/login.js", "login.js"],
+    ["/register.js", "register.js"],
+    ["/forgot-password.js", "forgot-password.js"],
+    ["/reset-password.js", "reset-password.js"],
+    ["/dashboard.js", "dashboard.js"],
+    ["/movements.js", "movements.js"],
+    ["/translations.js", "translations.js"],
+    ["/language.js", "language.js"]
+]);
+
+const MIME = {
+    ".html": "text/html",
+    ".css": "text/css",
+    ".js": "text/javascript",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".svg": "image/svg+xml"
+};
+
+function serveFile(res, pathname) {
+    let file = FILES.get(pathname);
+
+    if (
+        !file &&
+        /^\/assets\/images\/[a-zA-Z0-9_.-]+\.(png|jpg|jpeg|svg)$/
+            .test(pathname)
+    ) {
+        file = pathname.slice(1);
+    }
+
+    if (!file) {
+        return json(res, 404, {
+            error: "Not found"
+        });
+    }
+
+    const fullPath = path.join(ROOT, file);
+
+    fs.readFile(fullPath, (error, content) => {
+        if (error) {
+            return json(res, 404, {
+                error: "File not found"
+            });
+        }
+
+        const extension = path.extname(fullPath);
+
+        const textFile = [
+            ".html",
+            ".css",
+            ".js"
+        ].includes(extension);
+
+        res.writeHead(200, {
+            "Content-Type":
+                (MIME[extension] ||
+                    "application/octet-stream") +
+                (textFile ? "; charset=utf-8" : ""),
+
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+            "Referrer-Policy": "no-referrer",
+            "X-Frame-Options": "DENY",
+
+            "Content-Security-Policy":
+                "default-src 'self'; " +
+                "script-src 'self'; " +
+                "style-src 'self' 'unsafe-inline'; " +
+                "img-src 'self' data:; " +
+                "connect-src 'self'; " +
+                "object-src 'none'; " +
+                "frame-ancestors 'none'; " +
+                "base-uri 'self'"
+        });
+
+        res.end(content);
+    });
+}
+
+// ========================================
+// INICIAR SERVIDOR
+// ========================================
 
 async function start() {
-
     dummyHash = await hashPassword(
         "DummyPassword12345"
     );
 
     const server = http.createServer(
         async (req, res) => {
-
             try {
-
                 const url = new URL(
                     req.url,
                     ORIGIN
@@ -1316,52 +1030,47 @@ async function start() {
 
                 const pathname = url.pathname;
 
-
-                // =========================
-                // PETICIONES API
-                // =========================
+                // RUTAS API
 
                 if (pathname.startsWith("/api/")) {
 
-                    // Verificar origen en operaciones
+                    // Proteger operaciones
                     // que modifican información.
 
-                    if (
-                        req.method === "POST" ||
-                        req.method === "DELETE"
-                    ) {
+                    if ([
+                        "POST",
+                        "PATCH",
+                        "DELETE"
+                    ].includes(req.method)) {
 
-                        const origin =
-                            req.headers.origin;
-
-                        if (origin !== ORIGIN) {
-
+                        if (
+                            req.headers.origin !== ORIGIN
+                        ) {
                             return json(res, 403, {
                                 error: "Origen no permitido."
                             });
-
                         }
-
                     }
 
+                    // Verificar contenido JSON.
 
-                    // Solicitudes POST deben
-                    // enviar contenido JSON.
+                    if ([
+                        "POST",
+                        "PATCH"
+                    ].includes(req.method)) {
 
-                    if (req.method === "POST") {
+                        const contentType =
+                            req.headers["content-type"] || "";
 
                         if (
-                            !req.headers["content-type"] ||
-                            !req.headers["content-type"]
-                                .startsWith("application/json")
+                            !contentType.startsWith(
+                                "application/json"
+                            )
                         ) {
-
                             return json(res, 415, {
                                 error: "Se requiere JSON."
                             });
-
                         }
-
                     }
 
                     return await api(
@@ -1369,81 +1078,64 @@ async function start() {
                         res,
                         pathname
                     );
-
                 }
 
-
-                // =========================
                 // ARCHIVOS WEB
-                // =========================
 
                 if (req.method !== "GET") {
-
                     return json(res, 405, {
                         error: "Método no permitido."
                     });
-
                 }
 
-                serveFile(
-                    req,
-                    res,
-                    pathname
-                );
+                // Restringir páginas privadas.
+
+                if (
+                    [
+                        "/dashboard.html",
+                        "/movements.html"
+                    ].includes(pathname) &&
+                    !getSession(req)
+                ) {
+                    res.writeHead(302, {
+                        Location: "/index.html",
+                        "Cache-Control": "no-store"
+                    });
+
+                    return res.end();
+                }
+
+                serveFile(res, pathname);
 
             } catch (error) {
 
                 console.error(
-                    "Error:",
+                    "Error del servidor:",
                     error.message
                 );
 
                 if (!res.headersSent) {
-
-                    json(res, 500, {
+                    return json(res, 500, {
                         error: "Error interno del servidor."
                     });
-
-                } else {
-
-                    res.end();
-
                 }
 
+                res.end();
             }
-
         }
     );
 
-
-    server.listen(
-        PORT,
-        HOST,
-        () => {
-
-            console.log(
-                "\n================================"
-            );
-
-            console.log(
-                " FALCONI-GIT v0.7"
-            );
-
-            console.log(
-                " Servidor iniciado correctamente"
-            );
-
-            console.log(
-                ` ${ORIGIN}`
-            );
-
-            console.log(
-                "================================\n"
-            );
-
-        }
-    );
-
+    server.listen(PORT, HOST, () => {
+        console.log("");
+        console.log("==============================");
+        console.log(" FALCONI-GIT v0.8");
+        console.log(` ${ORIGIN}`);
+        console.log("==============================");
+        console.log("");
+    });
 }
 
-start().catch(console.error);
+start().catch(error => {
+    console.error(error);
+    process.exitCode = 1;
+});
