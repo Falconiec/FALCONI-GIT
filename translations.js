@@ -532,3 +532,83 @@ Object.assign(translations.ru, {
     noFilterResults:
         "По заданным фильтрам операции не найдены."
 });
+
+/*
+ FALCONI-GIT v0.8.1
+ Textos del login premium
+*/
+
+Object.assign(translations.es, {
+    brandEyebrow: "TU ESPACIO FINANCIERO EN ₽",
+    brandTitleLine1: "Tu dinero.",
+    brandTitleLine2: "Tu espacio.",
+    brandTitleLine3: "Tu control.",
+    brandDescription:
+        "Una manera más clara de organizar tus finanzas personales mientras construyes tu vida en Rusia.",
+    brandNote: "Tu espacio financiero personal.",
+    brandFooter: "Más claridad. Más control. Todo en rublos.",
+
+    loginEyebrow: "ACCESO A TU CUENTA",
+    loginTitle: "Bienvenido de nuevo.",
+    loginSubtitle: "Introduce tus credenciales para continuar.",
+    emailLabel: "Correo electrónico",
+    emailPlaceholder: "nombre@correo.com",
+    passwordLabel: "Contraseña",
+    passwordPlaceholder: "Introduce tu contraseña",
+    showPassword: "Mostrar",
+    forgotPassword: "¿Olvidaste tu contraseña?",
+    loginButton: "Iniciar sesión",
+    noAccount: "¿Aún no tienes cuenta?",
+    createAccount: "Crear cuenta",
+    interfaceDevelopment: "Interfaz en desarrollo"
+});
+
+Object.assign(translations.en, {
+    brandEyebrow: "YOUR FINANCIAL SPACE IN ₽",
+    brandTitleLine1: "Your money.",
+    brandTitleLine2: "Your space.",
+    brandTitleLine3: "Your control.",
+    brandDescription:
+        "A clearer way to manage your personal finances while building your life in Russia.",
+    brandNote: "Your personal financial space.",
+    brandFooter: "More clarity. More control. All in rubles.",
+
+    loginEyebrow: "ACCOUNT ACCESS",
+    loginTitle: "Welcome back.",
+    loginSubtitle: "Enter your credentials to continue.",
+    emailLabel: "Email address",
+    emailPlaceholder: "name@example.com",
+    passwordLabel: "Password",
+    passwordPlaceholder: "Enter your password",
+    showPassword: "Show",
+    forgotPassword: "Forgot your password?",
+    loginButton: "Sign in",
+    noAccount: "Don't have an account?",
+    createAccount: "Create account",
+    interfaceDevelopment: "Interface in development"
+});
+
+Object.assign(translations.ru, {
+    brandEyebrow: "ВАШЕ ФИНАНСОВОЕ ПРОСТРАНСТВО В ₽",
+    brandTitleLine1: "Ваши деньги.",
+    brandTitleLine2: "Ваше пространство.",
+    brandTitleLine3: "Ваш контроль.",
+    brandDescription:
+        "Удобный способ управлять личными финансами во время жизни в России.",
+    brandNote: "Ваше личное финансовое пространство.",
+    brandFooter: "Больше ясности. Больше контроля. Всё в рублях.",
+
+    loginEyebrow: "ВХОД В АККАУНТ",
+    loginTitle: "С возвращением!",
+    loginSubtitle: "Введите свои данные для входа.",
+    emailLabel: "Электронная почта",
+    emailPlaceholder: "name@example.com",
+    passwordLabel: "Пароль",
+    passwordPlaceholder: "Введите пароль",
+    showPassword: "Показать",
+    forgotPassword: "Забыли пароль?",
+    loginButton: "Войти",
+    noAccount: "Нет аккаунта?",
+    createAccount: "Создать аккаунт",
+    interfaceDevelopment: "Интерфейс в разработке"
+});

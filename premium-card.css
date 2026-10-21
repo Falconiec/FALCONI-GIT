@@ -1,149 +1,163 @@
 
 /*
-=============================================
  FALCONI-GIT v0.8.1
- PREMIUM CARD — DISEÑO APROBADO
-
- Paleta original:
- #0F1B2D  Azul marino
- #1E3A8A  Azul profundo
- #60A5FA  Azul claro
- #E0F2FE  Azul hielo
-=============================================
+ Premium Card
 */
 
 .fg-card-scene {
     width: min(100%, 410px);
     perspective: 1100px;
-    margin-top: 35px;
-    margin-bottom: 25px;
+    margin: 0 0 16px;
 }
 
 .fg-premium-card {
-    --pointer-x: 50%;
-    --pointer-y: 25%;
+    --pointer-x: 48%;
+    --pointer-y: 20%;
 
     position: relative;
     isolation: isolate;
     width: 100%;
-    aspect-ratio: 1.586;
+    aspect-ratio: 1.586 / 1;
     overflow: hidden;
-    border-radius: 19px;
-    border: 1px solid rgba(169, 189, 213, .65);
 
-    background:
-        linear-gradient(
-            135deg,
-            #0A1425 0%,
-            #0F1B2D 48%,
-            #172A47 80%,
-            #0B172A 100%
-        );
+    border: 1px solid rgba(174, 194, 219, .7);
+    border-radius: 19px;
+    color: #F8FAFF;
+
+    background: linear-gradient(
+        130deg,
+        #0A1425 0%,
+        #0F1B2D 42%,
+        #1E3A8A 100%
+    );
 
     box-shadow:
-        0 26px 44px -15px rgba(0, 0, 0, .65),
-        0 8px 18px rgba(0, 0, 0, .24),
-        inset 0 1px 1px rgba(255, 255, 255, .35);
+        0 28px 46px -18px rgba(0, 0, 0, .76),
+        0 6px 12px rgba(0, 0, 0, .28),
+        inset 0 1px rgba(255, 255, 255, .28);
 
     transform-style: preserve-3d;
-    transition: transform .2s ease, box-shadow .3s ease;
+
+    transition:
+        transform .22s ease,
+        box-shadow .25s ease;
 }
 
-/* CAPA DECORATIVA */
+/* SUPERFICIES METÁLICAS */
 
-.fg-card-metal {
+.fg-card-metal,
+.fg-card-shine {
     position: absolute;
     inset: 0;
-    overflow: hidden;
     pointer-events: none;
 }
 
-/*
- Diagonal principal:
- reflejo estrecho, no un bloque gigante.
-*/
+.fg-card-metal {
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Plateado superior */
 
 .fg-card-metal::before {
     content: "";
     position: absolute;
 
-    width: 27%;
-    height: 190%;
-    top: -45%;
-    left: 61%;
+    left: 32%;
+    top: -48%;
+    width: 60%;
+    height: 70%;
 
-    transform: rotate(43deg);
+    transform: rotate(-43deg);
 
     background: linear-gradient(
         90deg,
-        #172A45 0%,
-        #344C69 17%,
-        #A9BED2 43%,
-        #D7E1EC 49%,
-        #819AB4 57%,
-        #263B58 84%,
-        #13243D 100%
+        #586B85,
+        #DDE8F2 43%,
+        #7993B0
     );
 
-    border-left: 1px solid rgba(201, 221, 243, .7);
-    border-right: 1px solid rgba(138, 169, 202, .5);
-
     box-shadow:
-        -7px 0 20px rgba(0, 0, 0, .35),
-        7px 0 16px rgba(0, 0, 0, .2);
+        0 2px 4px rgba(0, 0, 0, .55);
 }
 
-/*
- Franja azul marino central:
- añade profundidad sin dominar el diseño.
-*/
+/* Franja azul diagonal */
 
 .fg-card-metal::after {
     content: "";
     position: absolute;
 
+    left: 52%;
     top: -40%;
-    left: 62%;
-    width: 15%;
-    height: 185%;
+    width: 35%;
+    height: 190%;
 
     transform: rotate(43deg);
 
     background:
         repeating-linear-gradient(
             110deg,
-            rgba(255, 255, 255, .035) 0px,
-            transparent 2px,
-            transparent 5px
+            rgba(255, 255, 255, .035) 0 2px,
+            transparent 2px 5px
         ),
         linear-gradient(
             90deg,
             #0C192B,
-            #1D3555 45%,
-            #0C1829
+            #1E3A8A 38%,
+            #101E33 84%
         );
 
-    border-left: 1px solid rgba(185, 206, 228, .55);
-    border-right: 1px solid rgba(169, 190, 212, .5);
+    border-left: 2px solid #8299B6;
+    border-right: 2px solid #8199B8;
+
+    box-shadow:
+        -8px 0 20px rgba(0, 0, 0, .5);
 }
 
-/* REFLEJO QUE SIGUE AL CURSOR */
+/* REFLEJOS */
 
 .fg-card-shine {
-    position: absolute;
-    inset: 0;
     z-index: 1;
-    pointer-events: none;
-
-    background:
-        radial-gradient(
-            ellipse at var(--pointer-x) var(--pointer-y),
-            rgba(224, 242, 254, .22),
-            transparent 53%
-        );
+    overflow: hidden;
 }
 
-/* CONTENIDO */
+.fg-card-shine::before {
+    content: "";
+    position: absolute;
+
+    left: 45%;
+    bottom: -23%;
+    width: 29%;
+    height: 65%;
+
+    transform: rotate(43deg);
+
+    background: linear-gradient(
+        90deg,
+        #394F6B,
+        #BBCDDD 45%,
+        #49637F
+    );
+
+    border-left: 1px solid #D2E0ED;
+
+    box-shadow:
+        4px 0 11px rgba(0, 0, 0, .25);
+}
+
+.fg-card-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        ellipse at var(--pointer-x) var(--pointer-y),
+        rgba(224, 242, 254, .24),
+        transparent 54%
+    );
+}
+
+/* CONTENIDO DE LA TARJETA */
 
 .fg-card-content {
     position: absolute;
@@ -154,39 +168,51 @@
     flex-direction: column;
     justify-content: space-between;
 
-    padding: 7.5% 8%;
-    color: #FFFFFF;
+    padding: 7% 8%;
+
+    color: #F8FAFF;
+
+    text-shadow:
+        0 2px 3px rgba(0, 0, 0, .56);
 }
 
-.fg-card-top {
+.fg-card-top,
+.fg-card-bottom {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    gap: 12px;
 }
 
-/* CHIP REALISTA */
+.fg-card-bottom {
+    align-items: flex-end;
+}
+
+/* CHIP METÁLICO */
 
 .fg-card-chip {
     position: relative;
+
     width: 15%;
+    min-width: 41px;
     aspect-ratio: 1.25;
-    border-radius: 7px;
-    border: 1px solid #E1E9F2;
-
-    background:
-        linear-gradient(
-            125deg,
-            #F4F5F6,
-            #A5B4C6 35%,
-            #E0E7EF 68%,
-            #8397AE
-        );
-
-    box-shadow:
-        0 3px 8px rgba(0, 0, 0, .45),
-        inset 0 1px 1px rgba(255, 255, 255, .9);
 
     overflow: hidden;
+
+    border: 1px solid #E0E6EF;
+    border-radius: 7px;
+
+    background: linear-gradient(
+        125deg,
+        #F4F3EF,
+        #A2ACBB 35%,
+        #EDF0F6 67%,
+        #8296AD
+    );
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, .52),
+        inset 0 1px 2px #FFFFFF;
 }
 
 .fg-card-chip::before {
@@ -198,85 +224,84 @@
         linear-gradient(
             90deg,
             transparent 31%,
-            #61758B 32%,
-            #61758B 34%,
-            transparent 35%,
-            transparent 65%,
-            #61758B 66%,
-            #61758B 68%,
+            #62758B 32% 34%,
+            transparent 35% 65%,
+            #62758B 66% 68%,
             transparent 69%
         ),
         linear-gradient(
             0deg,
-            transparent 28%,
-            #61758B 29%,
-            #61758B 31%,
-            transparent 32%,
-            transparent 68%,
-            #61758B 69%,
-            #61758B 71%,
-            transparent 72%
+            transparent 27%,
+            #62758B 28% 30%,
+            transparent 31% 69%,
+            #62758B 70% 72%,
+            transparent 73%
         );
 }
 
 .fg-card-chip::after {
     content: "";
     position: absolute;
-    left: 33%;
-    top: 17%;
-    width: 34%;
-    height: 66%;
 
-    border: 1px solid #61758B;
+    left: 33%;
+    top: 16%;
+    width: 34%;
+    height: 68%;
+
+    border: 1px solid #66798F;
     border-radius: 6px;
 
     background: linear-gradient(
-        125deg,
-        #AFBBC9,
-        #F3F6FA,
-        #9BAEC2
+        120deg,
+        #AAB9C9,
+        #F2F6FA,
+        #94A8BD
     );
 }
 
-/* IDENTIDAD FALCONI */
+/* LOGO FALCONI */
 
 .fg-card-brand {
     text-align: right;
-    color: #FFFFFF;
 }
 
 .fg-card-brand-symbol {
     display: block;
+    color: #FFFFFF;
+
     font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(22px, 3vw, 30px);
+    font-size: clamp(22px, 3vw, 31px);
     font-weight: 700;
-    line-height: .9;
-    text-shadow: 0 2px 4px rgba(0,0,0,.5);
+    line-height: .92;
 }
 
 .fg-card-brand-name {
     display: block;
-    margin-top: 6px;
+    margin-top: 5px;
+
     font-size: 9px;
     font-weight: 800;
-    letter-spacing: 2px;
+    letter-spacing: .18em;
 }
 
-/* NUMERACIÓN FICTICIA */
+/* NÚMERO FICTICIO */
 
 .fg-card-number {
     margin-top: auto;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+
+    white-space: nowrap;
+    color: #F2F7FF;
 
     font-family: Consolas, "Courier New", monospace;
-    font-size: clamp(13px, 2.1vw, 22px);
+    font-size: clamp(13px, 2vw, 21px);
     font-weight: 500;
-    letter-spacing: .04em;
-    white-space: nowrap;
+    line-height: 1.2;
+    letter-spacing: .025em;
 
     text-shadow:
-        0 2px 2px rgba(0,0,0,.75),
-        0 -1px 1px rgba(255,255,255,.45);
+        0 2px 2px #050A14,
+        0 -1px 1px rgba(255, 255, 255, .42);
 }
 
 /* VENCIMIENTO */
@@ -284,44 +309,41 @@
 .fg-card-expiry {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
+    gap: 9px;
+    margin-bottom: 13px;
 }
 
 .fg-card-expiry-label {
     font-size: 8px;
-    line-height: 1.1;
-    color: #C9D9EA;
+    line-height: 1.15;
+    color: #CAD9ED;
+    text-transform: uppercase;
 }
 
 .fg-card-expiry-date {
     font-family: Consolas, monospace;
     font-size: 16px;
-    letter-spacing: 2px;
+    font-weight: 500;
+    letter-spacing: .1em;
 }
 
-/* TITULAR */
-
-.fg-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
+/* PARTE INFERIOR */
 
 .fg-card-holder {
     font-family: Consolas, monospace;
-    font-size: 16px;
+    font-size: clamp(12px, 1.6vw, 17px);
     font-weight: 500;
-    letter-spacing: 2px;
+    letter-spacing: .12em;
+    white-space: nowrap;
 }
 
 .fg-card-corner {
-    font-family: Georgia, serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-size: 28px;
     font-weight: 700;
 }
 
-/* MÓVILES */
+/* RESPONSIVE */
 
 @media (max-width: 480px) {
     .fg-card-scene {
@@ -329,16 +351,25 @@
     }
 
     .fg-card-number {
-        font-size: clamp(11px, 3.6vw, 18px);
+        font-size: clamp(10px, 3.4vw, 16px);
+        letter-spacing: 0;
     }
 
     .fg-card-holder {
         font-size: 12px;
-        letter-spacing: 1.4px;
+        letter-spacing: .08em;
     }
 
     .fg-card-expiry {
-        margin-bottom: 10px;
+        margin-bottom: 8px;
+    }
+
+    .fg-card-expiry-date {
+        font-size: 13px;
+    }
+
+    .fg-card-corner {
+        font-size: 22px;
     }
 }
 

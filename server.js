@@ -1,10 +1,16 @@
 
 /*
-========================================
- FALCONI-GIT v0.8
- Backend de desarrollo local
- Node.js 24 + SQLite
-========================================
+ FALCONI-GIT v0.8.1
+ Backend local: Node.js + SQLite
+
+ Incluye:
+ - Registro
+ - Login y logout
+ - Recuperación de contraseña
+ - Sesiones
+ - Movimientos: crear, listar, editar, eliminar
+ - Dashboard
+ - Tarjeta Premium 3D
 */
 
 "use strict";
@@ -18,8 +24,6 @@ const { DatabaseSync } = require("node:sqlite");
 
 const scrypt = promisify(crypto.scrypt);
 
-// CONFIGURACIÓN
-
 const HOST = "127.0.0.1";
 const PORT = 3000;
 const ORIGIN = `http://${HOST}:${PORT}`;
@@ -30,22 +34,24 @@ const RESET_MS = 15 * 60 * 1000;
 
 if (process.env.NODE_ENV === "production") {
     throw new Error(
-        "Este servidor es únicamente para desarrollo local."
+        "Este servidor es solo para pruebas locales."
     );
 }
 
 // ========================================
-// BASE DE DATOS
+// 1. BASE DE DATOS
 // ========================================
 
-const dataDir = path.join(ROOT, "data");
+// Conservamos la misma base de datos.
+// No se eliminan cuentas ni movimientos.
 
-fs.mkdirSync(dataDir, {
-    recursive: true
-});
+fs.mkdirSync(
+    path.join(ROOT, "data"),
+    { recursive: true }
+);
 
 const db = new DatabaseSync(
-    path.join(dataDir, "falconi.db")
+    path.join(ROOT, "data", "falconi.db")
 );
 
 db.exec(`
@@ -64,6 +70,7 @@ db.exec(`
         token_hash TEXT PRIMARY KEY,
         user_id INTEGER NOT NULL,
         expires_at INTEGER NOT NULL,
+
         FOREIGN KEY(user_id)
             REFERENCES users(id)
             ON DELETE CASCADE
@@ -73,6 +80,7 @@ db.exec(`
         token_hash TEXT PRIMARY KEY,
         user_id INTEGER NOT NULL,
         expires_at INTEGER NOT NULL,
+
         FOREIGN KEY(user_id)
             REFERENCES users(id)
             ON DELETE CASCADE
@@ -80,21 +88,32 @@ db.exec(`
 
     CREATE TABLE IF NOT EXISTS movements (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+
         user_id INTEGER NOT NULL,
+
         type TEXT NOT NULL
-            CHECK(type IN ('income', 'expense')),
+            CHECK(type IN ('income','expense')),
+
         description TEXT NOT NULL,
+
         category TEXT NOT NULL
             CHECK(category IN (
-                'food', 'transport', 'housing',
-                'study', 'salary', 'other'
+                'food',
+                'transport',
+                'housing',
+                'study',
+                'salary',
+                'other'
             )),
+
         amount_kopeks INTEGER NOT NULL
             CHECK(
                 amount_kopeks >= 1
                 AND amount_kopeks <= 99999999999
             ),
+
         created_at INTEGER NOT NULL,
+
         FOREIGN KEY(user_id)
             REFERENCES users(id)
             ON DELETE CASCADE
@@ -105,24 +124,34 @@ db.exec(`
 `);
 
 // ========================================
-// UTILIDADES DE SEGURIDAD
+// 2. CONTRASEÑAS Y TOKENS
 // ========================================
 
-function token() {
-    return crypto.randomBytes(32).toString("hex");
+function randomToken() {
+    return crypto
+        .randomBytes(32)
+        .toString("hex");
 }
 
 function tokenHash(value) {
-    return crypto.createHash("sha256")
+    return crypto
+        .createHash("sha256")
         .update(value)
         .digest("hex");
 }
 
 async function hashPassword(password) {
-    const salt = crypto.randomBytes(16).toString("hex");
-    const hash = await scrypt(password, salt, 64);
+    const salt = crypto
+        .randomBytes(16)
+        .toString("hex");
 
-    return `${salt}:${hash.toString("hex")}`;
+    const digest = await scrypt(
+        password,
+        salt,
+        64
+    );
+
+    return `${salt}:${digest.toString("hex")}`;
 }
 
 async function verifyPassword(password, stored) {
@@ -133,16 +162,27 @@ async function verifyPassword(password, stored) {
     const [salt, hash] = stored.split(":");
 
     if (
-        !salt ||
+        !/^[a-f0-9]{32}$/.test(salt || "") ||
         !/^[a-f0-9]{128}$/.test(hash || "")
     ) {
         return false;
     }
 
-    const actual = await scrypt(password, salt, 64);
-    const expected = Buffer.from(hash, "hex");
+    const actual = await scrypt(
+        password,
+        salt,
+        64
+    );
 
-    return crypto.timingSafeEqual(actual, expected);
+    const expected = Buffer.from(
+        hash,
+        "hex"
+    );
+
+    return crypto.timingSafeEqual(
+        actual,
+        expected
+    );
 }
 
 function validPassword(value) {
@@ -164,79 +204,85 @@ function validEmail(value) {
     );
 }
 
-function json(res, status, data) {
+// ========================================
+// 3. RESPUESTAS DEL SERVIDOR
+// ========================================
+
+function sendJSON(res, status, payload) {
     res.writeHead(status, {
-        "Content-Type": "application/json; charset=utf-8",
+        "Content-Type":
+            "application/json; charset=utf-8",
+
         "Cache-Control": "no-store",
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
         "Referrer-Policy": "no-referrer"
     });
 
-    res.end(JSON.stringify(data));
+    res.end(JSON.stringify(payload));
 }
 
-async function readBody(req) {
-    const chunks = [];
+async function readJSON(req) {
     let size = 0;
+    const chunks = [];
 
     for await (const chunk of req) {
         size += chunk.length;
 
         if (size > 10000) {
-            throw new Error("REQUEST_TOO_LARGE");
+            throw new Error("BAD_JSON");
         }
 
         chunks.push(chunk);
     }
 
-    let data;
+    let value;
 
     try {
-        data = JSON.parse(
+        value = JSON.parse(
             Buffer.concat(chunks).toString("utf8")
         );
     } catch {
-        throw new Error("INVALID_JSON");
+        throw new Error("BAD_JSON");
     }
 
     if (
-        !data ||
-        typeof data !== "object" ||
-        Array.isArray(data)
+        !value ||
+        typeof value !== "object" ||
+        Array.isArray(value)
     ) {
-        throw new Error("INVALID_JSON");
+        throw new Error("BAD_JSON");
     }
 
-    return data;
+    return value;
 }
 
 // ========================================
-// COOKIES Y SESIONES
+// 4. COOKIES Y SESIONES
 // ========================================
 
-function getCookie(req, name) {
-    const parts = (req.headers.cookie || "").split(";");
+function cookie(req, name) {
+    const entry = (req.headers.cookie || "")
+        .split(";")
+        .map(x => x.trim())
+        .find(x => x.startsWith(`${name}=`));
 
-    const found = parts.find(
-        value => value.trim().startsWith(name + "=")
-    );
-
-    return found
-        ? found.trim().slice(name.length + 1)
+    return entry
+        ? entry.slice(name.length + 1)
         : null;
 }
 
-function setCookie(res, value, maxAge) {
+function setSessionCookie(res, value, maxAge) {
     res.setHeader(
         "Set-Cookie",
-        `falconi_session=${value}; HttpOnly; ` +
-        `SameSite=Strict; Path=/; Max-Age=${maxAge}`
+        `falconi_session=${value}; ` +
+        "HttpOnly; SameSite=Strict; Path=/; " +
+        `Max-Age=${maxAge}`
     );
 }
 
-function createSession(res, userId) {
-    const value = token();
+function openSession(res, userId) {
+    const value = randomToken();
 
     db.prepare(`
         INSERT INTO sessions(
@@ -244,22 +290,25 @@ function createSession(res, userId) {
             user_id,
             expires_at
         )
-        VALUES (?, ?, ?)
+        VALUES(?, ?, ?)
     `).run(
         tokenHash(value),
         userId,
         Date.now() + SESSION_MS
     );
 
-    setCookie(res, value, SESSION_MS / 1000);
-}
-
-function clearCookie(res) {
-    setCookie(res, "", 0);
+    setSessionCookie(
+        res,
+        value,
+        SESSION_MS / 1000
+    );
 }
 
 function getSession(req) {
-    const value = getCookie(req, "falconi_session");
+    const value = cookie(
+        req,
+        "falconi_session"
+    );
 
     if (
         !value ||
@@ -273,9 +322,12 @@ function getSession(req) {
             users.id,
             users.username,
             users.email
+
         FROM sessions
+
         JOIN users
             ON users.id = sessions.user_id
+
         WHERE sessions.token_hash = ?
           AND sessions.expires_at > ?
     `).get(
@@ -285,40 +337,40 @@ function getSession(req) {
 }
 
 // ========================================
-// LÍMITE DE SOLICITUDES
+// 5. LÍMITES DE SOLICITUDES
 // ========================================
 
-const attempts = new Map();
+const rateLimits = new Map();
 
-function limited(req, action, maximum = 10) {
-    const key = `${req.socket.remoteAddress}:${action}`;
+function limited(req, action, max = 10) {
+    const key =
+        `${req.socket.remoteAddress}:${action}`;
+
     const now = Date.now();
 
-    let record = attempts.get(key);
+    let item = rateLimits.get(key);
 
-    if (!record || now >= record.expires) {
-        record = {
+    if (!item || now >= item.expires) {
+        item = {
             count: 0,
             expires: now + 15 * 60 * 1000
         };
     }
 
-    record.count++;
-    attempts.set(key, record);
+    item.count++;
 
-    return record.count > maximum;
+    rateLimits.set(key, item);
+
+    return item.count > max;
 }
 
 // ========================================
-// VALIDACIÓN DE MOVIMIENTOS
+// 6. VALIDAR MOVIMIENTOS
 // ========================================
 
-const VALID_TYPES = [
-    "income",
-    "expense"
-];
+const TYPES = ["income", "expense"];
 
-const VALID_CATEGORIES = [
+const CATEGORIES = [
     "food",
     "transport",
     "housing",
@@ -339,9 +391,9 @@ function parseMovement(body) {
     const amount = body.amount_kopeks;
 
     if (
-        !VALID_TYPES.includes(type) ||
-        !VALID_CATEGORIES.includes(category) ||
-        description.length < 1 ||
+        !TYPES.includes(type) ||
+        !CATEGORIES.includes(category) ||
+        !description ||
         description.length > 100 ||
         !Number.isSafeInteger(amount) ||
         amount < 1 ||
@@ -359,25 +411,29 @@ function parseMovement(body) {
 }
 
 // ========================================
-// API
+// 7. API DEL SERVIDOR
 // ========================================
 
-let dummyHash = null;
+let dummyHash;
 
 async function api(req, res, pathname) {
+    const method = req.method;
 
+    // ------------------------------------
     // REGISTRO
+    // ------------------------------------
+
     if (
         pathname === "/api/register" &&
-        req.method === "POST"
+        method === "POST"
     ) {
-        if (limited(req, "register", 10)) {
-            return json(res, 429, {
+        if (limited(req, "register")) {
+            return sendJSON(res, 429, {
                 error: "Demasiados intentos."
             });
         }
 
-        const body = await readBody(req);
+        const body = await readJSON(req);
 
         const username =
             typeof body.username === "string"
@@ -395,7 +451,7 @@ async function api(req, res, pathname) {
             !validEmail(email) ||
             !validPassword(body.password)
         ) {
-            return json(res, 400, {
+            return sendJSON(res, 400, {
                 error: "Datos de registro inválidos."
             });
         }
@@ -407,13 +463,14 @@ async function api(req, res, pathname) {
         `).get(email);
 
         if (existing) {
-            return json(res, 409, {
+            return sendJSON(res, 409, {
                 error: "No se pudo registrar este correo."
             });
         }
 
-        const passwordHash =
-            await hashPassword(body.password);
+        const passHash = await hashPassword(
+            body.password
+        );
 
         const result = db.prepare(`
             INSERT INTO users(
@@ -422,34 +479,39 @@ async function api(req, res, pathname) {
                 password_hash,
                 created_at
             )
-            VALUES (?, ?, ?, ?)
+            VALUES(?, ?, ?, ?)
         `).run(
             username,
             email,
-            passwordHash,
+            passHash,
             Date.now()
         );
 
-        createSession(
+        openSession(
             res,
             Number(result.lastInsertRowid)
         );
 
-        return json(res, 201, { ok: true });
+        return sendJSON(res, 201, {
+            ok: true
+        });
     }
 
-    // INICIO DE SESIÓN
+    // ------------------------------------
+    // LOGIN
+    // ------------------------------------
+
     if (
         pathname === "/api/login" &&
-        req.method === "POST"
+        method === "POST"
     ) {
-        if (limited(req, "login", 10)) {
-            return json(res, 429, {
+        if (limited(req, "login")) {
+            return sendJSON(res, 429, {
                 error: "Demasiados intentos."
             });
         }
 
-        const body = await readBody(req);
+        const body = await readJSON(req);
 
         const email =
             typeof body.email === "string"
@@ -461,7 +523,7 @@ async function api(req, res, pathname) {
             typeof body.password !== "string" ||
             body.password.length > 128
         ) {
-            return json(res, 401, {
+            return sendJSON(res, 401, {
                 error: "Credenciales incorrectas."
             });
         }
@@ -472,42 +534,50 @@ async function api(req, res, pathname) {
             WHERE email = ?
         `).get(email);
 
-        const verified = await verifyPassword(
+        const valid = await verifyPassword(
             body.password,
             user ? user.password_hash : dummyHash
         );
 
-        if (!user || !verified) {
-            return json(res, 401, {
+        if (!user || !valid) {
+            return sendJSON(res, 401, {
                 error: "Credenciales incorrectas."
             });
         }
 
-        createSession(res, user.id);
+        openSession(res, user.id);
 
-        return json(res, 200, { ok: true });
+        return sendJSON(res, 200, {
+            ok: true
+        });
     }
 
-    // USUARIO ACTUAL
+    // ------------------------------------
+    // PERFIL
+    // ------------------------------------
+
     if (
         pathname === "/api/me" &&
-        req.method === "GET"
+        method === "GET"
     ) {
         const user = getSession(req);
 
         return user
-            ? json(res, 200, { user })
-            : json(res, 401, {
+            ? sendJSON(res, 200, { user })
+            : sendJSON(res, 401, {
                 error: "Sin sesión."
             });
     }
 
+    // ------------------------------------
     // CERRAR SESIÓN
+    // ------------------------------------
+
     if (
         pathname === "/api/logout" &&
-        req.method === "POST"
+        method === "POST"
     ) {
-        const value = getCookie(
+        const value = cookie(
             req,
             "falconi_session"
         );
@@ -522,23 +592,28 @@ async function api(req, res, pathname) {
             `).run(tokenHash(value));
         }
 
-        clearCookie(res);
+        setSessionCookie(res, "", 0);
 
-        return json(res, 200, { ok: true });
+        return sendJSON(res, 200, {
+            ok: true
+        });
     }
 
-    // RECUPERACIÓN DE CONTRASEÑA
+    // ------------------------------------
+    // SOLICITAR RECUPERACIÓN
+    // ------------------------------------
+
     if (
         pathname === "/api/forgot-password" &&
-        req.method === "POST"
+        method === "POST"
     ) {
         if (limited(req, "forgot", 5)) {
-            return json(res, 429, {
+            return sendJSON(res, 429, {
                 error: "Demasiados intentos."
             });
         }
 
-        const body = await readBody(req);
+        const body = await readJSON(req);
 
         const email =
             typeof body.email === "string"
@@ -554,7 +629,7 @@ async function api(req, res, pathname) {
             : null;
 
         if (user) {
-            const value = token();
+            const value = randomToken();
 
             db.prepare(`
                 DELETE FROM password_resets
@@ -567,7 +642,7 @@ async function api(req, res, pathname) {
                     user_id,
                     expires_at
                 )
-                VALUES (?, ?, ?)
+                VALUES(?, ?, ?)
             `).run(
                 tokenHash(value),
                 user.id,
@@ -583,39 +658,44 @@ async function api(req, res, pathname) {
             );
 
             console.log(
-                "Enlace válido durante 15 minutos.\n"
+                "Enlace válido 15 minutos. No lo compartas.\n"
             );
         }
 
-        return json(res, 200, {
+        return sendJSON(res, 200, {
             ok: true,
             message:
                 "Si existe una cuenta, se han generado las instrucciones."
         });
     }
 
+    // ------------------------------------
     // RESTABLECER CONTRASEÑA
+    // ------------------------------------
+
     if (
         pathname === "/api/reset-password" &&
-        req.method === "POST"
+        method === "POST"
     ) {
-        if (limited(req, "reset", 10)) {
-            return json(res, 429, {
+        if (limited(req, "reset")) {
+            return sendJSON(res, 429, {
                 error: "Demasiados intentos."
             });
         }
 
-        const body = await readBody(req);
+        const body = await readJSON(req);
 
         if (
             typeof body.token !== "string" ||
             !/^[a-f0-9]{64}$/.test(body.token) ||
             !validPassword(body.password)
         ) {
-            return json(res, 400, {
+            return sendJSON(res, 400, {
                 error: "Enlace o contraseña inválidos."
             });
         }
+
+        const tokenDigest = tokenHash(body.token);
 
         const record = db.prepare(`
             SELECT user_id
@@ -623,18 +703,19 @@ async function api(req, res, pathname) {
             WHERE token_hash = ?
               AND expires_at > ?
         `).get(
-            tokenHash(body.token),
+            tokenDigest,
             Date.now()
         );
 
         if (!record) {
-            return json(res, 400, {
+            return sendJSON(res, 400, {
                 error: "El enlace ha caducado."
             });
         }
 
-        const passwordHash =
-            await hashPassword(body.password);
+        const passHash = await hashPassword(
+            body.password
+        );
 
         db.exec("BEGIN IMMEDIATE");
 
@@ -644,14 +725,14 @@ async function api(req, res, pathname) {
                 WHERE token_hash = ?
                   AND expires_at > ?
             `).run(
-                tokenHash(body.token),
+                tokenDigest,
                 Date.now()
             );
 
             if (consumed.changes !== 1) {
                 db.exec("ROLLBACK");
 
-                return json(res, 400, {
+                return sendJSON(res, 400, {
                     error: "Enlace inválido."
                 });
             }
@@ -661,7 +742,7 @@ async function api(req, res, pathname) {
                 SET password_hash = ?
                 WHERE id = ?
             `).run(
-                passwordHash,
+                passHash,
                 record.user_id
             );
 
@@ -682,23 +763,25 @@ async function api(req, res, pathname) {
             throw error;
         }
 
-        clearCookie(res);
+        setSessionCookie(res, "", 0);
 
-        return json(res, 200, { ok: true });
+        return sendJSON(res, 200, {
+            ok: true
+        });
     }
 
-    // ====================================
-    // CONSULTAR MOVIMIENTOS
-    // ====================================
+    // ------------------------------------
+    // LISTAR MOVIMIENTOS
+    // ------------------------------------
 
     if (
         pathname === "/api/movements" &&
-        req.method === "GET"
+        method === "GET"
     ) {
         const user = getSession(req);
 
         if (!user) {
-            return json(res, 401, {
+            return sendJSON(res, 401, {
                 error: "Sin sesión."
             });
         }
@@ -711,44 +794,47 @@ async function api(req, res, pathname) {
                 category,
                 amount_kopeks,
                 created_at
+
             FROM movements
+
             WHERE user_id = ?
+
             ORDER BY created_at DESC, id DESC
         `).all(user.id);
 
-        return json(res, 200, {
+        return sendJSON(res, 200, {
             movements
         });
     }
 
-    // ====================================
+    // ------------------------------------
     // CREAR MOVIMIENTO
-    // ====================================
+    // ------------------------------------
 
     if (
         pathname === "/api/movements" &&
-        req.method === "POST"
+        method === "POST"
     ) {
         const user = getSession(req);
 
         if (!user) {
-            return json(res, 401, {
+            return sendJSON(res, 401, {
                 error: "Sin sesión."
             });
         }
 
         if (limited(req, "create-movement", 100)) {
-            return json(res, 429, {
+            return sendJSON(res, 429, {
                 error: "Demasiadas solicitudes."
             });
         }
 
         const movement = parseMovement(
-            await readBody(req)
+            await readJSON(req)
         );
 
         if (!movement) {
-            return json(res, 400, {
+            return sendJSON(res, 400, {
                 error: "Movimiento inválido."
             });
         }
@@ -760,8 +846,8 @@ async function api(req, res, pathname) {
         `).get(user.id);
 
         if (count.total >= 1000) {
-            return json(res, 409, {
-                error: "Límite de movimientos alcanzado."
+            return sendJSON(res, 409, {
+                error: "Límite de movimientos."
             });
         }
 
@@ -774,7 +860,7 @@ async function api(req, res, pathname) {
                 amount_kopeks,
                 created_at
             )
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES(?, ?, ?, ?, ?, ?)
         `).run(
             user.id,
             movement.type,
@@ -784,35 +870,38 @@ async function api(req, res, pathname) {
             Date.now()
         );
 
-        return json(res, 201, {
+        return sendJSON(res, 201, {
             ok: true,
             id: Number(result.lastInsertRowid)
         });
     }
 
+    // ------------------------------------
+    // MOVIMIENTO INDIVIDUAL
+    // ------------------------------------
+
     const match = pathname.match(
         /^\/api\/movements\/([1-9][0-9]*)$/
     );
 
-    // ====================================
+    // ------------------------------------
     // EDITAR MOVIMIENTO
-    // NUEVO EN V0.8
-    // ====================================
+    // ------------------------------------
 
     if (
         match &&
-        req.method === "PATCH"
+        method === "PATCH"
     ) {
         const user = getSession(req);
 
         if (!user) {
-            return json(res, 401, {
+            return sendJSON(res, 401, {
                 error: "Sin sesión."
             });
         }
 
         if (limited(req, "edit-movement", 100)) {
-            return json(res, 429, {
+            return sendJSON(res, 429, {
                 error: "Demasiadas solicitudes."
             });
         }
@@ -820,17 +909,17 @@ async function api(req, res, pathname) {
         const id = Number(match[1]);
 
         if (!Number.isSafeInteger(id)) {
-            return json(res, 400, {
+            return sendJSON(res, 400, {
                 error: "ID inválido."
             });
         }
 
         const movement = parseMovement(
-            await readBody(req)
+            await readJSON(req)
         );
 
         if (!movement) {
-            return json(res, 400, {
+            return sendJSON(res, 400, {
                 error: "Movimiento inválido."
             });
         }
@@ -855,32 +944,34 @@ async function api(req, res, pathname) {
         );
 
         if (result.changes !== 1) {
-            return json(res, 404, {
+            return sendJSON(res, 404, {
                 error: "Movimiento no encontrado."
             });
         }
 
-        return json(res, 200, { ok: true });
+        return sendJSON(res, 200, {
+            ok: true
+        });
     }
 
-    // ====================================
+    // ------------------------------------
     // ELIMINAR MOVIMIENTO
-    // ====================================
+    // ------------------------------------
 
     if (
         match &&
-        req.method === "DELETE"
+        method === "DELETE"
     ) {
         const user = getSession(req);
 
         if (!user) {
-            return json(res, 401, {
+            return sendJSON(res, 401, {
                 error: "Sin sesión."
             });
         }
 
         if (limited(req, "delete-movement", 100)) {
-            return json(res, 429, {
+            return sendJSON(res, 429, {
                 error: "Demasiadas solicitudes."
             });
         }
@@ -888,7 +979,7 @@ async function api(req, res, pathname) {
         const id = Number(match[1]);
 
         if (!Number.isSafeInteger(id)) {
-            return json(res, 400, {
+            return sendJSON(res, 400, {
                 error: "ID inválido."
             });
         }
@@ -897,27 +988,40 @@ async function api(req, res, pathname) {
             DELETE FROM movements
             WHERE id = ?
               AND user_id = ?
-        `).run(id, user.id);
+        `).run(
+            id,
+            user.id
+        );
 
         if (result.changes !== 1) {
-            return json(res, 404, {
+            return sendJSON(res, 404, {
                 error: "Movimiento no encontrado."
             });
         }
 
-        return json(res, 200, { ok: true });
+        return sendJSON(res, 200, {
+            ok: true
+        });
     }
 
-    return json(res, 404, {
+    // ------------------------------------
+    // RUTA NO ENCONTRADA
+    // ------------------------------------
+
+    return sendJSON(res, 404, {
         error: "Ruta de API no encontrada."
     });
 }
 
 // ========================================
-// ARCHIVOS PERMITIDOS
+// 8. ARCHIVOS PERMITIDOS
 // ========================================
 
+// Aquí estaban las rutas que faltaban.
+
 const FILES = new Map([
+
+    // PÁGINAS
     ["/", "index.html"],
     ["/index.html", "index.html"],
     ["/register.html", "register.html"],
@@ -926,11 +1030,16 @@ const FILES = new Map([
     ["/dashboard.html", "dashboard.html"],
     ["/movements.html", "movements.html"],
 
+    // CSS
     ["/styles.css", "styles.css"],
     ["/responsive.css", "responsive.css"],
     ["/dashboard.css", "dashboard.css"],
     ["/movements.css", "movements.css"],
 
+    // PREMIUM CSS - NUEVO
+    ["/premium-card.css", "premium-card.css"],
+
+    // JAVASCRIPT
     ["/login.js", "login.js"],
     ["/register.js", "register.js"],
     ["/forgot-password.js", "forgot-password.js"],
@@ -938,7 +1047,11 @@ const FILES = new Map([
     ["/dashboard.js", "dashboard.js"],
     ["/movements.js", "movements.js"],
     ["/translations.js", "translations.js"],
-    ["/language.js", "language.js"]
+    ["/language.js", "language.js"],
+
+    // PREMIUM JS - NUEVO
+    ["/premium-card.js", "premium-card.js"]
+
 ]);
 
 const MIME = {
@@ -951,68 +1064,81 @@ const MIME = {
     ".svg": "image/svg+xml"
 };
 
-function serveFile(res, pathname) {
-    let file = FILES.get(pathname);
+// ========================================
+// 9. SERVIR ARCHIVOS
+// ========================================
 
+function serveFile(res, pathname) {
+    let filename = FILES.get(pathname);
+
+    // Imágenes de la marca
     if (
-        !file &&
+        !filename &&
         /^\/assets\/images\/[a-zA-Z0-9_.-]+\.(png|jpg|jpeg|svg)$/
             .test(pathname)
     ) {
-        file = pathname.slice(1);
+        filename = pathname.slice(1);
     }
 
-    if (!file) {
-        return json(res, 404, {
+    if (!filename) {
+        return sendJSON(res, 404, {
             error: "Not found"
         });
     }
 
-    const fullPath = path.join(ROOT, file);
+    fs.readFile(
+        path.join(ROOT, filename),
+        (error, content) => {
 
-    fs.readFile(fullPath, (error, content) => {
-        if (error) {
-            return json(res, 404, {
-                error: "File not found"
+            if (error) {
+                return sendJSON(res, 404, {
+                    error: "File not found"
+                });
+            }
+
+            const ext = path.extname(filename);
+
+            const textual = [
+                ".html",
+                ".css",
+                ".js"
+            ].includes(ext);
+
+            res.writeHead(200, {
+                "Content-Type":
+                    (
+                        MIME[ext] ||
+                        "application/octet-stream"
+                    ) +
+                    (
+                        textual
+                            ? "; charset=utf-8"
+                            : ""
+                    ),
+
+                "Cache-Control": "no-store",
+                "X-Content-Type-Options": "nosniff",
+                "X-Frame-Options": "DENY",
+                "Referrer-Policy": "no-referrer",
+
+                "Content-Security-Policy":
+                    "default-src 'self'; " +
+                    "script-src 'self'; " +
+                    "style-src 'self' 'unsafe-inline'; " +
+                    "img-src 'self' data:; " +
+                    "connect-src 'self'; " +
+                    "object-src 'none'; " +
+                    "frame-ancestors 'none'; " +
+                    "base-uri 'self'"
             });
+
+            res.end(content);
         }
-
-        const extension = path.extname(fullPath);
-
-        const textFile = [
-            ".html",
-            ".css",
-            ".js"
-        ].includes(extension);
-
-        res.writeHead(200, {
-            "Content-Type":
-                (MIME[extension] ||
-                    "application/octet-stream") +
-                (textFile ? "; charset=utf-8" : ""),
-
-            "Cache-Control": "no-store",
-            "X-Content-Type-Options": "nosniff",
-            "Referrer-Policy": "no-referrer",
-            "X-Frame-Options": "DENY",
-
-            "Content-Security-Policy":
-                "default-src 'self'; " +
-                "script-src 'self'; " +
-                "style-src 'self' 'unsafe-inline'; " +
-                "img-src 'self' data:; " +
-                "connect-src 'self'; " +
-                "object-src 'none'; " +
-                "frame-ancestors 'none'; " +
-                "base-uri 'self'"
-        });
-
-        res.end(content);
-    });
+    );
 }
 
 // ========================================
-// INICIAR SERVIDOR
+// 10. INICIAR SERVIDOR
 // ========================================
 
 async function start() {
@@ -1023,54 +1149,41 @@ async function start() {
     const server = http.createServer(
         async (req, res) => {
             try {
-                const url = new URL(
+                const pathname = new URL(
                     req.url,
                     ORIGIN
-                );
+                ).pathname;
 
-                const pathname = url.pathname;
-
-                // RUTAS API
-
+                // API
                 if (pathname.startsWith("/api/")) {
 
-                    // Proteger operaciones
-                    // que modifican información.
-
-                    if ([
-                        "POST",
-                        "PATCH",
-                        "DELETE"
-                    ].includes(req.method)) {
-
-                        if (
-                            req.headers.origin !== ORIGIN
-                        ) {
-                            return json(res, 403, {
-                                error: "Origen no permitido."
-                            });
-                        }
+                    // Proteger operaciones que cambian datos
+                    if (
+                        [
+                            "POST",
+                            "PATCH",
+                            "DELETE"
+                        ].includes(req.method) &&
+                        req.headers.origin !== ORIGIN
+                    ) {
+                        return sendJSON(res, 403, {
+                            error: "Origen no permitido."
+                        });
                     }
 
-                    // Verificar contenido JSON.
-
-                    if ([
-                        "POST",
-                        "PATCH"
-                    ].includes(req.method)) {
-
-                        const contentType =
-                            req.headers["content-type"] || "";
-
-                        if (
-                            !contentType.startsWith(
-                                "application/json"
-                            )
-                        ) {
-                            return json(res, 415, {
-                                error: "Se requiere JSON."
-                            });
-                        }
+                    // Las operaciones con cuerpo usan JSON
+                    if (
+                        [
+                            "POST",
+                            "PATCH"
+                        ].includes(req.method) &&
+                        !(
+                            req.headers["content-type"] || ""
+                        ).startsWith("application/json")
+                    ) {
+                        return sendJSON(res, 415, {
+                            error: "Se requiere JSON."
+                        });
                     }
 
                     return await api(
@@ -1080,16 +1193,13 @@ async function start() {
                     );
                 }
 
-                // ARCHIVOS WEB
-
                 if (req.method !== "GET") {
-                    return json(res, 405, {
+                    return sendJSON(res, 405, {
                         error: "Método no permitido."
                     });
                 }
 
-                // Restringir páginas privadas.
-
+                // Proteger las páginas privadas
                 if (
                     [
                         "/dashboard.html",
@@ -1108,16 +1218,24 @@ async function start() {
                 serveFile(res, pathname);
 
             } catch (error) {
-
                 console.error(
-                    "Error del servidor:",
+                    "Error FALCONI-GIT:",
                     error.message
                 );
 
                 if (!res.headersSent) {
-                    return json(res, 500, {
-                        error: "Error interno del servidor."
-                    });
+                    const badJSON =
+                        error.message === "BAD_JSON";
+
+                    return sendJSON(
+                        res,
+                        badJSON ? 400 : 500,
+                        {
+                            error: badJSON
+                                ? "JSON inválido."
+                                : "Error interno."
+                        }
+                    );
                 }
 
                 res.end();
@@ -1127,10 +1245,10 @@ async function start() {
 
     server.listen(PORT, HOST, () => {
         console.log("");
-        console.log("==============================");
-        console.log(" FALCONI-GIT v0.8");
+        console.log("==================================");
+        console.log(" FALCONI-GIT v0.8.1");
         console.log(` ${ORIGIN}`);
-        console.log("==============================");
+        console.log("==================================");
         console.log("");
     });
 }
