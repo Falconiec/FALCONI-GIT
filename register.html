@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crear cuenta | FALCONI-GIT</title>
+
+    <!-- Reutilizamos el CSS del login -->
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./responsive.css">
+
+    <!-- JavaScript del registro -->
+    <script src="./register.js" defer></script>
+</head>
+
+<body>
+
+    <main class="page">
+
+        <!-- PANEL IZQUIERDO -->
+        <section class="brand-panel">
+
+            <header class="brand-header">
+                <div class="logo-box">
+                    <img
+                        src="./assets/images/logo.png"
+                        alt=""
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                    >
+                    <span class="logo-fallback">F.</span>
+                </div>
+
+                <span class="brand-name">FALCONI-GIT</span>
+            </header>
+
+            <div class="brand-content">
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    TU ESPACIO FINANCIERO EN ₽
+                </div>
+
+                <h1 class="brand-title">
+                    Comienza hoy.<br>
+                    Organízate mejor.<br>
+                    <span>Crece mañana.</span>
+                </h1>
+
+                <p class="brand-description">
+                    Crea tu espacio personal para organizar
+                    tus finanzas de manera clara y sencilla.
+                </p>
+
+                <div class="card-stage">
+
+                    <div
+                        class="finance-card"
+                        role="img"
+                        aria-label="Tarjeta decorativa FALCONI-GIT"
+                    >
+                        <div class="card-diagonal-one"></div>
+                        <div class="card-diagonal-two"></div>
+                        <div class="card-texture"></div>
+                        <div class="card-chip"></div>
+
+                        <div class="card-mark">
+                            <strong>F.</strong>
+                            <span>FALCONI</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <footer class="brand-footer">
+                Más claridad. Más control. Todo en rublos.
+            </footer>
+
+        </section>
+
+        <!-- PANEL DE REGISTRO -->
+        <section class="auth-panel">
+
+            <header class="auth-top">
+                <a href="./index.html" class="text-link">
+                    ← Volver al inicio
+                </a>
+            </header>
+
+            <div class="auth-content">
+
+                <div class="auth-heading">
+                    <p class="auth-label">Únete a FALCONI-GIT</p>
+
+                    <h2 class="auth-title">Crea tu cuenta.</h2>
+
+                    <p class="auth-description">
+                        Completa tus datos para comenzar.
+                    </p>
+                </div>
+
+                <form
+                    id="registerForm"
+                    class="login-form"
+                    novalidate
+                >
+
+                    <div class="form-group">
+                        <label class="form-label" for="username">
+                            Nombre de usuario
+                        </label>
+
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Tu nombre"
+                            autocomplete="username"
+                            aria-describedby="usernameError"
+                            required
+                        >
+
+                        <small
+                            class="error-message"
+                            id="usernameError"
+                            aria-live="polite"
+                        ></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            Correo electrónico
+                        </label>
+
+                        <input
+                            class="form-input"
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="nombre@correo.com"
+                            autocomplete="email"
+                            aria-describedby="emailError"
+                            required
+                        >
+
+                        <small
+                            class="error-message"
+                            id="emailError"
+                            aria-live="polite"
+                        ></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            Contraseña
+                        </label>
+
+                        <input
+                            class="form-input"
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Crea una contraseña"
+                            autocomplete="new-password"
+                            aria-describedby="passwordError"
+                            required
+                        >
+
+                        <small
+                            class="error-message"
+                            id="passwordError"
+                            aria-live="polite"
+                        ></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">
+                            Confirmar contraseña
+                        </label>
+
+                        <input
+                            class="form-input"
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            placeholder="Repite tu contraseña"
+                            autocomplete="new-password"
+                            aria-describedby="confirmPasswordError"
+                            required
+                        >
+
+                        <small
+                            class="error-message"
+                            id="confirmPasswordError"
+                            aria-live="polite"
+                        ></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input
+                                type="checkbox"
+                                id="acceptTerms"
+                                required
+                            >
+                            Acepto los términos y la política de privacidad
+                        </label>
+
+                        <small
+                            class="error-message"
+                            id="termsError"
+                            aria-live="polite"
+                        ></small>
+                    </div>
+
+                    <button type="submit" class="submit-button">
+                        <span>Crear cuenta</span>
+                        <span class="submit-arrow" aria-hidden="true">→</span>
+                    </button>
+
+                    <p
+                        id="registerStatus"
+                        class="form-status"
+                        role="status"
+                    ></p>
+
+                </form>
+
+                <div class="register-area">
+                    <span>¿Ya tienes cuenta?</span>
+                    <a href="./index.html" class="text-link">
+                        Iniciar sesión
+                    </a>
+                </div>
+
+            </div>
+
+            <footer class="auth-footer">
+                <span>© 2026 FALCONI-GIT</span>
+                <span>Interfaz en desarrollo</span>
+            </footer>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
