@@ -405,3 +405,529 @@
         transition: none;
     }
 }
+
+/*
+==========================================
+ FG-MOVEMENTS-PREMIUM-081
+ FALCONI-GIT v0.8.1
+
+ PREMIUM FINANCIAL CONTROL
+==========================================
+*/
+
+/* VARIABLES */
+
+.app-layout {
+    --movement-premium-navy: #0F1B2D;
+    --movement-premium-blue: #1E3A8A;
+    --movement-premium-accent: #60A5FA;
+    --movement-premium-ice: #E0F2FE;
+    --movement-premium-light: #F8FAFF;
+
+    --movement-premium-ease:
+        cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ======================================
+   1. TARJETAS FINANCIERAS
+====================================== */
+
+.movement-summary {
+    gap: 18px;
+}
+
+.movement-summary .summary-box {
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid #DFE8F3;
+    border-radius: 18px;
+
+    background: linear-gradient(
+        145deg,
+        #FFFFFF,
+        #F8FAFF
+    );
+
+    box-shadow:
+        0 9px 26px rgba(15, 27, 45, .055);
+
+    transition:
+        transform .3s var(--movement-premium-ease),
+        box-shadow .3s ease,
+        border-color .3s ease;
+}
+
+/* Detalle superior */
+
+.movement-summary .summary-box::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 23px;
+    right: 23px;
+
+    height: 3px;
+    border-radius: 0 0 5px 5px;
+
+    background: linear-gradient(
+        90deg,
+        #1E3A8A,
+        #60A5FA,
+        transparent
+    );
+
+    opacity: .75;
+}
+
+.movement-summary .summary-box p {
+    color: #64748B;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    letter-spacing: .01em;
+}
+
+.movement-summary .summary-box h2 {
+    color: #0F1B2D;
+
+    font-weight: 750;
+    letter-spacing: -.035em;
+
+    font-variant-numeric: tabular-nums;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+    .movement-summary .summary-box:hover {
+        transform: translateY(-5px);
+
+        border-color: #BDD3EC;
+
+        box-shadow:
+            0 20px 40px rgba(15, 27, 45, .11);
+    }
+}
+
+/* ======================================
+   2. PANELES DE MOVIMIENTOS
+====================================== */
+
+.movement-panel {
+    position: relative;
+
+    background: #FFFFFF;
+
+    border: 1px solid #DFE8F3;
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 28px rgba(15, 27, 45, .045);
+}
+
+.movement-panel .panel-heading h2 {
+    color: #0F1B2D;
+
+    font-weight: 700;
+    letter-spacing: -.025em;
+}
+
+.movement-panel .panel-description {
+    color: #64748B;
+    line-height: 1.65;
+}
+
+/* ======================================
+   3. GRAFICO FINANCIERO
+====================================== */
+
+.chart-area {
+    position: relative;
+    border-radius: 16px;
+
+    background: linear-gradient(
+        180deg,
+        #FFFFFF,
+        #F8FAFF
+    );
+
+    padding: 23px 12px 17px;
+}
+
+.chart-track {
+    position: relative;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #EDF3FA,
+            #E2EAF4
+        );
+
+    box-shadow:
+        inset 0 2px 5px rgba(15, 27, 45, .055);
+
+    overflow: hidden;
+}
+
+.chart-bar {
+    position: relative;
+
+    border-radius: 12px 12px 3px 3px;
+
+    transition:
+        height .6s var(--movement-premium-ease);
+}
+
+/* Brillo sobre las barras */
+
+.chart-bar::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, .05),
+        rgba(255, 255, 255, .25),
+        rgba(255, 255, 255, .02)
+    );
+
+    pointer-events: none;
+}
+
+.chart-bar.income-bar {
+    background: linear-gradient(
+        180deg,
+        #2DD4BF,
+        #087F5B
+    );
+}
+
+.chart-bar.expense-bar {
+    background: linear-gradient(
+        180deg,
+        #60A5FA,
+        #1E3A8A
+    );
+}
+
+.chart-column strong {
+    color: #0F1B2D;
+
+    font-weight: 700;
+}
+
+.chart-column > span {
+    color: #64748B;
+    font-weight: 600;
+}
+
+/* ======================================
+   4. CAMPOS Y FILTROS
+====================================== */
+
+.movement-field label {
+    color: #0F1B2D;
+    font-weight: 650;
+}
+
+.movement-field input,
+.movement-field select {
+    border: 1px solid #DDE5F0;
+    border-radius: 12px;
+
+    background: #F8FAFF;
+
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background-color .25s ease;
+}
+
+.movement-field input:focus,
+.movement-field select:focus {
+    border-color: #60A5FA;
+    background: #FFFFFF;
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, .12),
+        0 7px 20px rgba(15, 27, 45, .035);
+}
+
+.movement-field:focus-within label {
+    color: #1E3A8A;
+}
+
+/* ======================================
+   5. BOTON PRINCIPAL
+====================================== */
+
+.movement-submit {
+    border-radius: 12px;
+
+    background: linear-gradient(
+        105deg,
+        #1E3A8A,
+        #254898
+    );
+
+    box-shadow:
+        0 8px 17px rgba(30, 58, 138, .12);
+
+    transition:
+        transform .25s var(--movement-premium-ease),
+        box-shadow .25s ease,
+        background-color .25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+    .movement-submit:not(:disabled):hover {
+        transform: translateY(-2px);
+
+        background: #1E3A8A;
+
+        box-shadow:
+            0 16px 28px rgba(30, 58, 138, .23);
+    }
+}
+
+.movement-submit:not(:disabled):active {
+    transform: scale(.99);
+}
+
+/* BOTONES SECUNDARIOS */
+
+.secondary-button {
+    border-radius: 10px;
+
+    background: #F8FAFF;
+    color: #1E3A8A;
+
+    border: 1px solid #DFE8F3;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+    .secondary-button:hover {
+        background: #E0F2FE;
+        border-color: #B5CEE9;
+    }
+}
+
+/* ======================================
+   6. HISTORIAL DE MOVIMIENTOS
+====================================== */
+
+.movement-list {
+    gap: 11px;
+}
+
+.movement-item {
+    background: linear-gradient(
+        140deg,
+        #FFFFFF,
+        #FAFCFF
+    );
+
+    border: 1px solid #E2EAF4;
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 10px rgba(15, 27, 45, .02);
+
+    transition:
+        transform .25s var(--movement-premium-ease),
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+    .movement-item:hover {
+        transform: translateY(-2px);
+
+        border-color: #BDCEE7;
+
+        box-shadow:
+            0 12px 23px rgba(15, 27, 45, .075);
+    }
+}
+
+.movement-icon {
+    border-radius: 12px;
+
+    color: #1E3A8A;
+    background: #E0F2FE;
+}
+
+.movement-info strong {
+    color: #0F1B2D;
+    font-weight: 700;
+}
+
+.movement-info small {
+    color: #64748B;
+    line-height: 1.6;
+}
+
+.movement-amount {
+    font-weight: 750;
+    letter-spacing: -.01em;
+}
+
+.movement-amount.income {
+    color: #087F5B;
+}
+
+.movement-amount.expense {
+    color: #0F1B2D;
+}
+
+/* ======================================
+   7. EDITAR Y ELIMINAR
+====================================== */
+
+.movement-actions button {
+    border-radius: 9px;
+
+    background: #FFFFFF;
+    border: 1px solid #DFE8F3;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+    .movement-actions button:hover {
+        background: #F1F6FC;
+        border-color: #BDD3EC;
+    }
+}
+
+.movement-actions .delete-button {
+    color: #B42332;
+}
+
+.movement-actions .delete-button:hover {
+    background: #FFF4F4;
+    border-color: #F0CDCD;
+}
+
+/* ======================================
+   8. ETIQUETAS Y ESTADOS
+====================================== */
+
+.result-count {
+    background: #E0F2FE;
+    color: #1E3A8A;
+
+    border-radius: 30px;
+
+    font-weight: 700;
+}
+
+.empty-message {
+    color: #64748B;
+    line-height: 1.7;
+}
+
+.movement-status {
+    font-weight: 500;
+}
+
+/* ======================================
+   9. ANIMACIONES DE ENTRADA
+====================================== */
+
+@keyframes fg-movement-enter {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.movement-summary {
+    animation:
+        fg-movement-enter
+        .7s var(--movement-premium-ease) backwards;
+}
+
+.movement-panel {
+    animation:
+        fg-movement-enter
+        .75s var(--movement-premium-ease) backwards;
+}
+
+/* ======================================
+   10. ACCESIBILIDAD
+====================================== */
+
+.movement-field input:focus-visible,
+.movement-field select:focus-visible,
+.movement-submit:focus-visible,
+.secondary-button:focus-visible,
+.movement-actions button:focus-visible {
+    outline: 2px solid #60A5FA;
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .movement-summary,
+    .movement-panel {
+        animation: none !important;
+    }
+
+    .movement-item,
+    .summary-box,
+    .movement-submit,
+    .chart-bar {
+        transition: none !important;
+    }
+}
+
+/* ======================================
+   11. RESPONSIVE
+====================================== */
+
+@media (max-width: 767px) {
+
+    .movement-panel {
+        border-radius: 16px;
+    }
+
+    .summary-box {
+        border-radius: 15px;
+    }
+
+    .movement-item {
+        border-radius: 12px;
+    }
+
+    .chart-area {
+        padding: 18px 8px 12px;
+    }
+}

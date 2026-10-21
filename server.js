@@ -6,7 +6,7 @@
  Incluye:
  - Registro
  - Login y logout
- - Recuperación de contraseña
+ - RecuperaciÃ³n de contraseÃ±a
  - Sesiones
  - Movimientos: crear, listar, editar, eliminar
  - Dashboard
@@ -124,7 +124,7 @@ db.exec(`
 `);
 
 // ========================================
-// 2. CONTRASEÑAS Y TOKENS
+// 2. CONTRASEÃ‘AS Y TOKENS
 // ========================================
 
 function randomToken() {
@@ -337,7 +337,7 @@ function getSession(req) {
 }
 
 // ========================================
-// 5. LÍMITES DE SOLICITUDES
+// 5. LÃMITES DE SOLICITUDES
 // ========================================
 
 const rateLimits = new Map();
@@ -452,7 +452,7 @@ async function api(req, res, pathname) {
             !validPassword(body.password)
         ) {
             return sendJSON(res, 400, {
-                error: "Datos de registro inválidos."
+                error: "Datos de registro invÃ¡lidos."
             });
         }
 
@@ -565,12 +565,12 @@ async function api(req, res, pathname) {
         return user
             ? sendJSON(res, 200, { user })
             : sendJSON(res, 401, {
-                error: "Sin sesión."
+                error: "Sin sesiÃ³n."
             });
     }
 
     // ------------------------------------
-    // CERRAR SESIÓN
+    // CERRAR SESIÃ“N
     // ------------------------------------
 
     if (
@@ -600,7 +600,7 @@ async function api(req, res, pathname) {
     }
 
     // ------------------------------------
-    // SOLICITAR RECUPERACIÓN
+    // SOLICITAR RECUPERACIÃ“N
     // ------------------------------------
 
     if (
@@ -650,7 +650,7 @@ async function api(req, res, pathname) {
             );
 
             console.log(
-                "\n--- RECUPERACIÓN FALCONI-GIT ---"
+                "\n--- RECUPERACIÃ“N FALCONI-GIT ---"
             );
 
             console.log(
@@ -658,7 +658,7 @@ async function api(req, res, pathname) {
             );
 
             console.log(
-                "Enlace válido 15 minutos. No lo compartas.\n"
+                "Enlace vÃ¡lido 15 minutos. No lo compartas.\n"
             );
         }
 
@@ -670,7 +670,7 @@ async function api(req, res, pathname) {
     }
 
     // ------------------------------------
-    // RESTABLECER CONTRASEÑA
+    // RESTABLECER CONTRASEÃ‘A
     // ------------------------------------
 
     if (
@@ -691,7 +691,7 @@ async function api(req, res, pathname) {
             !validPassword(body.password)
         ) {
             return sendJSON(res, 400, {
-                error: "Enlace o contraseña inválidos."
+                error: "Enlace o contraseÃ±a invÃ¡lidos."
             });
         }
 
@@ -733,7 +733,7 @@ async function api(req, res, pathname) {
                 db.exec("ROLLBACK");
 
                 return sendJSON(res, 400, {
-                    error: "Enlace inválido."
+                    error: "Enlace invÃ¡lido."
                 });
             }
 
@@ -782,7 +782,7 @@ async function api(req, res, pathname) {
 
         if (!user) {
             return sendJSON(res, 401, {
-                error: "Sin sesión."
+                error: "Sin sesiÃ³n."
             });
         }
 
@@ -819,7 +819,7 @@ async function api(req, res, pathname) {
 
         if (!user) {
             return sendJSON(res, 401, {
-                error: "Sin sesión."
+                error: "Sin sesiÃ³n."
             });
         }
 
@@ -835,7 +835,7 @@ async function api(req, res, pathname) {
 
         if (!movement) {
             return sendJSON(res, 400, {
-                error: "Movimiento inválido."
+                error: "Movimiento invÃ¡lido."
             });
         }
 
@@ -847,7 +847,7 @@ async function api(req, res, pathname) {
 
         if (count.total >= 1000) {
             return sendJSON(res, 409, {
-                error: "Límite de movimientos."
+                error: "LÃ­mite de movimientos."
             });
         }
 
@@ -896,7 +896,7 @@ async function api(req, res, pathname) {
 
         if (!user) {
             return sendJSON(res, 401, {
-                error: "Sin sesión."
+                error: "Sin sesiÃ³n."
             });
         }
 
@@ -910,7 +910,7 @@ async function api(req, res, pathname) {
 
         if (!Number.isSafeInteger(id)) {
             return sendJSON(res, 400, {
-                error: "ID inválido."
+                error: "ID invÃ¡lido."
             });
         }
 
@@ -920,7 +920,7 @@ async function api(req, res, pathname) {
 
         if (!movement) {
             return sendJSON(res, 400, {
-                error: "Movimiento inválido."
+                error: "Movimiento invÃ¡lido."
             });
         }
 
@@ -966,7 +966,7 @@ async function api(req, res, pathname) {
 
         if (!user) {
             return sendJSON(res, 401, {
-                error: "Sin sesión."
+                error: "Sin sesiÃ³n."
             });
         }
 
@@ -980,7 +980,7 @@ async function api(req, res, pathname) {
 
         if (!Number.isSafeInteger(id)) {
             return sendJSON(res, 400, {
-                error: "ID inválido."
+                error: "ID invÃ¡lido."
             });
         }
 
@@ -1017,11 +1017,11 @@ async function api(req, res, pathname) {
 // 8. ARCHIVOS PERMITIDOS
 // ========================================
 
-// Aquí estaban las rutas que faltaban.
+// AquÃ­ estaban las rutas que faltaban.
 
 const FILES = new Map([
 
-    // PÁGINAS
+    // PÃGINAS
     ["/", "index.html"],
     ["/index.html", "index.html"],
     ["/register.html", "register.html"],
@@ -1052,7 +1052,10 @@ const FILES = new Map([
     // PREMIUM JS - NUEVO
     ["/premium-card.js", "premium-card.js"]
 
-]);
+
+    ["/cards.html", "cards.html"],
+    ["/cards.css", "cards.css"],
+    ["/cards.js", "cards.js"],]);
 
 const MIME = {
     ".html": "text/html",
@@ -1071,7 +1074,7 @@ const MIME = {
 function serveFile(res, pathname) {
     let filename = FILES.get(pathname);
 
-    // Imágenes de la marca
+    // ImÃ¡genes de la marca
     if (
         !filename &&
         /^\/assets\/images\/[a-zA-Z0-9_.-]+\.(png|jpg|jpeg|svg)$/
@@ -1195,11 +1198,11 @@ async function start() {
 
                 if (req.method !== "GET") {
                     return sendJSON(res, 405, {
-                        error: "Método no permitido."
+                        error: "MÃ©todo no permitido."
                     });
                 }
 
-                // Proteger las páginas privadas
+                // Proteger las pÃ¡ginas privadas
                 if (
                     [
                         "/dashboard.html",
@@ -1232,7 +1235,7 @@ async function start() {
                         badJSON ? 400 : 500,
                         {
                             error: badJSON
-                                ? "JSON inválido."
+                                ? "JSON invÃ¡lido."
                                 : "Error interno."
                         }
                     );

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0F1B2D">
+
+    <title>Mis tarjetas | FALCONI-GIT</title>
+
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./responsive.css">
+    <link rel="stylesheet" href="./dashboard.css">
+    <link rel="stylesheet" href="./cards.css">
+
+    <script src="./translations.js" defer></script>
+    <script src="./language.js" defer></script>
+    <script src="./cards.js" defer></script>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <strong>FALCONI-GIT</strong>
+            </div>
+
+            <nav class="sidebar-nav" aria-label="Navegación principal">
+                <a href="./dashboard.html" class="nav-item">Inicio</a>
+                <a href="./movements.html" class="nav-item">Movimientos</a>
+                <a href="./cards.html" class="nav-item active">Mis tarjetas</a>
+                <span class="nav-item disabled">Categorías</span>
+                <span class="nav-item disabled">Metas</span>
+                <span class="nav-item disabled">Configuración</span>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="./dashboard.html" class="logout-button" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
+                    Volver
+                </a>
+            </div>
+        </aside>
+
+        <div class="main-column">
+            <header class="topbar">
+                <div class="topbar-brand">FALCONI-GIT · Tarjetas</div>
+
+                <div class="topbar-actions">
+                    <select id="language" aria-label="Idioma">
+                        <option value="es">Español</option>
+                        <option value="ru">Русский</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </header>
+
+            <main class="dashboard-content cards-page">
+                <section class="cards-hero">
+                    <p class="cards-eyebrow">MIS TARJETAS</p>
+                    <h1>Organiza tus tarjetas.</h1>
+                    <p class="cards-intro">
+                        Guarda un alias y los 4 últimos dígitos para identificar desde qué tarjeta realizas tus gastos.
+                    </p>
+                </section>
+
+                <section class="cards-layout">
+                    <div class="cards-left-column">
+                        <section class="cards-panel">
+                            <div class="panel-heading">
+                                <h2>Añadir tarjeta</h2>
+                                <p>Elige una de las 3 variantes y agrega las tarjetas que necesites.</p>
+                            </div>
+
+                            <form id="cardForm" class="card-form">
+                                <div class="card-field">
+                                    <label for="cardAlias">Alias de la tarjeta</label>
+                                    <input
+                                        type="text"
+                                        id="cardAlias"
+                                        maxlength="30"
+                                        placeholder="Ej: Principal"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="card-field">
+                                    <label for="cardLast4">Últimos 4 dígitos</label>
+                                    <input
+                                        type="text"
+                                        id="cardLast4"
+                                        inputmode="numeric"
+                                        maxlength="4"
+                                        placeholder="2048"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="card-field">
+                                    <label for="cardHolder">Nombre visible</label>
+                                    <input
+                                        type="text"
+                                        id="cardHolder"
+                                        maxlength="24"
+                                        placeholder="FALCONI-GIT"
+                                        value="FALCONI-GIT"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="card-field">
+                                    <label>Selecciona diseño</label>
+
+                                    <div class="variant-selector">
+                                        <label class="variant-option">
+                                            <input type="radio" name="variant" value="variant-1" checked>
+                                            <span>Variante 1 · Azul Plata</span>
+                                        </label>
+
+                                        <label class="variant-option">
+                                            <input type="radio" name="variant" value="variant-2">
+                                            <span>Variante 2 · Negro Titanio</span>
+                                        </label>
+
+                                        <label class="variant-option">
+                                            <input type="radio" name="variant" value="variant-3">
+                                            <span>Variante 3 · Azul Carbono</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="cardPreview" class="card-preview-wrap"></div>
+
+                                <div class="card-form-actions">
+                                    <button type="submit" class="movement-submit">Guardar tarjeta</button>
+                                </div>
+
+                                <p id="cardStatus" class="card-status" aria-live="polite"></p>
+                            </form>
+                        </section>
+                    </div>
+
+                    <div class="cards-right-column">
+                        <section class="cards-panel">
+                            <div class="panel-heading">
+                                <h2>Plantillas disponibles</h2>
+                                <p>Estas son las 3 variantes que podrá elegir el usuario.</p>
+                            </div>
+
+                            <div id="templatesGallery" class="templates-gallery"></div>
+                        </section>
+
+                        <section class="cards-panel">
+                            <div class="panel-heading">
+                                <h2>Mis tarjetas guardadas</h2>
+                                <p>Se guardan localmente en tu navegador por ahora.</p>
+                            </div>
+
+                            <div id="cardsList" class="saved-cards-list"></div>
+                        </section>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
