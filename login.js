@@ -159,14 +159,14 @@ forgotLink.addEventListener("click", function (event) {
 // CREAR CUENTA
 // ==========================================
 
+
 const registerLink = document.getElementById("registerLink");
 
 registerLink.addEventListener("click", function (event) {
 
     event.preventDefault();
 
-    formStatus.textContent =
-        "El registro de usuarios estará disponible próximamente.";
+    window.location.href = "./register.html";
 
 });
 
