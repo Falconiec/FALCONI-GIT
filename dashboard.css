@@ -374,3 +374,26 @@ button, select {
         transition: none !important;
     }
 }
+
+/* FALCONI-GIT v0.7
+   Enlace a Movimientos */
+
+.module-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 15px;
+    color: var(--blue);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.module-link:hover {
+    text-decoration: underline;
+}
+
+.module-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 3px;
+}
