@@ -222,3 +222,105 @@ const translations = {
         recoveryPending: "Восстановление пароля скоро появится."
     }
 };
+
+/*
+ FALCONI-GIT v0.6
+ Traducciones adicionales:
+ backend, recuperación y dashboard
+*/
+
+Object.assign(translations.es, {
+    recoveryLabel: "RECUPERACIÓN DE ACCESO",
+    recoveryTitle: "¿Olvidaste tu contraseña?",
+    recoveryDescription: "Introduce tu correo para solicitar un enlace de recuperación.",
+    sendRecovery: "Solicitar enlace",
+    recoverySent: "Si existe una cuenta con ese correo, se han generado las instrucciones de recuperación.",
+    resetTitle: "Nueva contraseña",
+    resetDescription: "Establece una nueva contraseña para tu cuenta.",
+    savePassword: "Guardar contraseña",
+    resetSuccess: "Contraseña actualizada. Ya puedes iniciar sesión.",
+    invalidResetLink: "El enlace es inválido, ha caducado o no se pudo completar la solicitud.",
+    serverError: "No se pudo conectar con el servidor. Inténtalo de nuevo.",
+    tooManyAttempts: "Demasiados intentos. Prueba más tarde.",
+    invalidCredentials: "Correo o contraseña incorrectos.",
+    registrationFailed: "No se pudo registrar este correo.",
+    dashboardHome: "Inicio",
+    dashboardMovements: "Movimientos",
+    dashboardCategories: "Categorías",
+    dashboardGoals: "Metas",
+    dashboardSettings: "Configuración",
+    dashboardLabel: "TU ESPACIO PERSONAL",
+    dashboardSubtitle: "Organiza tu espacio financiero desde aquí.",
+    dashboardReady: "Tu espacio está preparado.",
+    dashboardReadyDescription: "Pronto podrás registrar movimientos, organizar gastos y establecer metas personales.",
+    dashboardModules: "Tu espacio de trabajo",
+    movementsDescription: "Organiza ingresos y gastos.",
+    categoriesDescription: "Clasifica tus operaciones.",
+    goalsDescription: "Planifica tus objetivos.",
+    comingSoon: "Próximamente",
+    logout: "Cerrar sesión"
+});
+
+Object.assign(translations.en, {
+    recoveryLabel: "ACCOUNT RECOVERY",
+    recoveryTitle: "Forgot your password?",
+    recoveryDescription: "Enter your email to request a recovery link.",
+    sendRecovery: "Request link",
+    recoverySent: "If an account exists with that email, recovery instructions have been generated.",
+    resetTitle: "New password",
+    resetDescription: "Set a new password for your account.",
+    savePassword: "Save password",
+    resetSuccess: "Password updated. You can now sign in.",
+    invalidResetLink: "The link is invalid, expired, or the request could not be completed.",
+    serverError: "Could not connect to the server. Please try again.",
+    tooManyAttempts: "Too many attempts. Please try again later.",
+    invalidCredentials: "Incorrect email or password.",
+    registrationFailed: "This email could not be registered.",
+    dashboardHome: "Home",
+    dashboardMovements: "Transactions",
+    dashboardCategories: "Categories",
+    dashboardGoals: "Goals",
+    dashboardSettings: "Settings",
+    dashboardLabel: "YOUR PERSONAL SPACE",
+    dashboardSubtitle: "Manage your financial space here.",
+    dashboardReady: "Your space is ready.",
+    dashboardReadyDescription: "Soon you will be able to record transactions, organize expenses and set personal goals.",
+    dashboardModules: "Your workspace",
+    movementsDescription: "Organize income and expenses.",
+    categoriesDescription: "Classify your transactions.",
+    goalsDescription: "Plan your objectives.",
+    comingSoon: "Coming soon",
+    logout: "Sign out"
+});
+
+Object.assign(translations.ru, {
+    recoveryLabel: "ВОССТАНОВЛЕНИЕ ДОСТУПА",
+    recoveryTitle: "Забыли пароль?",
+    recoveryDescription: "Введите адрес электронной почты, чтобы запросить ссылку для восстановления.",
+    sendRecovery: "Запросить ссылку",
+    recoverySent: "Если аккаунт с таким адресом существует, инструкции по восстановлению сформированы.",
+    resetTitle: "Новый пароль",
+    resetDescription: "Установите новый пароль для своего аккаунта.",
+    savePassword: "Сохранить пароль",
+    resetSuccess: "Пароль обновлён. Теперь можно войти.",
+    invalidResetLink: "Ссылка недействительна, устарела или запрос не удалось выполнить.",
+    serverError: "Не удалось подключиться к серверу. Попробуйте снова.",
+    tooManyAttempts: "Слишком много попыток. Попробуйте позже.",
+    invalidCredentials: "Неверная почта или пароль.",
+    registrationFailed: "Не удалось зарегистрировать этот адрес.",
+    dashboardHome: "Главная",
+    dashboardMovements: "Операции",
+    dashboardCategories: "Категории",
+    dashboardGoals: "Цели",
+    dashboardSettings: "Настройки",
+    dashboardLabel: "ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО",
+    dashboardSubtitle: "Управляйте своим финансовым пространством здесь.",
+    dashboardReady: "Ваше пространство готово.",
+    dashboardReadyDescription: "Скоро вы сможете записывать операции, распределять расходы по категориям и ставить личные цели.",
+    dashboardModules: "Ваше рабочее пространство",
+    movementsDescription: "Управляйте доходами и расходами.",
+    categoriesDescription: "Распределяйте операции по категориям.",
+    goalsDescription: "Планируйте свои цели.",
+    comingSoon: "Скоро",
+    logout: "Выйти"
+});
