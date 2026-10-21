@@ -1050,7 +1050,7 @@ const FILES = new Map([
     ["/language.js", "language.js"],
 
     // PREMIUM JS - NUEVO
-    ["/premium-card.js", "premium-card.js"]
+    ["/premium-card.js", "premium-card.js"],
 
 
     ["/cards.html", "cards.html"],
