@@ -16,3 +16,6 @@ node_modules/
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+FALCONI-CODIGO-REVISION.zip
+server.v07.buckup.txt
+server-pre-premium.backup.txt

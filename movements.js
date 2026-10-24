@@ -387,7 +387,7 @@ async function apiRequest(url, options = {}) {
     });
 
     if (response.status === 401) {
-        window.location.replace("./index.html");
+        window.location.replace("./login.html");
         throw new Error("UNAUTHORIZED");
     }
 
@@ -553,7 +553,7 @@ $("logoutButton").addEventListener(
                 body: "{}"
             });
 
-            window.location.replace("./index.html");
+            window.location.replace("./login.html");
 
         } catch {
             button.disabled = false;

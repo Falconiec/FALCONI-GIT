@@ -39,7 +39,7 @@ async function loadDashboard() {
         });
 
         if (!response.ok) {
-            window.location.replace("./index.html");
+            window.location.replace("./login.html");
             return;
         }
 
@@ -69,7 +69,7 @@ logoutButton.addEventListener("click", async function () {
 
         if (!response.ok) throw new Error("LOGOUT_FAILED");
 
-        window.location.replace("./index.html");
+        window.location.replace("./login.html");
 
     } catch {
         logoutButton.disabled = false;

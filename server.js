@@ -418,6 +418,8 @@ let dummyHash;
 
 async function api(req, res, pathname) {
 
+
+
     if (await walletV09.handle(
         req,
         res,
@@ -1041,6 +1043,11 @@ walletV09.install(db);
 // FALCONI-WALLET-V09-INSTALLED
 
 const FILES = new Map([
+    ["/atelier-hero.html", "index.html"],
+    ["/smart-receipt-v091.js", "smart-receipt-v091.js"],
+    ["/smart-receipt-v091.css", "smart-receipt-v091.css"],
+    ["/smart-receipt-v091.js", "smart-receipt-v091.js"],
+    ["/smart-receipt-v091.css", "smart-receipt-v091.css"],
 
     ["/wallet-dashboard-v09.js", "wallet-dashboard-v09.js"],
     ["/finance-v09.js", "finance-v09.js"],
@@ -1049,6 +1056,9 @@ const FILES = new Map([
     // PÃGINAS
     ["/", "index.html"],
     ["/index.html", "index.html"],
+    ["/login.html", "login.html"],
+    ["/atelier-motion.js", "atelier-motion.js"],
+    ["/auth-unified-blue.css", "auth-unified-blue.css"],
     ["/register.html", "register.html"],
     ["/forgot-password.html", "forgot-password.html"],
     ["/reset-password.html", "reset-password.html"],
@@ -1236,7 +1246,7 @@ async function start() {
                     !getSession(req)
                 ) {
                     res.writeHead(302, {
-                        Location: "/index.html",
+                        Location: "/login.html",
                         "Cache-Control": "no-store"
                     });
 

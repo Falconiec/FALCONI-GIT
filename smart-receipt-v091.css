@@ -1,0 +1,671 @@
+/* ==========================================
+   FALCONI-GIT v0.9.1 SMART RECEIPT
+   ========================================== */
+
+#sr-launcher {
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    z-index: 900;
+    padding: 15px 22px;
+    background: linear-gradient(120deg,#10223B,#254B9A);
+    color: #fff;
+    border: 1px solid #6A8AC6;
+    border-radius: 16px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 15px 35px #0F1B2D55;
+}
+
+body.sr-modal-open {
+    overflow: hidden;
+}
+
+#sr-overlay[hidden] {
+    display: none !important;
+}
+
+#sr-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    padding: 22px;
+    background: #060E1BCC;
+    backdrop-filter: blur(13px);
+    display: grid;
+    place-items: center;
+    overflow-y: auto;
+}
+
+.sr-window {
+    width: min(1160px,100%);
+    max-height: calc(100vh - 44px);
+    overflow-y: auto;
+    border: 1px solid #AFC3DA55;
+    border-radius: 24px;
+    background: #F8FAFF;
+    box-shadow: 0 35px 90px #0008;
+    color: #0F1B2D;
+}
+
+.sr-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    background: #0F1B2D;
+    color: #fff;
+}
+
+.sr-logo {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.sr-monogram {
+    font-family: Georgia,serif;
+    font-size: 34px;
+    font-weight: bold;
+}
+
+.sr-logo strong,
+.sr-logo small {
+    display: block;
+}
+
+.sr-logo small {
+    color: #A9C2E2;
+    font-size: 10px;
+    letter-spacing: .12em;
+    margin-top: 4px;
+}
+
+#sr-close {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid #FFFFFF55;
+    background: #FFFFFF12;
+    color: #fff;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.sr-columns {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+}
+
+.sr-left,
+.sr-right {
+    padding: 30px;
+    min-width: 0;
+}
+
+.sr-right {
+    background: radial-gradient(
+        circle at 55% 22%,
+        #294C81,
+        #101D32 60%,
+        #091321
+    );
+    color: #fff;
+}
+
+.sr-eyebrow {
+    color: #5279B5;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: .16em;
+}
+
+.sr-right .sr-eyebrow {
+    color: #B2CAE9;
+}
+
+.sr-left h2 {
+    margin: 10px 0 6px;
+    font-size: clamp(25px,3vw,35px);
+    letter-spacing: -.03em;
+}
+
+.sr-subtitle {
+    color: #64748B;
+    line-height: 1.6;
+    margin: 0 0 22px;
+}
+
+.sr-card-view {
+    max-width: 420px;
+    margin-bottom: 24px;
+}
+
+.sr-card-view .fg-cardskin {
+    max-width: 100%;
+}
+
+.sr-empty-card {
+    min-height: 168px;
+    border-radius: 18px;
+    background: linear-gradient(120deg,#0F1B2D,#1E3A8A);
+    color: #fff;
+    padding: 23px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sr-empty-card strong {
+    font: bold 40px Georgia,serif;
+}
+
+#sr-form {
+    display: grid;
+    gap: 15px;
+}
+
+#sr-form label {
+    display: grid;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+#sr-form input,
+#sr-form select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 11px 13px;
+    font: inherit;
+    border: 1px solid #D6E0EE;
+    border-radius: 11px;
+    background: #fff;
+    color: #0F1B2D;
+}
+
+.sr-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.sr-primary {
+    min-height: 48px;
+    border: 0;
+    border-radius: 12px;
+    background: #1E3A8A;
+    color: #fff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.sr-primary:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.sr-note,
+#sr-status {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.sr-note {
+    color: #64748B;
+}
+
+#sr-status {
+    color: #234989;
+    font-weight: 700;
+    min-height: 20px;
+}
+
+.sr-process-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.sr-process-label {
+    color: #D2E5FF;
+    font-size: 11px;
+}
+
+.sr-printer-stage {
+    height: 440px;
+    position: relative;
+    display: grid;
+    place-items: start center;
+    padding-top: 60px;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.sr-printer {
+    position: relative;
+    z-index: 3;
+    width: min(330px,90%);
+    height: 145px;
+    border-radius: 30px 30px 20px 20px;
+    background: linear-gradient(
+        145deg,
+        #515D6C,
+        #252F3B 34%,
+        #111922 78%
+    );
+    border: 2px solid #8795A866;
+    box-shadow:
+        inset 0 3px 5px #FFFFFF22,
+        0 25px 35px #0009;
+}
+
+.sr-printer-lid {
+    position: absolute;
+    top: 22px;
+    left: 25px;
+    right: 25px;
+    height: 38px;
+    border-radius: 13px;
+    background: linear-gradient(
+        180deg,#15202D,#303A45
+    );
+    border: 1px solid #8795A855;
+}
+
+.sr-printer-brand {
+    position: absolute;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: bold 15px Georgia,serif;
+    color: #CDD5DE;
+    letter-spacing: .23em;
+}
+
+.sr-printer-light {
+    position: absolute;
+    top: 83px;
+    right: 25px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #D2A64B;
+    box-shadow: 0 0 14px #D2A64B;
+}
+
+.sr-success .sr-printer-light {
+    background: #55E6BA;
+    box-shadow: 0 0 15px #55E6BA;
+}
+
+.sr-printer-slot {
+    position: absolute;
+    bottom: 12px;
+    left: 17px;
+    right: 17px;
+    height: 11px;
+    border-radius: 8px;
+    background: #05080C;
+    box-shadow: inset 0 2px 4px #000;
+}
+
+.sr-paper {
+    position: absolute;
+    z-index: 2;
+    top: 175px;
+    left: 50%;
+    width: min(265px,75%);
+    max-height: 248px;
+    overflow: hidden;
+    background: #FFFDF6;
+    color: #171717;
+    box-shadow: 0 18px 30px #0008;
+    transform: translate(-50%,-110%);
+    opacity: 0;
+}
+
+.sr-paper.sr-printing {
+    animation: sr-output 1.8s cubic-bezier(
+        .18,.8,.3,1
+    ) forwards;
+}
+
+@keyframes sr-output {
+    0% {
+        transform: translate(-50%,-110%);
+        opacity: 0;
+    }
+    12% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%,0);
+        opacity: 1;
+    }
+}
+
+.sr-receipt-content {
+    padding: 18px 14px;
+    font-family: "Courier New",monospace;
+    font-size: 9px;
+    text-align: center;
+}
+
+.sr-receipt-logo {
+    font: bold 27px Georgia,serif;
+}
+
+.sr-receipt-title {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+.sr-receipt-content small {
+    font-size: 8px;
+}
+
+.sr-dashes {
+    margin: 12px 0;
+    border-top: 1px dashed #777;
+}
+
+.sr-receipt-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 7px 0;
+    text-align: left;
+}
+
+.sr-receipt-line strong {
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.sr-receipt-total {
+    display: grid;
+    gap: 5px;
+}
+
+.sr-receipt-total strong {
+    font-size: 17px;
+}
+
+.sr-receipt-disclaimer {
+    margin: 10px 0 0;
+    font-size: 7px;
+    line-height: 1.5;
+}
+
+.sr-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 11px;
+}
+
+.sr-actions button {
+    min-height: 42px;
+    padding: 10px 14px;
+    border: 1px solid #AFC3DC77;
+    background: #FFFFFF19;
+    border-radius: 11px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sr-actions button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.sr-security {
+    margin-top: 20px;
+    text-align: center;
+    color: #AFC3DD;
+    font-size: 11px;
+}
+
+@media (max-width: 800px) {
+    .sr-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .sr-left,
+    .sr-right {
+        padding: 20px;
+    }
+
+    #sr-overlay {
+        padding: 8px;
+    }
+
+    .sr-window {
+        max-height: calc(100vh - 16px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sr-paper.sr-printing {
+        animation: none;
+        transform: translate(-50%,0);
+        opacity: 1;
+    }
+}
+
+/*
+   Al imprimir o guardar PDF:
+   mostrar solamente el recibo.
+*/
+
+@media print {
+    @page {
+        size: A4;
+        margin: 14mm;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #sr-paper,
+    #sr-paper * {
+        visibility: visible !important;
+    }
+
+    #sr-overlay {
+        display: block !important;
+        position: static !important;
+        background: white !important;
+    }
+
+    #sr-paper {
+        position: absolute !important;
+        left: 50% !important;
+        top: 10mm !important;
+        width: 80mm !important;
+        max-height: none !important;
+        overflow: visible !important;
+        opacity: 1 !important;
+        transform: translateX(-50%) !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    .sr-receipt-content {
+        font-size: 11px;
+    }
+}
+
+/* ==========================================
+   FALCONI-GIT Smart Receipt Visual Fix
+   ========================================== */
+
+/* El estilo anterior se conserva.
+   Estas reglas mejoran la vista en PC. */
+
+.sr-window {
+    width: min(1220px, calc(100vw - 44px));
+    border-radius: 26px;
+}
+
+.sr-left,
+.sr-right {
+    padding: clamp(20px, 3vw, 36px);
+}
+
+.sr-card-view {
+    width: 100%;
+    max-width: 460px;
+    margin: 8px auto 25px;
+    min-height: 0;
+    isolation: isolate;
+}
+
+.sr-card-view .fg-card-scene,
+.sr-card-view .fg-cardskin {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.sr-card-view .fg-premium-card {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1.586;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    border-radius: 5.2%;
+}
+
+/* Mantener visibles las capas del diseño premium */
+
+.sr-card-view .fg-card-metal,
+.sr-card-view .fg-card-shine {
+    pointer-events: none;
+}
+
+.sr-card-view .fg-card-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Reglas de respaldo para las tres variantes */
+
+.sr-card-view
+.fg-cardskin--variant-1
+.fg-premium-card {
+    background: linear-gradient(
+        130deg,
+        #0A1425,
+        #0F1B2D 43%,
+        #1E3A8A
+    );
+}
+
+.sr-card-view
+.fg-cardskin--variant-2
+.fg-premium-card {
+    background: linear-gradient(
+        130deg,
+        #090A0D,
+        #1B1D22 47%,
+        #383C44
+    );
+}
+
+.sr-card-view
+.fg-cardskin--variant-3
+.fg-premium-card {
+    background: linear-gradient(
+        130deg,
+        #061216,
+        #06362E 49%,
+        #08755D
+    );
+}
+
+.sr-card-enter {
+    animation: sr-card-in .36s ease both;
+}
+
+@keyframes sr-card-in {
+    from {
+        opacity: .35;
+        transform: translateY(10px) scale(.975);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Mejorar escenario de impresora */
+
+.sr-printer-stage {
+    height: 470px;
+    padding-top: 58px;
+    overflow: hidden;
+}
+
+.sr-printer {
+    filter: drop-shadow(
+        0 17px 15px rgba(0,0,0,.23)
+    );
+}
+
+.sr-paper {
+    width: min(275px, 76%);
+    max-height: 252px;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Contraste de botones */
+
+.sr-actions button:not(:disabled) {
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(210,229,255,.36);
+}
+
+.sr-actions button:not(:disabled):hover {
+    background: rgba(96,165,250,.25);
+}
+
+#sr-status {
+    line-height: 1.55;
+    min-height: 24px;
+}
+
+/* En dispositivos de pantalla pequeña */
+
+@media (max-width: 800px) {
+    .sr-window {
+        width: 100%;
+    }
+
+    .sr-card-view {
+        max-width: 380px;
+    }
+
+    .sr-printer-stage {
+        height: 420px;
+    }
+}
+
+/* Desactivar movimientos si el usuario lo solicita */
+
+@media (prefers-reduced-motion: reduce) {
+    .sr-card-enter {
+        animation: none;
+    }
+}

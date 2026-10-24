@@ -1,0 +1,225 @@
+/* ===================================================
+   FALCONI-GIT - PREMIUM BLUE AUTH
+   Solo estilos. No modifica formularios ni JS.
+   =================================================== */
+
+.fg-blue-auth {
+    --fg-navy:#0F1B2D;
+    --fg-royal:#244698;
+    --fg-electric:#60A5FA;
+    --fg-paper:#F7F9FD;
+    --fg-muted:#71829C;
+    background:var(--fg-paper);
+}
+
+.fg-blue-auth .page {
+    display:grid;
+    grid-template-columns:minmax(0,52%) minmax(0,48%);
+    min-height:100dvh;
+}
+
+.fg-blue-auth .brand-panel {
+    position:relative;
+    isolation:isolate;
+    min-width:0;
+    min-height:100dvh;
+    overflow:hidden;
+    color:#F8FAFF;
+
+    background:
+        radial-gradient(
+            ellipse at 76% 57%,
+            rgba(58,112,205,.38) 0%,
+            rgba(25,52,102,.22) 37%,
+            transparent 72%
+        ),
+        linear-gradient(
+            145deg,
+            #142744,
+            #0F1B2D 80%
+        );
+}
+
+.fg-blue-auth .brand-panel::before,
+.fg-blue-auth .brand-panel::after {
+    border-color:rgba(130,175,250,.14);
+    pointer-events:none;
+}
+
+.fg-blue-auth .brand-header,
+.fg-blue-auth .brand-content,
+.fg-blue-auth .brand-footer {
+    position:relative;
+    z-index:2;
+}
+
+.fg-blue-auth .brand-content {
+    width:100%;
+    max-width:650px;
+}
+
+.fg-blue-auth .brand-title {
+    color:#F8FAFF;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:clamp(40px,4.4vw,76px);
+    font-weight:400;
+    line-height:1.06;
+    letter-spacing:-.045em;
+}
+
+.fg-blue-auth .brand-title span:last-child {
+    color:#60A5FA;
+}
+
+.fg-blue-auth .brand-description {
+    color:#C7D7EC;
+    line-height:1.75;
+}
+
+.fg-blue-auth .eyebrow {
+    color:#D9E9FF;
+    border-color:rgba(130,175,250,.25);
+    background:rgba(12,29,58,.28);
+}
+
+.fg-blue-auth .eyebrow-dot {
+    background:#60A5FA;
+}
+
+.fg-blue-auth .card-stage {
+    width:100%;
+    max-width:500px;
+    margin-top:26px;
+    perspective:1200px;
+}
+
+.fg-blue-auth .card-stage .fg-card-scene {
+    width:min(100%,440px);
+    max-width:440px;
+    transform:rotate(-4deg);
+    transition:transform .4s ease;
+}
+
+.fg-blue-auth .card-stage:hover .fg-card-scene {
+    transform:rotate(-2deg) translateY(-5px);
+}
+
+.fg-blue-auth .card-stage .fg-premium-card {
+    box-shadow:
+        0 30px 55px rgba(0,0,0,.46),
+        inset 0 1px rgba(255,255,255,.25);
+}
+
+.fg-blue-auth .card-note,
+.fg-blue-auth .brand-footer {
+    color:#BDCEE8;
+}
+
+.fg-blue-auth .auth-panel {
+    min-width:0;
+    min-height:100dvh;
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(96,165,250,.08),
+            transparent 40%
+        ),
+        #FAFBFE;
+    color:#101D33;
+}
+
+.fg-blue-auth .auth-content {
+    width:100%;
+    max-width:450px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.fg-blue-auth .auth-title {
+    color:#101D33;
+    letter-spacing:-.035em;
+}
+
+.fg-blue-auth .auth-label {
+    color:#244698;
+}
+
+.fg-blue-auth .auth-description {
+    color:#71829C;
+}
+
+.fg-blue-auth .auth-panel input:not([type=checkbox]),
+.fg-blue-auth .auth-panel select,
+.fg-blue-auth .auth-panel textarea {
+    background:#F5F7FC;
+    color:#101D33;
+    border-color:#D6DFEE;
+    border-radius:12px;
+}
+
+.fg-blue-auth .auth-panel input:focus,
+.fg-blue-auth .auth-panel select:focus {
+    border-color:#60A5FA;
+    outline:2px solid rgba(96,165,250,.5);
+    outline-offset:1px;
+}
+
+.fg-blue-auth .submit-button {
+    background:#244698;
+    color:#FFFFFF;
+    border-radius:12px;
+}
+
+.fg-blue-auth .submit-button:hover:not(:disabled) {
+    background:#19387D;
+}
+
+.fg-blue-auth .text-link,
+.fg-blue-auth .password-toggle {
+    color:#244698;
+}
+
+.fg-blue-auth .fg-home-link {
+    color:#244698;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:700;
+    display:inline-block;
+    margin-bottom:18px;
+}
+
+.fg-blue-auth :focus-visible {
+    outline:2px solid #60A5FA;
+    outline-offset:3px;
+}
+
+@media(max-width:850px) {
+    .fg-blue-auth .page {
+        grid-template-columns:1fr;
+    }
+
+    .fg-blue-auth .brand-panel {
+        min-height:auto;
+        padding:24px;
+    }
+
+    .fg-blue-auth .brand-content {
+        display:none;
+    }
+
+    .fg-blue-auth .auth-panel {
+        min-height:calc(100dvh - 95px);
+        padding:24px;
+    }
+
+    .fg-blue-auth .auth-content {
+        margin:30px auto;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .fg-blue-auth .fg-card-scene {
+        transition:none !important;
+        transform:none !important;
+    }
+}

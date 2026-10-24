@@ -1,468 +1,724 @@
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101C19">
+<meta name="description"
+      content="FALCONI-GIT, tu espacio financiero personal en rublos.">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<title>FALCONI-GIT | Atelier Edition</title>
 
-    <meta name="theme-color" content="#0F1B2D">
+<link rel="stylesheet" href="./premium-card.css">
+<link rel="stylesheet" href="./cards.css">
 
-    <title>FALCONI-GIT | Iniciar sesión</title>
+<style>
+:root{
+    --ivory:#F4F0E7;
+    --champagne:#D7BE95;
+    --muted:#A9B7B2;
+    --border:rgba(255,255,255,.14);
+}
 
-    <!-- ESTILOS EXISTENTES -->
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="./responsive.css">
+*{box-sizing:border-box}
 
-    <!-- TARJETA PREMIUM -->
-    <link rel="stylesheet" href="./premium-card.css">
+html{min-height:100%}
 
-    <!-- IDIOMAS -->
-    <script src="./translations.js" defer></script>
-    <script src="./language.js" defer></script>
+body{
+    margin:0;
+    min-height:100vh;
+    overflow-x:hidden;
+    background:#091612;
+    color:var(--ivory);
+    font-family:Inter,Arial,sans-serif;
+}
 
-    <!-- AUTENTICACIÓN EXISTENTE -->
-    <script src="./login.js" defer></script>
+button,a{-webkit-tap-highlight-color:transparent}
 
-    <!-- ANIMACIÓN DE LA TARJETA -->
-    <script src="./premium-card.js" defer></script>
+button{font:inherit}
+
+.ambient{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    transition:opacity 1s ease;
+    opacity:0;
+}
+
+.ambient.active{opacity:1}
+
+.ambient.green{
+    background:radial-gradient(
+        ellipse at 53% 48%,
+        #135E4B 0%,
+        #0B2824 42%,
+        #07100F 82%
+    );
+}
+
+.ambient.blue{
+    background:radial-gradient(
+        ellipse at 53% 48%,
+        #244882 0%,
+        #142741 42%,
+        #080D18 82%
+    );
+}
+
+.ambient.black{
+    background:radial-gradient(
+        ellipse at 53% 48%,
+        #48454A 0%,
+        #212329 42%,
+        #0A0C10 82%
+    );
+}
+
+.grain{
+    position:fixed;
+    inset:0;
+    opacity:.12;
+    pointer-events:none;
+    z-index:1;
+    background-image:radial-gradient(
+        #fff 0.5px,
+        transparent .5px
+    );
+    background-size:9px 9px;
+    mask-image:linear-gradient(
+        to bottom,#000,transparent 95%
+    );
+}
+
+nav{
+    position:relative;
+    z-index:20;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    padding:28px 5%;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:var(--ivory);
+    font-weight:800;
+    letter-spacing:.06em;
+}
+
+.brand-mark{
+    font:700 34px Georgia,serif;
+    color:var(--champagne);
+}
+
+.nav-links{
+    display:flex;
+    gap:6px;
+    padding:7px;
+    border:1px solid var(--border);
+    border-radius:60px;
+    background:rgba(255,255,255,.055);
+    backdrop-filter:blur(18px);
+}
+
+.nav-links a{
+    padding:12px 18px;
+    color:#DBE6DF;
+    text-decoration:none;
+    font-size:13px;
+    border-radius:40px;
+}
+
+.nav-links a.active,
+.nav-links a:hover{
+    background:var(--champagne);
+    color:#13201B;
+}
+
+.login{
+    color:var(--ivory);
+    border:1px solid var(--border);
+    border-radius:60px;
+    padding:12px 20px;
+    text-decoration:none;
+    background:rgba(0,0,0,.17);
+    font-size:13px;
+}
+
+main{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(300px,1.1fr) minmax(0,1fr);
+    align-items:center;
+    min-height:calc(100vh - 100px);
+    padding:30px 5% 55px;
+    gap:18px;
+}
+
+.copy-left,
+.copy-right{
+    position:relative;
+    z-index:6;
+}
+
+.eyebrow{
+    color:var(--champagne);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.22em;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(54px,6.7vw,112px);
+    line-height:.97;
+    letter-spacing:-.06em;
+    font-weight:400;
+    margin:24px 0;
+}
+
+h1 em{
+    color:var(--champagne);
+    font-style:italic;
+}
+
+.copy-left p,
+.copy-right p{
+    max-width:380px;
+    color:#C2D1C9;
+    line-height:1.8;
+    font-size:15px;
+}
+
+.cta{
+    display:inline-flex;
+    align-items:center;
+    gap:22px;
+    margin-top:22px;
+    background:var(--champagne);
+    color:#102019;
+    text-decoration:none;
+    font-weight:800;
+    border-radius:60px;
+    padding:8px 8px 8px 24px;
+}
+
+.cta-icon{
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    width:43px;
+    height:43px;
+    background:#14231E;
+    color:#FFF;
+    font-size:22px;
+}
+
+.tagline{
+    margin-top:65px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    color:#CBD5CE;
+    font-size:12px;
+    letter-spacing:.07em;
+}
+
+.tagline span{
+    width:36px;
+    height:36px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    color:var(--champagne);
+    font-size:19px;
+}
+
+.center{
+    width:100%;
+    min-height:550px;
+    position:relative;
+    display:grid;
+    place-items:center;
+    perspective:1300px;
+    transform-style:preserve-3d;
+}
+
+.halo{
+    position:absolute;
+    width:min(90%,520px);
+    aspect-ratio:1;
+    border-radius:50%;
+    border:1px solid rgba(215,190,149,.22);
+    box-shadow:
+        0 0 0 40px rgba(215,190,149,.03),
+        0 0 130px rgba(215,190,149,.1),
+        inset 0 0 100px rgba(215,190,149,.07);
+    transform:rotateX(65deg) rotateZ(-22deg);
+}
+
+.halo.two{
+    width:min(70%,410px);
+    transform:rotateY(65deg) rotateZ(30deg);
+    opacity:.6;
+}
+
+#card-stage{
+    position:relative;
+    z-index:5;
+    width:min(100%,490px);
+    transform-style:preserve-3d;
+    will-change:transform,filter;
+    animation:levitate 6s ease-in-out infinite;
+}
+
+#card-stage .fg-cardskin{
+    max-width:none;
+    width:100%;
+    transform-style:preserve-3d;
+}
+
+#card-stage .fg-premium-card{
+    width:100%;
+    aspect-ratio:1.586;
+    border-radius:24px;
+    box-shadow:
+        0 38px 70px rgba(0,0,0,.48),
+        inset 0 1px rgba(255,255,255,.4);
+}
+
+@keyframes levitate{
+    0%,100%{translate:0 0}
+    50%{translate:0 -17px}
+}
+
+.particle{
+    position:absolute;
+    z-index:3;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(215,190,149,.25);
+    background:linear-gradient(
+        145deg,
+        rgba(255,255,255,.16),
+        rgba(255,255,255,.035)
+    );
+    backdrop-filter:blur(8px);
+    border-radius:50%;
+    color:#E9D8BA;
+    box-shadow:0 15px 35px rgba(0,0,0,.22);
+    pointer-events:none;
+    will-change:transform;
+}
+
+.p1{top:10%;left:12%;width:62px;height:62px;font-size:26px}
+.p2{top:19%;right:5%;width:90px;height:90px;font-size:34px}
+.p3{bottom:16%;left:5%;width:90px;height:90px;font-size:29px}
+.p4{bottom:11%;right:14%;width:57px;height:57px;font-size:24px}
+.p5{top:49%;left:-3%;width:29px;height:29px}
+.p6{top:61%;right:-2%;width:40px;height:40px}
+
+.copy-right{
+    justify-self:end;
+    max-width:300px;
+}
+
+.copy-right h2{
+    font:normal clamp(36px,3.8vw,63px)/1 Georgia,serif;
+    letter-spacing:-.04em;
+}
+
+.copy-right h2 em{
+    color:var(--champagne);
+}
+
+.chooser{
+    margin:25px 0;
+    display:grid;
+    gap:11px;
+}
+
+.choice{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    text-align:left;
+    padding:11px;
+    border-radius:16px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.05);
+    color:white;
+    cursor:pointer;
+    backdrop-filter:blur(16px);
+    transition:background .3s,transform .3s,border-color .3s;
+}
+
+.choice:hover{
+    transform:translateX(-4px);
+    background:rgba(255,255,255,.1);
+}
+
+.choice[aria-pressed="true"]{
+    border-color:var(--champagne);
+    background:rgba(215,190,149,.12);
+}
+
+.swatch{
+    width:60px;
+    height:39px;
+    border:1px solid rgba(255,255,255,.3);
+    border-radius:7px;
+    box-shadow:0 8px 13px rgba(0,0,0,.24);
+}
+
+.swatch.blue{background:linear-gradient(130deg,#091425,#3158A1)}
+.swatch.black{background:linear-gradient(130deg,#080A0D,#545862)}
+.swatch.green{background:linear-gradient(130deg,#071817,#088062)}
+
+.choice strong{display:block;font-size:13px}
+.choice small{display:block;color:#B9C8BF;margin-top:4px}
+
+.footnote{
+    font-size:11px !important;
+    color:#9EAEA5 !important;
+}
+
+@media(max-width:1050px){
+    main{
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+    }
+    .center{
+        grid-column:2;
+        grid-row:1/3;
+    }
+    .copy-right{
+        grid-column:1;
+        grid-row:2;
+        justify-self:start;
+        max-width:400px;
+    }
+    .tagline{margin-top:30px}
+}
+
+@media(max-width:700px){
+    nav{padding:20px}
+    .nav-links{display:none}
+    main{
+        display:flex;
+        flex-direction:column;
+        align-items:stretch;
+        padding:25px 24px 60px;
+        gap:14px;
+    }
+    h1{font-size:clamp(52px,14vw,85px)}
+    .center{min-height:330px}
+    #card-stage{width:min(93%,390px)}
+    .copy-right{max-width:none}
+    .chooser{grid-template-columns:1fr}
+    .tagline{margin-top:25px}
+    .p2,.p3{width:60px;height:60px}
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+    }
+}
+</style>
+  <style>
+/* FALCONI ORIGINAL BLUE START */
+/* ORIGINAL BLUE EDITION - FALCONI-GIT */
+
+/* Fondo de las tres variantes */
+body:has(#card-stage) .ambient.green {
+  background:radial-gradient(
+    ellipse at 53% 48%,
+    #254A92 0%,
+    #132B50 43%,
+    #0C172A 85%
+  ) !important;
+}
+
+body:has(#card-stage) .ambient.blue {
+  background:radial-gradient(
+    ellipse at 53% 48%,
+    #2859A9 0%,
+    #183665 43%,
+    #0B1529 85%
+  ) !important;
+}
+
+body:has(#card-stage) .ambient.black {
+  background:radial-gradient(
+    ellipse at 53% 48%,
+    #333E5C 0%,
+    #18243D 43%,
+    #0B1426 85%
+  ) !important;
+}
+
+/* Paleta principal */
+body:has(#card-stage) {
+  --ivory:#F5F7FC;
+  --champagne:#60A5FA;
+  --muted:#B9C9E4;
+  --border:rgba(160,190,240,.22);
+  color:#F5F7FC;
+  background:#0C172A;
+}
+
+/* Títulos y detalles */
+body:has(#card-stage) h1 em,
+body:has(#card-stage) h2 em,
+body:has(#card-stage) .eyebrow,
+body:has(#card-stage) .brand-mark {
+  color:#60A5FA;
+}
+
+/* Botón principal */
+body:has(#card-stage) .cta {
+  background:#60A5FA;
+  color:#101B2D;
+}
+
+body:has(#card-stage) .cta-icon {
+  background:#101B2D;
+  color:#FFFFFF;
+}
+
+/* Menú */
+body:has(#card-stage) .nav-links a.active,
+body:has(#card-stage) .nav-links a:hover {
+  background:#60A5FA;
+  color:#101B2D;
+}
+
+/* Selector de tarjetas */
+body:has(#card-stage) .choice[aria-pressed="true"] {
+  border-color:#60A5FA;
+  background:rgba(96,165,250,.12);
+}
+
+/* Efectos de profundidad */
+body:has(#card-stage) .halo {
+  border-color:rgba(96,165,250,.25);
+  box-shadow:
+    0 0 0 40px rgba(96,165,250,.025),
+    0 0 130px rgba(96,165,250,.11),
+    inset 0 0 100px rgba(96,165,250,.07);
+}
+
+body:has(#card-stage) .particle {
+  color:#B9D8FF;
+  border-color:rgba(96,165,250,.3);
+}
+
+/* Textos secundarios */
+body:has(#card-stage) .copy-left p,
+body:has(#card-stage) .copy-right p {
+  color:#C3D2E9;
+}
+/* FALCONI ORIGINAL BLUE END */
+</style>
+<style id="falconi-black-layout">
+@media (min-width: 851px) {
+  body:has(#card-stage) main {
+    grid-template-columns:
+      minmax(300px, 1fr)
+      minmax(440px, 1.2fr) !important;
+  }
+
+  body:has(#card-stage) .center {
+    grid-column: 2;
+    width: 100%;
+  }
+
+  body:has(#card-stage) #card-stage {
+    width: min(100%, 520px);
+  }
+}
+
+body:has(#card-stage) .copy-right {
+  display: none !important;
+}
+</style>
+<style id="fg-unified-hero">
+body:has(#card-stage) main {
+    display:grid;
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1.15fr) !important;
+    align-items:center;
+    gap:clamp(20px,4vw,75px);
+    min-height:calc(100dvh - 95px);
+}
+
+body:has(#card-stage) .copy-left {
+    grid-column:1;
+    min-width:0;
+}
+
+body:has(#card-stage) .center {
+    grid-column:2;
+    grid-row:auto;
+    width:100%;
+    min-height:480px;
+}
+
+body:has(#card-stage) #card-stage {
+    width:min(100%,540px);
+    max-width:540px;
+}
+
+body:has(#card-stage) .copy-right {
+    display:none !important;
+}
+
+body:has(#card-stage) .fg-premium-card {
+    width:100%;
+    aspect-ratio:1.586;
+}
+
+@media(max-width:800px) {
+    body:has(#card-stage) main {
+        display:flex !important;
+        flex-direction:column;
+        align-items:stretch;
+        padding:26px 23px 60px;
+    }
+
+    body:has(#card-stage) .center {
+        min-height:330px;
+        order:2;
+    }
+
+    body:has(#card-stage) .copy-left {
+        order:1;
+    }
+
+    body:has(#card-stage) #card-stage {
+        width:min(94%,430px);
+    }
+}
+</style>
 </head>
 
 <body>
 
-<main class="page">
+<div class="ambient green" data-bg="variant-3"></div>
+<div class="ambient blue" data-bg="variant-1"></div>
+<div class="ambient black active" data-bg="variant-2"></div>
+<div class="grain"></div>
 
-    <!-- =====================================
-         PANEL IZQUIERDO
-         ===================================== -->
+<nav>
+    <a class="brand" href="./index.html">
+        <span class="brand-mark">F.</span>
+        <span>FALCONI-GIT</span>
+    </a>
 
-    <section
-        class="brand-panel"
-        aria-label="FALCONI-GIT"
-    >
+    <div class="nav-links">
+        <a class="active" href="./index.html">Inicio</a>
+        <a href="./login.html">Mi espacio</a>
+        <a href="./register.html">Crear cuenta</a>
+    </div>
 
-        <!-- LOGO SUPERIOR -->
-        <header class="brand-header">
+    <a class="login" href="./login.html">
+        Iniciar sesión ↗
+    </a>
+</nav>
 
-            <div class="logo-box">
+<main>
+    <section class="copy-left">
+        <div class="eyebrow">
+            FINANCIAL SPACE · ATELIER EDITION
+        </div>
 
-                <span
-                    class="falconi-logo falconi-logo--small"
-                    role="img"
-                    aria-label="Logo FALCONI"
-                >
+        <h1>
+            Your money.<br>
+            <em>Elevated.</em>
+        </h1>
 
-                    <span class="falconi-logo-symbol">
-                        F.
-                    </span>
+        <p>
+            Una nueva manera de organizar tus finanzas
+            personales en rublos. Claridad, control
+            y una experiencia diseñada alrededor de ti.
+        </p>
 
-                    <span class="falconi-logo-caption">
-                        FALCONI
-                    </span>
+        <a class="cta" href="./register.html">
+            Crear mi espacio
+            <span class="cta-icon">↗</span>
+        </a>
 
-                </span>
+        <div class="tagline">
+            <span>✧</span>
+            PERSONAL FINANCE · ₽ · PREMIUM EXPERIENCE
+        </div>
+    </section>
 
-            </div>
+    <section class="center" id="scene"
+             aria-label="Tarjeta FALCONI-GIT interactiva">
 
-            <span class="brand-name">
-                FALCONI-GIT
-            </span>
+        <div class="halo"></div>
+        <div class="halo two"></div>
 
-        </header>
+        
+        
+        
+        
+        
+        
 
-        <!-- CONTENIDO DE MARCA -->
-        <div class="brand-content">
+        <div id="card-stage">
+            <div id="premium-shell"
+                 class="fg-card-scene fg-cardskin fg-cardskin--variant-2">
 
-            <div class="eyebrow premium-enter">
+                <div class="fg-premium-card">
+                    <div class="fg-card-metal"></div>
+                    <div class="fg-card-shine"></div>
 
-                <span class="eyebrow-dot"></span>
-
-                <span data-i18n="brandEyebrow">
-                    TU ESPACIO FINANCIERO EN ₽
-                </span>
-
-            </div>
-
-            <h1 class="brand-title premium-enter premium-enter-delay-1">
-
-                <span data-i18n="brandTitleLine1"
-                      style="color:inherit">
-                    Tu dinero.
-                </span>
-
-                <br>
-
-                <span data-i18n="brandTitleLine2"
-                      style="color:inherit">
-                    Tu espacio.
-                </span>
-
-                <br>
-
-                <span data-i18n="brandTitleLine3">
-                    Tu control.
-                </span>
-
-            </h1>
-
-            <p
-                class="brand-description premium-enter premium-enter-delay-2"
-                data-i18n="brandDescription"
-            >
-                Una manera más clara de organizar tus finanzas
-                personales mientras construyes tu vida en Rusia.
-            </p>
-
-            <!-- =====================================
-                 TARJETA PREMIUM v0.8.1
-                 ===================================== -->
-
-            <div class="card-stage premium-enter premium-enter-delay-3">
-
-                <div class="fg-card-scene">
-
-                    <div
-                        class="fg-premium-card"
-                        id="falconiPremiumCard"
-                        role="img"
-                        aria-label="Tarjeta decorativa FALCONI-GIT con numeración ficticia"
-                    >
-
-                        <!-- FONDO METÁLICO -->
-                        <div
-                            class="fg-card-metal"
-                            aria-hidden="true"
-                        ></div>
-
-                        <!-- REFLEJO DINÁMICO -->
-                        <div
-                            class="fg-card-shine"
-                            aria-hidden="true"
-                        ></div>
-
-                        <!-- CONTENIDO -->
-                        <div class="fg-card-content">
-
-                            <!-- PARTE SUPERIOR -->
-                            <div class="fg-card-top">
-
-                                <!-- CHIP METÁLICO -->
-                                <div
-                                    class="fg-card-chip"
-                                    aria-hidden="true"
-                                ></div>
-
-                                <!-- LOGO FALCONI -->
-                                <div class="fg-card-brand">
-
-                                    <span class="fg-card-brand-symbol">
-                                        F.
-                                    </span>
-
-                                    <span class="fg-card-brand-name">
-                                        FALCONI
-                                    </span>
-
-                                </div>
-
+                    <div class="fg-card-content">
+                        <div class="fg-card-top">
+                            <div class="fg-card-chip"></div>
+                            <div class="fg-card-brand">
+                                <span class="fg-card-brand-symbol">F.</span>
+                                <span class="fg-card-brand-name">FALCONI</span>
                             </div>
-
-                            <!-- NUMERACIÓN FICTICIA -->
-                            <div class="fg-card-number">
-                                4874 2479 2847 1204
-                            </div>
-
-                            <!-- FECHA FICTICIA -->
-                            <div class="fg-card-expiry">
-
-                                <span class="fg-card-expiry-label">
-                                    VALID THRU
-                                </span>
-
-                                <span class="fg-card-expiry-date">
-                                    08/28
-                                </span>
-
-                            </div>
-
-                            <!-- PARTE INFERIOR -->
-                            <div class="fg-card-bottom">
-
-                                <span class="fg-card-holder">
-                                    FALCONI-GIT
-                                </span>
-
-                                <span class="fg-card-corner">
-                                    F.
-                                </span>
-
-                            </div>
-
                         </div>
 
+                        <div class="fg-card-number">
+                            •••• •••• •••• 1204
+                        </div>
+
+                        <div class="fg-card-expiry">
+                            <span class="fg-card-expiry-label">
+                                PREMIUM CONCEPT
+                            </span>
+                            <span class="fg-card-expiry-date">₽</span>
+                        </div>
+
+                        <div class="fg-card-bottom">
+                            <span class="fg-card-holder">FALCONI-GIT</span>
+                            <span class="fg-card-corner">F.</span>
+                        </div>
                     </div>
-
                 </div>
-
-                <!-- MENSAJE ORIGINAL -->
-                <div class="card-note">
-
-                    <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.7"
-                        aria-hidden="true"
-                    >
-
-                        <path
-                            d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
-                        ></path>
-
-                        <path
-                            d="m9 12 2 2 4-4"
-                        ></path>
-
-                    </svg>
-
-                    <span data-i18n="brandNote">
-                        Tu espacio financiero personal.
-                    </span>
-
-                </div>
-
             </div>
-
         </div>
-
-        <footer class="brand-footer">
-            <span data-i18n="brandFooter">
-                Más claridad. Más control. Todo en rublos.
-            </span>
-        </footer>
-
     </section>
 
-    <!-- =====================================
-         PANEL DERECHO: LOGIN
-         ===================================== -->
-
-    <section class="auth-panel">
-
-        <!-- SELECTOR DE IDIOMAS -->
-        <header class="auth-top">
-
-            <select
-                id="language"
-                class="language-select"
-                aria-label="Seleccionar idioma"
-            >
-
-                <option value="es">Español</option>
-                <option value="en">English</option>
-                <option value="ru">Русский</option>
-
-            </select>
-
-        </header>
-
-        <div class="auth-content">
-
-            <!-- ENCABEZADO -->
-            <div class="auth-heading premium-enter">
-
-                <p
-                    class="auth-label"
-                    data-i18n="loginEyebrow"
-                >
-                    ACCESO A TU CUENTA
-                </p>
-
-                <h2
-                    class="auth-title"
-                    data-i18n="loginTitle"
-                >
-                    Bienvenido de nuevo.
-                </h2>
-
-                <p
-                    class="auth-description"
-                    data-i18n="loginSubtitle"
-                >
-                    Introduce tus credenciales para continuar.
-                </p>
-
-            </div>
-
-            <!-- =====================================
-                 FORMULARIO ORIGINAL DE LOGIN
-                 ===================================== -->
-
-            <form
-                id="loginForm"
-                class="login-form premium-enter premium-enter-delay-1"
-                novalidate
-            >
-
-                <!-- CORREO -->
-                <div class="form-group">
-
-                    <label
-                        class="form-label"
-                        for="email"
-                        data-i18n="emailLabel"
-                    >
-                        Correo electrónico
-                    </label>
-
-                    <input
-                        class="form-input"
-                        type="email"
-                        id="email"
-                        name="email"
-                        autocomplete="email"
-                        placeholder="nombre@correo.com"
-                        data-i18n-placeholder="emailPlaceholder"
-                        aria-describedby="emailError"
-                        required
-                    >
-
-                    <small
-                        class="error-message"
-                        id="emailError"
-                        aria-live="polite"
-                    ></small>
-
-                </div>
-
-                <!-- CONTRASEÑA -->
-                <div class="form-group">
-
-                    <label
-                        class="form-label"
-                        for="password"
-                        data-i18n="passwordLabel"
-                    >
-                        Contraseña
-                    </label>
-
-                    <div class="password-field">
-
-                        <input
-                            class="form-input"
-                            type="password"
-                            id="password"
-                            name="password"
-                            autocomplete="current-password"
-                            placeholder="Introduce tu contraseña"
-                            data-i18n-placeholder="passwordPlaceholder"
-                            aria-describedby="passwordError"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            id="togglePassword"
-                            aria-label="Mostrar contraseña"
-                            aria-pressed="false"
-                            data-i18n="showPassword"
-                        >
-                            Mostrar
-                        </button>
-
-                    </div>
-
-                    <small
-                        class="error-message"
-                        id="passwordError"
-                        aria-live="polite"
-                    ></small>
-
-                </div>
-
-                <!-- RECUPERACIÓN -->
-                <div class="forgot-row">
-
-                    <a
-                        href="./forgot-password.html"
-                        class="text-link"
-                        id="forgotLink"
-                        data-i18n="forgotPassword"
-                    >
-                        ¿Olvidaste tu contraseña?
-                    </a>
-
-                </div>
-
-                <!-- INICIAR SESIÓN -->
-                <button
-                    class="submit-button"
-                    type="submit"
-                    id="submitButton"
-                >
-
-                    <span data-i18n="loginButton">
-                        Iniciar sesión
-                    </span>
-
-                    <span
-                        class="submit-arrow"
-                        aria-hidden="true"
-                    >
-                        →
-                    </span>
-
-                </button>
-
-                <!-- ESTADO DEL FORMULARIO -->
-                <p
-                    id="formStatus"
-                    class="form-status"
-                    role="status"
-                ></p>
-
-            </form>
-
-            <!-- REGISTRARSE -->
-            <div class="register-area premium-enter premium-enter-delay-2">
-
-                <span data-i18n="noAccount">
-                    ¿Aún no tienes cuenta?
-                </span>
-
-                <a
-                    href="./register.html"
-                    class="text-link"
-                    id="registerLink"
-                    data-i18n="createAccount"
-                >
-                    Crear cuenta
-                </a>
-
-            </div>
-
-        </div>
-
-        <footer class="auth-footer">
-
-            <span>© 2026 FALCONI-GIT</span>
-
-            <span data-i18n="interfaceDevelopment">
-                Interfaz en desarrollo
-            </span>
-
-        </footer>
-
-    </section>
-
+    
 </main>
+
+<script src="./atelier-motion.js" defer></script>
 
 </body>
 </html>

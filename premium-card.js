@@ -52,7 +52,7 @@
 
         const scene = document.createElement("div");
 
-        scene.className = "fg-card-scene";
+        scene.className = "fg-card-scene fg-cardskin fg-cardskin--variant-2";
 
         scene.innerHTML = `
             <div class="fg-premium-card"
@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="fg-card-number">
-                        4874 2479 2847 1204
+                        •••• •••• •••• 1204
                     </div>
 
                     <div class="fg-card-expiry">
